@@ -349,7 +349,7 @@ function draw(t) {
     // the lie: a red scanner hops between the six and never settles
     if (t > c('lie', -.05) && name === 'twist') {
       const per = t < c('stay') ? .13 : .26, step = Math.floor((t - c('lie')) / per);
-      const r = rng(77 + step)(), idx = (step * 5 + Math.floor(r * 6)) % 6;
+      const r = rng(77 + Math.abs(step))(), idx = (((step * 5 + Math.floor(r * 6)) % 6) + 6) % 6;
       const e = icEls[idx]; e.classList.add('hot');
       const sr = $('scanring'); sr.style.left = e.style.left; sr.style.top = e.style.top; show(sr, 1 - seg(t, s1 - .15, s1));
       red = .12;
