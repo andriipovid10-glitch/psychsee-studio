@@ -1,0 +1,21 @@
+{
+ "_doc": "Cue = the word that triggers an animation beat. 'word' = 1st occurrence, 'word#n' = n-th, '.end' = end of that word. align.py writes scene-second times to timing_s00.json. Same system as engine/ep02.",
+ "script": "scripts/ep02-v2-first-minute.md",
+ "s00": {
+  "section": "// 00",
+  "lead": 0.35,
+  "tail": 1.2,
+  "cues": {
+   "remember": "remember", "fight": "fight#1", "fight_end": "fight#1.end",
+   "school": "school", "bar": "bar", "street": "street", "street_end": "street.end",
+   "remember2": "remember#2", "panic": "panic", "heart": "heart", "slamming": "slamming",
+   "hands": "hands", "shaking": "shaking", "mouth": "mouth", "dry": "dry",
+   "everything": "everything", "quiet": "quiet", "quiet_end": "quiet.end", "felt2": "felt#2", "slow": "slow", "motion_end": "motion.end",
+   "heres": "here's", "crazy": "crazy", "part_end": "part.end", "didnt": "didn't", "choose": "choose", "that_end": "that.end",
+   "body": "body", "decisions": "decisions", "before": "before", "think": "think", "think_end": "think.end",
+   "and2": "and#2", "them": "them", "lie": "lie", "lie_end": "lie.end", "stay": "stay", "show": "show", "which_end": "one#3.end",
+   "this": "this", "inside": "inside", "first2": "first#2", "ten": "ten", "seconds": "seconds", "fight2": "fight#2",
+   "second": "second#1", "second2": "second#2", "end": "second#2.end"
+  }
+ }
+}

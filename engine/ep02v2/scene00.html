@@ -1,0 +1,400 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style>
+#gl{width:1920px;height:1080px}
+.kw{position:absolute;font-weight:900;letter-spacing:-.045em;line-height:.9;white-space:nowrap;transform-origin:50% 50%;will-change:transform;visibility:hidden;
+  text-shadow:0 6px 40px rgba(0,0,0,.55)}
+.kw.r,.kw .r{color:#ff3340;text-shadow:0 0 40px rgba(255,40,60,.45),0 6px 40px rgba(0,0,0,.55)}
+.kw span{display:inline-block;will-change:transform}
+#rflash{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,30,45,0) 35%,rgba(255,30,45,.55) 100%);opacity:0}
+.ic{position:absolute;width:136px;height:136px;margin:-68px 0 0 -68px;border-radius:50%;background:rgba(20,30,52,.82);border:2px solid rgba(160,185,235,.35);
+  box-shadow:0 14px 50px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#eef2fa;visibility:hidden}
+.ic svg{width:74px;height:74px;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.ic .t{position:absolute;top:150px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.ic.hot{border-color:#ff3340;color:#ff3340;box-shadow:0 0 50px rgba(255,40,60,.55),0 14px 50px rgba(0,0,0,.5)}
+#scanring{position:absolute;width:176px;height:176px;margin:-88px 0 0 -88px;border:4px solid #ff3340;border-radius:50%;box-shadow:0 0 30px rgba(255,40,60,.7);visibility:hidden}
+#dial{position:absolute;left:960px;top:440px;width:680px;height:680px;margin:-340px 0 0 -340px;visibility:hidden}
+#dial svg{position:absolute;inset:0}
+#dial .num{position:absolute;left:0;right:0;top:50%;transform:translateY(-52%);text-align:center;font-weight:900;font-size:220px;letter-spacing:-.05em}
+#dial .num small{font-size:80px;color:#8a97b3;margin-left:6px;letter-spacing:-.02em}
+#dial .cap{position:absolute;left:0;right:0;top:130px;text-align:center}
+#fz{position:absolute;left:50%;top:40px;transform:translateX(-50%);visibility:hidden}
+#blackout{position:absolute;inset:0;background:#000}
+</style></head><body>
+<canvas id="gl"></canvas>
+<svg class="ov" id="lines" width="1920" height="1080"></svg>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 00 — your first fight</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+<div id="fz" class="mono">◼ &nbsp;frame held</div>
+
+<div id="k_first" class="kw" style="left:960px;top:880px;font-size:120px"><span>YOUR</span> <span>FIRST</span> <span class="r">FIGHT?</span></div>
+<div id="k_school" class="kw" style="left:960px;top:850px;font-size:230px">SCHOOL.</div>
+<div id="k_bar" class="kw" style="left:960px;top:850px;font-size:230px">BAR.</div>
+<div id="k_street" class="kw" style="left:960px;top:850px;font-size:230px">STREET.</div>
+<div id="k_panic" class="kw" style="left:960px;top:820px;font-size:250px">PANIC.</div>
+<div id="k_heart" class="kw" style="left:960px;top:840px;font-size:170px"><span>HEART</span> <span>SLAMMING.</span></div>
+<div id="k_hands" class="kw" style="left:960px;top:840px;font-size:170px"><span>HANDS</span> <span>SHAKING.</span></div>
+<div id="k_dry" class="kw" style="left:960px;top:840px;font-size:170px"><span>DRY</span> <span>MOUTH.</span></div>
+<div id="k_silence" class="kw" style="left:960px;top:540px;font-size:150px;letter-spacing:.32em;font-weight:800">SILENCE.</div>
+<div id="k_slow" class="kw" style="left:960px;top:850px;font-size:190px"><span>SLOW</span> <span>MOTION.</span></div>
+<div id="k_choose" class="kw" style="left:960px;top:975px;font-size:96px"><span>YOU</span> <span>DIDN'T</span> <span>CHOOSE.</span></div>
+<div id="k_lie" class="kw" style="left:960px;top:975px;font-size:96px"><span>ONE</span> <span>OF</span> <span>THEM</span> <span>IS</span> <span>A</span> <span class="r">LIE.</span></div>
+<div id="k_title" class="kw" style="left:960px;top:900px;font-size:120px"><span>THE</span> <span>FIRST</span> <span class="r">10</span> <span>SECONDS</span></div>
+<div id="k_sbs" class="kw mono" style="left:960px;top:990px;font-size:26px;letter-spacing:.3em;font-weight:400;color:#8a97b3;text-shadow:none">SECOND BY SECOND</div>
+
+<div id="icons"></div>
+<div id="scanring"></div>
+<div id="dial">
+  <svg viewBox="0 0 680 680" id="dialsvg"></svg>
+  <div class="cap mono">// the clock starts</div>
+  <div class="num"><span id="dnum">0.00</span><small>s</small></div>
+</div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, makeMan, pose, setXray, makeChest, pulse, orbitPos, shake,
+  $, show, project, timecode, loadTiming, rng} from '../ep02/lib/core.js';
+import {setupStage} from './lib/stage.js';
+import {makeVoid, makeSchool, makeBar, makeStreet} from './lib/sets.js';
+
+// ---------------------------------------------------------------- timing (all beats come from the VO cues)
+const TM = await loadTiming('s00');
+const c = TM.cue, DUR = TM.duration, WD = TM.words;
+window.DURATION = DUR;
+const wordAt = (n, nth = 1) => { let k = 0; for (const w of WD) { if (w.w.toLowerCase().replace(/[^a-z']/g, '') === n && ++k === nth) return w.start; } throw new Error('word ' + n); };
+
+// ---------------------------------------------------------------- stage + cast + sets
+const st = setupStage($('gl'));
+const {scene, cam, composer, grade, key, rim, hemi} = st;
+const SETS = {void: makeVoid(scene), school: makeSchool(scene), bar: makeBar(scene), street: makeStreet(scene)};
+// photoreal background plates (AI-generated, graded navy) — the stickmen are 3D and cast real shadows on top
+const BG = {};
+await Promise.all(['school', 'bar', 'street', 'bokeh'].map(n => new Promise(res => {
+  new THREE.TextureLoader().load(`bg/${n}.jpg`, tx => { tx.colorSpace = THREE.SRGBColorSpace; BG[n] = tx; res(); }, undefined, () => res());
+})));
+// z = zoom (1 = full frame), (px, py) = pan in fractions of the frame
+function plate(n, z = 1, px = 0, py = 0) {
+  const tx = BG[n]; if (!tx) { scene.background = new THREE.Color(0x0b1222); return; }
+  tx.repeat.set(1 / z, 1 / z); tx.offset.set(clamp(.5 - .5 / z + px, 0, 1 - 1 / z), clamp(.5 - .5 / z + py, 0, 1 - 1 / z));
+  tx.updateMatrix(); scene.background = tx;
+}
+const A = makeMan(scene), B = makeMan(scene);
+const ghosts = [0, 1, 2].map(() => makeMan(scene));
+ghosts.forEach((g, i) => { g.mat.opacity = [.22, .13, .07][i]; g.mat.depthWrite = false; g.g.children.forEach(m => m.castShadow = false); });
+const fistGeo = new THREE.SphereGeometry(1, 24, 16);
+function addFists(M) { M.fists = [0, 1].map(() => { const f = new THREE.Mesh(fistGeo, M.mat); f.castShadow = true; M.g.add(f); return f; }); }
+[A, B, ...ghosts].forEach(addFists);
+const chest = makeChest(B);
+// bystanders (crowd) — also stickmen, a bit darker, watching the fight
+const crowd = [0, 1, 2, 3, 4].map(() => { const M = makeMan(scene, 0xb9c3d6); addFists(M); return M; });
+const CROWD = {   // [x, z, facing angle (rad, 0 = +z), pose variant]
+  school: [[-1.55, -2.2, 2.4, 0], [1.7, -2.8, -2.3, 1], [-1.2, -4.6, 2.7, 2], [1.35, -5.6, -2.8, 0], [.3, -7.5, 3.1, 1]],
+  bar: [[-2.3, -1.15, 2.3, 1], [-1.6, -2.3, 2.9, 2], [2.0, -2.2, -2.7, 0], [2.7, -1.0, -2.2, 1], [.5, -3.6, 3.0, 2]],
+  street: [[-3.0, -2.6, 2.2, 0], [3.4, -3.4, -2.4, 2], [-4.2, -5.0, 2.6, 1]],
+};
+function poseCrowd(set, t) {
+  const L = CROWD[set] || [];
+  crowd.forEach((M, i) => {
+    M.g.visible = i < L.length; if (!M.g.visible) return;
+    const [x, z, a, v] = L[i]; M.g.position.set(x, 0, z); M.g.rotation.y = a;
+    const br = Math.sin(t * 2.2 + i * 1.7) * .01, lean = [.12, .05, .18][v];
+    const ua = [{L: V3(.5, -.6, .55), R: V3(-.5, -.6, .55)}, {L: V3(.3, -.95, .05), R: V3(-.3, -.95, .05)}, {L: V3(.4, -.4, .7), R: V3(-.25, -.95, 0)}][v];
+    const la = [{L: V3(-.7, .1, .5), R: V3(.7, .15, .5)}, {L: V3(.1, -.99, 0), R: V3(-.1, -.99, 0)}, {L: V3(-.2, .9, .3), R: V3(-.1, -.99, .05)}][v];
+    pose(M, {bob: br, lean, headLean: .1 + .05 * Math.sin(t * .7 + i), roll: .03 * Math.sin(t * .5 + i), ua, la});
+    fists(M, .95);
+  });
+}
+const HX = .9;
+function place(M, x, face) { M.g.position.set(x, 0, 0); M.g.rotation.y = face * Math.PI / 2; }
+
+// ---------------------------------------------------------------- poses (man-local: faces +z, his left = +x)
+const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) * a * .5, Math.cos(t * 47.3) * a, Math.sin(t * 39.9) * a * .4);
+function fists(M, sq = 1) { const P = M.P; M.fists[0].position.copy(P.hL); M.fists[1].position.copy(P.hR); M.fists.forEach(f => f.scale.setScalar(.088 * sq)); }
+function poseA(M, t, o = {}) {           // the aggressor: chest out, leaning in, fists low
+  const br = Math.sin(t * 3.1) * .012, p = o.punch || 0, pp = back(clamp(p));
+  const uaR = vlerp(V3(-.42, -.88, .12), V3(-.06, .16, 1), pp), laR = vlerp(V3(-.18, -.75, .5), V3(-.03, .08, 1), pp);
+  pose(M, {root: [0, 0, .45 * p], bob: br, lean: .2 + .16 * p, headLean: .1, roll: -.05 * p,
+    ua: {L: V3(.42, -.88 + .3 * p, .12), R: uaR}, la: {L: V3(.18, -.75 + .9 * p, .5), R: laR},
+    th: {L: V3(.15, -.99, .14 + .2 * p), R: V3(-.15, -.99, -.12 - .15 * p)}});
+  fists(M, 1.05);
+}
+function poseB(M, t, o = {}) {           // "you": guard up, breathing hard, shaking
+  const rate = o.rate || 4.2, br = Math.sin(t * rate) * (o.breath || .014);
+  const sh = o.shake || 0, tr = tremor(t, sh), tr2 = tremor(t + 3.3, sh);
+  const fl = o.flinch || 0;
+  pose(M, {root: [0, 0, -.15 * fl], bob: br, lean: -.03 - .2 * fl + br * 1.2, headLean: .14 - .2 * fl,
+    ua: {L: V3(.32, -.8, .45), R: V3(-.32, -.8, .45)},
+    la: {L: V3(.08, .8, .55).add(tr), R: V3(-.08, .8, .55).add(tr2)},
+    th: {L: V3(.16, -.99, .08), R: V3(-.14, -.99, -.14)}});
+  fists(M, o.squeeze || 1);
+}
+
+// ---------------------------------------------------------------- shots
+const SHOTS = [
+  ['void', 0], ['school', c('school', -.04)], ['bar', c('bar', -.04)], ['street', c('street', -.04)],
+  ['panic', c('panic', -.08)], ['chest', c('heart', -.1)], ['hand', c('hands', -.08)], ['head', c('mouth', -.08)],
+  ['silence', c('everything', -.05)], ['slowmo', c('felt2', -.05)], ['twist', c('heres', -.12)], ['inside', c('this', -.05)], ['dial', c('inside', .05)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+// 3D sets only for the void shots; real locations are photo plates (see PLATE_OF)
+const SET_OF = {void: 'void', twist: 'void', inside: 'void', dial: 'void'};
+const PLATE_OF = {school: 'school', bar: 'bar', street: 'street', silence: 'street', panic: 'bokeh', chest: 'bokeh', hand: 'bokeh', head: 'bokeh', slowmo: 'bokeh'};
+
+// ---------------------------------------------------------------- DOM: kinetic words
+const K = id => $(id), spans = id => [...$(id).querySelectorAll('span')];
+function hideAll() { document.querySelectorAll('.kw').forEach(e => show(e, 0)); }
+// slam: big -> settle with back-ease, blur in, short shake; fades out at t1
+function slam(el, t, t0, t1, o = {}) {
+  if (t < t0 || t > t1 + .12) return;
+  const k = seg(t, t0, t0 + (o.dur || .22)), s = lerp(o.from || 1.55, 1, back(k));
+  const j = (1 - seg(t, t0, t0 + .3)) * (o.jolt ?? 14);
+  const out = seg(t, t1 - .02, t1 + .12);
+  const jx = Math.sin(t * 97) * j, jy = Math.cos(t * 83) * j;
+  el.style.transform = `translate(-50%,-50%) translate(${jx}px,${jy}px) scale(${s * (1 + .04 * out)})`;
+  el.style.filter = `blur(${(1 - clamp(k * 1.4)) * 12 + out * 8}px)`;
+  show(el, clamp(k * 3) * (1 - out));
+}
+// word-by-word: each span slams on its own time; el visible from first word to t1
+function slamWords(el, t, times, t1, o = {}) {
+  if (t < times[0] || t > t1 + .12) return;
+  const out = seg(t, t1 - .02, t1 + .12); show(el, 1 - out);
+  el.style.transform = 'translate(-50%,-50%)'; el.style.filter = out ? `blur(${out * 8}px)` : 'none';
+  spans(el.id).forEach((sp, i) => {
+    const t0 = times[Math.min(i, times.length - 1)], k = seg(t, t0, t0 + .2);
+    const j = (1 - seg(t, t0, t0 + .28)) * (o.jolt ?? 10);
+    sp.style.opacity = clamp(k * 3);
+    sp.style.transform = `translate(${Math.sin(t * 97 + i) * j}px,${Math.cos(t * 83 + i) * j}px) scale(${lerp(o.from || 1.5, 1, back(k))})`;
+  });
+}
+
+// ---------------------------------------------------------------- DOM: icons (twist)
+const ICONS = [
+  ['heart', 'heart', '<path d="M50 82 C20 62 14 44 22 32 C30 20 46 22 50 36 C54 22 70 20 78 32 C86 44 80 62 50 82Z"/>', [-400, -235]],
+  ['hands', 'hand', '<path d="M36 86 L25 60 Q22 51 30 51 Q35 51 38 58 L41 64 L41 28 Q41 21 47 21 Q53 21 53 28 L53 50 L53 22 Q53 15 59 15 Q65 15 65 22 L65 50 L65 29 Q65 23 71 23 Q77 23 77 29 L77 62 Q77 80 64 86 Z"/>', [400, -235]],
+  ['vision', 'eye', '<path d="M10 50 Q50 14 90 50 Q50 86 10 50Z"/><circle cx="50" cy="50" r="13"/>', [-525, 25]],
+  ['hearing', 'ear', '<path d="M36 70 Q36 84 49 85 Q59 85 61 74 Q63 64 71 56 Q81 44 77 30 Q71 14 52 14 Q30 14 28 38"/><path d="M42 41 Q44 28 54 28 Q65 30 63 42 Q61 50 52 53"/>', [525, 25]],
+  ['time', 'head', '<circle cx="50" cy="52" r="34"/><path d="M50 32 V52 L64 61"/>', [-400, 275]],
+  ['adrenaline', 'chest', '<path d="M56 10 L24 56 H47 L41 90 L76 42 H53 Z"/>', [400, 275]],
+];
+const IC0 = [960, 500];
+const icEls = ICONS.map(([lab, , svg, [dx, dy]]) => {
+  const d = document.createElement('div'); d.className = 'ic';
+  d.innerHTML = `<svg viewBox="0 0 100 100">${svg}</svg><div class="t mono">${lab}</div>`;
+  $('icons').appendChild(d); return d;
+});
+const NS = 'http://www.w3.org/2000/svg';
+const lineEls = ICONS.map(() => { const l = document.createElementNS(NS, 'line'); l.setAttribute('stroke', '#cfdcf5'); l.setAttribute('stroke-width', '2.5'); l.setAttribute('stroke-dasharray', '6 8'); $('lines').appendChild(l); return l; });
+const dots = ICONS.map(() => { const d = document.createElementNS(NS, 'circle'); d.setAttribute('r', '7'); d.setAttribute('fill', '#eef2fa'); $('lines').appendChild(d); return d; });
+
+// ---------------------------------------------------------------- DOM: dial (title)
+(() => {
+  const s = $('dialsvg'); let h = `<circle cx="340" cy="340" r="300" stroke="rgba(160,185,235,.22)" stroke-width="3" fill="none"/>`;
+  for (let i = 0; i < 10; i++) {
+    const a = i / 10 * Math.PI * 2 - Math.PI / 2, x1 = 340 + Math.cos(a) * 300, y1 = 340 + Math.sin(a) * 300, x2 = 340 + Math.cos(a) * 262, y2 = 340 + Math.sin(a) * 262;
+    const lx = 340 + Math.cos(a) * 232, ly = 340 + Math.sin(a) * 232;
+    h += `<line id="tk${i}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8a97b3" stroke-width="${i ? 4 : 7}" stroke-linecap="round"/>`;
+    h += `<text x="${lx}" y="${ly + 8}" text-anchor="middle" font-family="DejaVu Sans Mono" font-size="22" fill="#8a97b3">${i}</text>`;
+  }
+  h += `<circle id="tkdot" cx="340" cy="40" r="13" fill="#ff3340"/>`;
+  s.innerHTML = h;
+})();
+
+// ---------------------------------------------------------------- camera
+function look(pos, tgt, fov = 34) { cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); }
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+
+// ---------------------------------------------------------------- draw(t)
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d);
+  for (const [n, S] of Object.entries(SETS)) S.g.visible = n === SET_OF[name];
+  hideAll();
+  icEls.forEach(e => show(e, 0)); lineEls.forEach(l => l.style.opacity = 0); dots.forEach(l => l.style.opacity = 0);
+  show($('scanring'), 0); show($('dial'), 0); show($('fz'), 0);
+  [A, B, ...ghosts].forEach(M => M.g.visible = true);
+  ghosts.forEach(g => g.g.visible = false);
+  setXray(B, 0); setXray(A, 0);
+  chest.heart.scale.setScalar(0); chest.ribMat.opacity = 0; chest.redL.intensity = 0; chest.heartMat.emissiveIntensity = 0;
+  place(A, -HX, 1); place(B, HX, -1);
+  poseCrowd(['school', 'bar', 'street'].includes(name) ? name : '', t);
+  key.intensity = 1.4; rim.intensity = 3.0; hemi.intensity = .55; scene.fog.near = 9; scene.fog.far = 24;
+  key.color.set(0xffffff); key.position.set(-4, 8, 6); key.target.position.set(0, 0, 0); rim.color.set(0x7fb2ff);
+  if (PLATE_OF[name]) plate(PLATE_OF[name]); else scene.background = new THREE.Color(0x0b1222);
+  let desat = .25, vign = .42, red = 0, flash = 0, black = 0, ca = 0;
+  let pos, tgt, fov = 34, shk = 0;
+  const cutHit = Math.exp(-lt * 9);          // decays after every cut
+
+  // default standoff poses
+  poseA(A, t); poseB(B, t, {shake: .02});
+
+  if (name === 'void') {                      // 0:00 "Do you remember your first fight?"
+    key.intensity = .9; hemi.intensity = .3;
+    const c0 = V3(0, 1.25, 0);
+    pos = orbitPos(c0, lerp(7.2, 5.4, ease(k)), lerp(.42, .22, k), lerp(.12, .05, k)); tgt = c0;
+    slamWords(K('k_first'), t, [wordAt('your'), wordAt('first'), wordAt('fight')], s1 - .05, {from: 1.25, jolt: 4});
+    black = 1 - seg(t, 0, .35);
+  } else if (name === 'school') {             // corridor, low angle, quick dolly
+    hemi.intensity = .6; key.intensity = 1.1; key.color.set(0xcfe0ff); key.position.set(.5, 9, 2); rim.intensity = 2.4;
+    scene.fog.near = 14; scene.fog.far = 40;
+    pos = V3(0, 1.5, lerp(6.6, 6.0, eo(k))); tgt = V3(0, 1.45, 0); fov = 36;
+    plate('school', lerp(1.0, 1.06, eo(k)), 0, 0);
+    slam(K('k_school'), t, c('school'), s1 - .02); shk = .05 * cutHit; flash = .35 * cutHit;
+  } else if (name === 'bar') {                 // over A's shoulder
+    key.intensity = 1.0; key.color.set(0xffc489); key.position.set(-3, 7, 1); hemi.intensity = .35; rim.intensity = 2.8;
+    scene.fog.near = 14; scene.fog.far = 40;
+    pos = V3(lerp(-.6, -.4, eo(k)), 1.35, lerp(6.4, 5.9, eo(k))); tgt = V3(.45, 1.3, 0); fov = 36;
+    plate('bar', lerp(1.0, 1.05, eo(k)), .01 * k, 0);
+    slam(K('k_bar'), t, c('bar'), s1 - .02); shk = .05 * cutHit; flash = .35 * cutHit;
+  } else if (name === 'street') {             // wide under the street lamp -> drift in to B over A's shoulder
+    key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+    scene.fog.near = 20; scene.fog.far = 50;
+    const kk = ease(seg(lt, .6, d));
+    pos = vlerp(V3(0, 2.2, 14), V3(-.3, 1.75, 7.5), kk); tgt = vlerp(V3(1.2, 1.9, 0), V3(.75, 1.5, 0), kk); fov = 36;
+    plate('street', lerp(1.0, 1.45, kk), lerp(0, -.06, kk), lerp(0, -.1, kk));
+    slam(K('k_street'), t, c('street'), c('remember2', .35)); shk = .05 * cutHit; flash = .35 * cutHit;
+  } else if (name === 'panic') {              // medium-close on B, hard handheld
+    key.intensity = .45; hemi.intensity = .3;
+    poseB(B, t, {shake: .05, rate: 9, breath: .02});
+    pos = V3(lerp(-1.0, -.75, k), 1.75, lerp(2.7, 2.4, k)); tgt = V3(HX, 1.55, 0);
+    shk = .035 + .06 * cutHit; red = .4 * Math.exp(-(t - c('panic')) * 5) * (t > c('panic') ? 1 : 0); desat = .4;
+    slam(K('k_panic'), t, c('panic'), s1 - .02, {from: 1.8, jolt: 22});
+  } else if (name === 'chest') {              // 1.5 s x-ray accent: heart slamming
+    key.intensity = .5; hemi.intensity = .3;
+    poseB(B, t, {shake: .03, rate: 9, breath: .022});
+    const P = B.P, ch = W2(B, P.hip.clone().lerp(P.sh, .66));
+    const xr = seg(lt, .05, .25) * (1 - seg(lt, d - .2, d));
+    setXray(B, .85 * xr);
+    chest.inside.position.copy(P.hip.clone().lerp(P.sh, .62)); chest.inside.scale.setScalar(.85);
+    const beat = pulse((t - c('heart')) * 2.6);   // ~155 bpm
+    chest.heart.scale.setScalar(.85 * xr * (1 + .32 * beat)); chest.heartMat.emissiveIntensity = xr * (.6 + 2.8 * beat);
+    chest.ribMat.opacity = xr * .55; chest.redL.intensity = xr * (.6 + 5 * beat);
+    pos = ch.clone().add(V3(lerp(-1.1, -.85, k), lerp(.15, .08, k), lerp(1.55, 1.2, k))); tgt = ch; A.g.visible = false;
+    shk = .012 + .02 * beat; red = .35 * beat * xr; desat = .35;
+    slamWords(K('k_heart'), t, [c('heart'), c('slamming')], s1 - .02, {jolt: 16});
+  } else if (name === 'hand') {               // close-up: fist clenching, shaking
+    key.intensity = .55;
+    const sq = 1 + .25 * ease(seg(lt, 0, .5));
+    poseB(B, t, {shake: .11, rate: 8, breath: .02, squeeze: sq});
+    const hnd = W2(B, B.P.hL);
+    A.g.visible = false; pos = hnd.clone().add(V3(lerp(-.55, -.42, k), lerp(.2, .12, k), lerp(1.0, .78, k))); tgt = hnd.clone().add(V3(0, -.03, 0));
+    shk = .01; red = .4 * Math.exp(-lt * 4); desat = .35;
+    slamWords(K('k_hands'), t, [c('hands'), c('shaking')], s1 - .02, {jolt: 12});
+    // the text shakes too
+    const tr = tremor(t, 4); K('k_hands').style.transform = `translate(-50%,-50%) translate(${tr.x}px,${tr.y}px)`;
+  } else if (name === 'head') {               // close profile, fast shallow breathing
+    key.intensity = .55;
+    poseB(B, t, {shake: .03, rate: 11, breath: .02});
+    const hd = W2(B, B.P.head);
+    A.g.visible = false; pos = hd.clone().add(V3(lerp(-1.05, -.9, k), lerp(-.1, -.04, k), lerp(.5, .7, k))); tgt = hd.clone().add(V3(.02, -.06, 0));
+    shk = .01; red = .35 * Math.exp(-lt * 4); desat = .4;
+    slamWords(K('k_dry'), t, [c('mouth'), c('dry')], s1 - .02, {jolt: 12});
+  } else if (name === 'silence') {            // world drains; only the heart is left
+    key.intensity = .4; hemi.intensity = .25;
+    poseA(A, c('everything') + (t - c('everything')) * .15); poseB(B, c('everything') + (t - c('everything')) * .15, {shake: .01});
+    key.intensity = 1.1; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); scene.fog.near = 20; scene.fog.far = 50;
+    pos = vlerp(V3(0, 2.0, 11), V3(0, 1.9, 9.5), ease(k)); tgt = V3(1.0, 1.75, 0); fov = 36;
+    plate('street', lerp(1.2, 1.3, ease(k)), -.04, -.07);
+    desat = .5 + .45 * seg(t, c('quiet', -.2), c('quiet', .3)); vign = .42 + .35 * seg(t, c('quiet', -.2), c('quiet', .4));
+    if (t > c('quiet', -.05)) {
+      const el = K('k_silence'), kk = seg(t, c('quiet', -.05), c('quiet', .6)), out = seg(t, s1 - .15, s1);
+      el.style.transform = `translate(-50%,-50%) scale(${lerp(.94, 1, eo(kk))})`; el.style.filter = `blur(${(1 - kk) * 10}px)`;
+      el.style.letterSpacing = lerp(.55, .32, eo(kk)) + 'em'; show(el, kk * (1 - out));
+    }
+  } else if (name === 'slowmo') {             // the punch, in extreme slow motion, with ghost trail
+    key.intensity = .5; hemi.intensity = .3;
+    const pt = p => .9 * ease(clamp(p));
+    const pk = seg(lt, .1, d + .4);
+    poseA(A, t, {punch: pt(pk)}); poseB(B, t, {flinch: .6 * ease(seg(pk, .45, 1)), shake: .01});
+    ghosts.forEach((g, i) => { g.g.visible = pk > .05; place(g, -HX, 1); poseA(g, t, {punch: pt(pk - .08 * (i + 1))}); });
+    const c0 = V3(0, 1.45, 0);
+    pos = orbitPos(c0, lerp(3.4, 2.9, k), lerp(.95, .55, ease(k)), lerp(.0, .08, k)); tgt = c0; fov = 30;
+    desat = .75; vign = .7; ca = 2.5;
+    slamWords(K('k_slow'), t, [c('slow'), c('slow', .32)], s1 - .02, {from: 1.15, jolt: 0});
+    spans('k_slow').forEach((sp, i) => { const kk = seg(t, c('slow') + i * .32, c('slow') + i * .32 + .9); sp.style.transform = `scale(${lerp(1.18, 1, eo(kk))})`; sp.style.filter = `blur(${(1 - kk) * 6}px)`; });
+  } else if (name === 'twist' || name === 'inside') {   // freeze frame: six decisions around "you"
+    A.g.visible = false; key.intensity = .8; hemi.intensity = .35;
+    poseB(B, c('heres'), {flinch: .35, shake: 0, breath: 0});
+    const c0 = V3(HX, 1.12, 0);
+    const T0 = c('heres', -.12), T1 = c('this'), kk = clamp((t - T0) / (T1 - T0));
+    pos = orbitPos(c0, lerp(5.9, 5.0, ease(kk)), -Math.PI / 2 + lerp(.5, .18, kk), lerp(.07, .04, kk)); tgt = c0;
+    desat = .92; vign = .5;
+    flash = .45 * Math.exp(-(t - T0) * 7) * (t < T0 + .6 ? 1 : 0);
+    show($('fz'), seg(t, T0, T0 + .2) * (1 - seg(t, c('didnt'), c('didnt', .3))));
+    if (name === 'inside') {                  // "This is what happens inside you" — push into the chest, 1 s glow
+      const P = B.P, ch = W2(B, P.hip.clone().lerp(P.sh, .66)), ik = ease(clamp(lt / d));
+      pos = vlerp(pos, ch.clone().add(V3(-1.35, .05, .25)), ik); tgt = vlerp(c0, ch, ik);
+      const xr = seg(lt, .15, .45); setXray(B, .8 * xr);
+      chest.inside.position.copy(P.hip.clone().lerp(P.sh, .62)); chest.inside.scale.setScalar(.85);
+      const beat = pulse(lt * 1.6);
+      chest.heart.scale.setScalar(.85 * xr * (1 + .25 * beat)); chest.heartMat.emissiveIntensity = xr * (.5 + 2.4 * beat);
+      chest.ribMat.opacity = xr * .5; chest.redL.intensity = xr * (.5 + 4 * beat);
+      black = .85 * ei(seg(lt, d - .35, d));
+    }
+    // icons
+    cam.position.copy(pos); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const fly = name === 'inside' ? ei(seg(lt, 0, .45)) : 0;
+    const P = B.P, anchor = {heart: P.hip.clone().lerp(P.sh, .75), hand: P.hL, eye: P.head, ear: P.head, head: P.head, chest: P.hip.clone().lerp(P.sh, .4)};
+    ICONS.forEach(([lab, an, , [dx, dy]], i) => {
+      const tp = c('heres') + i * .14, kp = seg(t, tp, tp + .25);
+      const x = IC0[0] + dx * (1 - fly), y = IC0[1] + dy * (1 - fly);
+      const e = icEls[i]; e.style.left = x + 'px'; e.style.top = y + 'px';
+      e.style.transform = `scale(${lerp(.3, 1, back(kp)) * (1 - fly)})`; show(e, clamp(kp * 3) * (1 - fly));
+      e.classList.remove('hot');
+      // body lines: "your body made every one of those decisions"
+      const lk = seg(t, c('body') + i * .12, c('body') + i * .12 + .5) * (1 - seg(t, c('and2', -.2), c('and2', .2))) * (1 - fly);
+      if (lk > 0) {
+        const [bx, by] = project(cam, W2(B, anchor[an]));
+        const ex = lerp(x, bx, lk), ey = lerp(y, by, lk);
+        const L = lineEls[i]; L.setAttribute('x1', x); L.setAttribute('y1', y); L.setAttribute('x2', ex); L.setAttribute('y2', ey); L.style.opacity = .7;
+        dots[i].setAttribute('cx', bx); dots[i].setAttribute('cy', by); dots[i].style.opacity = lk > .95 ? 1 : 0;
+      }
+    });
+    const nerve = seg(t, c('body', .2), c('decisions')) * (1 - seg(t, c('think_end'), c('and2', .3)));
+    if (name === 'twist') setXray(B, .3 * nerve, .8 * nerve);
+    // the lie: a red scanner hops between the six and never settles
+    if (t > c('lie', -.05) && name === 'twist') {
+      const per = t < c('stay') ? .13 : .26, step = Math.floor((t - c('lie')) / per);
+      const r = rng(77 + step)(), idx = (step * 5 + Math.floor(r * 6)) % 6;
+      const e = icEls[idx]; e.classList.add('hot');
+      const sr = $('scanring'); sr.style.left = e.style.left; sr.style.top = e.style.top; show(sr, 1 - seg(t, s1 - .15, s1));
+      red = .12;
+    }
+    slamWords(K('k_choose'), t, [c('didnt', -.25), c('didnt'), c('choose')], c('and2', -.05), {jolt: 8});
+    slamWords(K('k_lie'), t, [c('and2'), c('and2', .12), c('them'), c('lie', -.18), c('lie', -.1), c('lie')], s1 - .02, {jolt: 8});
+    if (name === 'inside') hideAll();
+  } else if (name === 'dial') {               // full-screen 0.00 clock, ticking
+    A.g.visible = false; B.g.visible = false;
+    pos = V3(0, 1.4, 6); tgt = V3(0, 1.2, 0);
+    black = .9;
+    const dk = seg(lt, 0, .35), dl = $('dial');
+    dl.style.transform = `scale(${lerp(1.25, 1, eo(dk)) * (1 + .02 * k)})`; dl.style.filter = `blur(${(1 - dk) * 12}px)`; show(dl, dk);
+    flash = .3 * Math.exp(-lt * 8);
+    const tick = Math.floor((t - c('inside')) * 2);
+    const ph = (t - c('inside')) * 2 - tick;
+    $('tkdot').setAttribute('r', 13 + 6 * Math.exp(-ph * 8)); $('tkdot').style.opacity = tick % 2 ? .45 : 1;
+    $('tk0').setAttribute('stroke', tick % 2 ? '#ff3340' : '#eef2fa');
+    $('dnum').style.opacity = 1;
+    slamWords(K('k_title'), t, [c('first2', -.22), c('first2'), c('ten'), c('seconds')], DUR + 1, {jolt: 10});
+    if (t > c('second', -.05)) { const e = K('k_sbs'), kk = seg(t, c('second', -.05), c('second', .4)); e.style.transform = 'translate(-50%,-50%)'; show(e, kk); }
+    black = .9 + .1 * seg(t, DUR - .35, DUR);
+    if (t > DUR - .35) { document.querySelectorAll('.kw,#dial').forEach(e => e.style.opacity = 1 - seg(t, DUR - .35, DUR)); }
+  }
+
+  // camera
+  const sh = shake(t, shk); look(pos.clone().add(sh), tgt.clone().add(sh.multiplyScalar(.5)), fov);
+  // HUD
+  const sec = ['// 00 — your first fight', '// 01 — the feeling', '// 02 — the twist', '// 03 — second by second'];
+  $('tl').textContent = sec[si < 4 ? 0 : si < 10 ? 1 : si < 12 ? 2 : 3];
+  timecode($('tc'), t);
+  // grade
+  grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.ca.value = ca;
+  grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+  $('rflash').style.opacity = clamp(red * 1.4);
+  $('blackout').style.opacity = black;
+  composer.render();
+}
+window.draw = draw; await document.fonts.ready; draw(0); window.ready = true;
+</script></body></html>

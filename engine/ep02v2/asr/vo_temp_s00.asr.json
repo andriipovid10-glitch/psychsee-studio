@@ -1,0 +1,450 @@
+{
+"source": "Speko audio.transcribe (gemini-3.5-transcribe) on the raw take, times mapped through pause-tightening + atempo 1.05",
+"words": [
+{
+"text": "Do",
+"start_ms": 95,
+"end_ms": 190
+},
+{
+"text": "you",
+"start_ms": 190,
+"end_ms": 381
+},
+{
+"text": "remember",
+"start_ms": 381,
+"end_ms": 952
+},
+{
+"text": "your",
+"start_ms": 952,
+"end_ms": 1238
+},
+{
+"text": "first",
+"start_ms": 1238,
+"end_ms": 1714
+},
+{
+"text": "fight?",
+"start_ms": 1714,
+"end_ms": 2095
+},
+{
+"text": "School,",
+"start_ms": 2285,
+"end_ms": 2892
+},
+{
+"text": "a",
+"start_ms": 2969,
+"end_ms": 3064
+},
+{
+"text": "bar,",
+"start_ms": 3064,
+"end_ms": 3540
+},
+{
+"text": "the",
+"start_ms": 3540,
+"end_ms": 3636
+},
+{
+"text": "street?",
+"start_ms": 3636,
+"end_ms": 4017
+},
+{
+"text": "Remember",
+"start_ms": 4474,
+"end_ms": 4854
+},
+{
+"text": "what",
+"start_ms": 4854,
+"end_ms": 4950
+},
+{
+"text": "it",
+"start_ms": 4950,
+"end_ms": 5045
+},
+{
+"text": "felt",
+"start_ms": 5045,
+"end_ms": 5426
+},
+{
+"text": "like?",
+"start_ms": 5426,
+"end_ms": 5616
+},
+{
+"text": "Panic.",
+"start_ms": 6044,
+"end_ms": 6425
+},
+{
+"text": "Your",
+"start_ms": 6733,
+"end_ms": 6828
+},
+{
+"text": "heart",
+"start_ms": 6828,
+"end_ms": 7304
+},
+{
+"text": "slamming.",
+"start_ms": 7304,
+"end_ms": 8066
+},
+{
+"text": "Your",
+"start_ms": 8279,
+"end_ms": 8374
+},
+{
+"text": "hands",
+"start_ms": 8374,
+"end_ms": 8946
+},
+{
+"text": "shaking.",
+"start_ms": 8946,
+"end_ms": 9517
+},
+{
+"text": "Your",
+"start_ms": 9837,
+"end_ms": 9932
+},
+{
+"text": "mouth",
+"start_ms": 9932,
+"end_ms": 10218
+},
+{
+"text": "going",
+"start_ms": 10218,
+"end_ms": 10599
+},
+{
+"text": "dry.",
+"start_ms": 10599,
+"end_ms": 11171
+},
+{
+"text": "Everything",
+"start_ms": 11361,
+"end_ms": 12313
+},
+{
+"text": "went",
+"start_ms": 12313,
+"end_ms": 12599
+},
+{
+"text": "quiet.",
+"start_ms": 12599,
+"end_ms": 13075
+},
+{
+"text": "And",
+"start_ms": 13766,
+"end_ms": 13766
+},
+{
+"text": "it",
+"start_ms": 13766,
+"end_ms": 13861
+},
+{
+"text": "felt",
+"start_ms": 13861,
+"end_ms": 14337
+},
+{
+"text": "like",
+"start_ms": 14337,
+"end_ms": 14527
+},
+{
+"text": "slow",
+"start_ms": 14527,
+"end_ms": 14813
+},
+{
+"text": "motion.",
+"start_ms": 14813,
+"end_ms": 15194
+},
+{
+"text": "Here's",
+"start_ms": 15433,
+"end_ms": 15529
+},
+{
+"text": "the",
+"start_ms": 15529,
+"end_ms": 15624
+},
+{
+"text": "crazy",
+"start_ms": 15624,
+"end_ms": 16005
+},
+{
+"text": "part.",
+"start_ms": 16005,
+"end_ms": 16291
+},
+{
+"text": "You",
+"start_ms": 16558,
+"end_ms": 16748
+},
+{
+"text": "didn't",
+"start_ms": 16748,
+"end_ms": 17129
+},
+{
+"text": "choose",
+"start_ms": 17129,
+"end_ms": 17605
+},
+{
+"text": "any",
+"start_ms": 17700,
+"end_ms": 17891
+},
+{
+"text": "of",
+"start_ms": 17891,
+"end_ms": 17986
+},
+{
+"text": "that.",
+"start_ms": 17986,
+"end_ms": 18367
+},
+{
+"text": "Your",
+"start_ms": 18837,
+"end_ms": 18932
+},
+{
+"text": "body",
+"start_ms": 18932,
+"end_ms": 19408
+},
+{
+"text": "made",
+"start_ms": 19408,
+"end_ms": 19694
+},
+{
+"text": "every",
+"start_ms": 19694,
+"end_ms": 20075
+},
+{
+"text": "one",
+"start_ms": 20075,
+"end_ms": 20265
+},
+{
+"text": "of",
+"start_ms": 20265,
+"end_ms": 20361
+},
+{
+"text": "those",
+"start_ms": 20361,
+"end_ms": 20551
+},
+{
+"text": "decisions",
+"start_ms": 20551,
+"end_ms": 21122
+},
+{
+"text": "before",
+"start_ms": 21122,
+"end_ms": 21503
+},
+{
+"text": "you",
+"start_ms": 21503,
+"end_ms": 21599
+},
+{
+"text": "could",
+"start_ms": 21599,
+"end_ms": 21789
+},
+{
+"text": "even",
+"start_ms": 21789,
+"end_ms": 22075
+},
+{
+"text": "think.",
+"start_ms": 22075,
+"end_ms": 22551
+},
+{
+"text": "And",
+"start_ms": 22813,
+"end_ms": 23003
+},
+{
+"text": "one",
+"start_ms": 23003,
+"end_ms": 23098
+},
+{
+"text": "of",
+"start_ms": 23098,
+"end_ms": 23194
+},
+{
+"text": "them",
+"start_ms": 23194,
+"end_ms": 23479
+},
+{
+"text": "is",
+"start_ms": 23831,
+"end_ms": 23926
+},
+{
+"text": "a",
+"start_ms": 23926,
+"end_ms": 24021
+},
+{
+"text": "lie.",
+"start_ms": 24021,
+"end_ms": 24402
+},
+{
+"text": "Stay.",
+"start_ms": 24892,
+"end_ms": 25178
+},
+{
+"text": "I'll",
+"start_ms": 25273,
+"end_ms": 25463
+},
+{
+"text": "show",
+"start_ms": 25463,
+"end_ms": 25654
+},
+{
+"text": "you",
+"start_ms": 25654,
+"end_ms": 25749
+},
+{
+"text": "which",
+"start_ms": 25749,
+"end_ms": 25940
+},
+{
+"text": "one.",
+"start_ms": 25940,
+"end_ms": 26130
+},
+{
+"text": "This",
+"start_ms": 26600,
+"end_ms": 26886
+},
+{
+"text": "is",
+"start_ms": 26886,
+"end_ms": 26981
+},
+{
+"text": "what",
+"start_ms": 26981,
+"end_ms": 27171
+},
+{
+"text": "happens",
+"start_ms": 27171,
+"end_ms": 27552
+},
+{
+"text": "inside",
+"start_ms": 27552,
+"end_ms": 28219
+},
+{
+"text": "you",
+"start_ms": 28219,
+"end_ms": 28497
+},
+{
+"text": "in",
+"start_ms": 28574,
+"end_ms": 28764
+},
+{
+"text": "the",
+"start_ms": 28764,
+"end_ms": 28859
+},
+{
+"text": "first",
+"start_ms": 28859,
+"end_ms": 29240
+},
+{
+"text": "ten",
+"start_ms": 29240,
+"end_ms": 29526
+},
+{
+"text": "seconds",
+"start_ms": 29526,
+"end_ms": 30002
+},
+{
+"text": "of",
+"start_ms": 30002,
+"end_ms": 30097
+},
+{
+"text": "a",
+"start_ms": 30097,
+"end_ms": 30193
+},
+{
+"text": "fight.",
+"start_ms": 30193,
+"end_ms": 30574
+},
+{
+"text": "Second",
+"start_ms": 30840,
+"end_ms": 31317
+},
+{
+"text": "by",
+"start_ms": 31317,
+"end_ms": 31507
+},
+{
+"text": "second.",
+"start_ms": 31507,
+"end_ms": 31888
+}
+]
+}
