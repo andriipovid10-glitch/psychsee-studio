@@ -1,0 +1,171 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#digits{position:absolute;left:1035px;top:440px;transform:translate(-50%,-50%) rotate(-62deg) skewX(8deg);font-family:'DejaVu Sans Mono',monospace;font-weight:700;font-size:64px;color:#ff4a4a;
+  text-shadow:0 0 18px rgba(255,60,60,.9);letter-spacing:.06em;visibility:hidden;mix-blend-mode:screen}
+.stat{position:absolute;text-align:center;visibility:hidden;transform:translate(-50%,-50%)}
+.stat b{display:block;font-weight:900;font-size:200px;letter-spacing:-.05em;line-height:.9}
+.stat span{font-family:'DejaVu Sans Mono',monospace;font-size:26px;letter-spacing:.2em;color:#8a97b3;text-transform:uppercase}
+#stamp{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-8deg);font-weight:900;font-size:150px;letter-spacing:-.02em;color:#ff3340;border:12px solid #ff3340;border-radius:18px;padding:0 40px;line-height:1.15;visibility:hidden}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_tower" class="plate"><img src="img/flow_tower.jpg"><i class="shade"></i></div>
+<div id="pl_wrist" class="plate"><img src="img/flow_wrist.jpg"><i class="shade"></i></div>
+<div id="pl_film" class="plate"><img src="img/flow_film.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="digits">0000</div>
+<div id="s31" class="stat" style="left:430px;top:400px"><b>31 m</b><span>free fall</span></div>
+<div id="s10" class="stat" style="left:1490px;top:400px"><b>≈10</b><span>floors</span></div>
+<div id="s36" class="stat" style="left:960px;top:430px"><b class="r" style="color:#ff3340">+36%</b><span>“my fall felt longer”</span></div>
+<div id="s0" class="stat" style="left:960px;top:430px"><b>0</b><span>extra numbers read</span></div>
+<div id="stamp">MYTH</div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 07 — the lie</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>PLoS ONE · 2007 · experiment</span><span>PsychSee notes</span></div>
+  <h1 style="font-size:64px">Does time really slow down during a frightening event?</h1>
+  <div class="pron">C. Stetson, M. Fiesta, D. Eagleman</div>
+  <div class="rule"></div>
+  <p>Volunteers fell <span class="hl"><i></i>31 metres backwards</span> into a net, wearing a wrist display that flashed numbers slightly too fast to read.</p>
+  <p>They judged their own fall <span class="hl"><i></i>about 36% longer</span> — but could not read the numbers.</p>
+  <p class="src">Source: Stetson, Fiesta &amp; Eagleman (2007), PLoS ONE 2(12): e1295</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:430px;font-size:230px"><span>SECOND</span> <span class="r">8</span></div>
+<div id="k_lie" class="kw" style="left:960px;top:640px;font-size:150px"><span>THE</span> <span class="r">LIE.</span></div>
+<div id="k_slowed" class="kw" style="left:960px;top:880px;font-size:130px"><span>TIME</span> <span>SLOWED</span> <span>DOWN?</span></div>
+<div id="k_62" class="kw" style="left:960px;top:880px;font-size:120px"><span class="r">62%</span> <span>SAID</span> <span>YES.</span></div>
+<div id="k_tested" class="kw sm" style="left:960px;top:80px">// so a neuroscientist tested it</div>
+<div id="k_fast" class="kw" style="left:960px;top:900px;font-size:120px"><span>TOO</span> <span>FAST</span> <span>TO</span> <span>READ.</span></div>
+<div id="k_if" class="kw" style="left:960px;top:900px;font-size:90px"><span>IF</span> <span>TIME</span> <span>SLOWED</span> <span>→</span> <span class="b">READABLE.</span></div>
+<div id="k_didnt" class="kw" style="left:960px;top:820px;font-size:130px"><span>TIME</span> <span class="r">DIDN'T</span> <span>SLOW</span> <span>DOWN.</span></div>
+<div id="k_rec" class="kw" style="left:960px;top:900px;font-size:120px"><span>RECORDED</span> <span>IN</span> <span class="r">DETAIL.</span></div>
+<div id="k_after" class="kw" style="left:960px;top:880px;font-size:120px"><span>NOT</span> <span>DURING.</span> <span class="r">AFTER.</span></div>
+<div id="k_mem" class="kw sm" style="left:960px;top:975px">// in your memory</div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, pulse, rng} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const TM = await loadTiming('s07'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene);
+const ghosts = [0, 1, 2].map(() => man(scene));
+ghosts.forEach((g, i) => { g.mat.opacity = [.22, .13, .07][i]; g.mat.depthWrite = false; g.g.children.forEach(m => m.castShadow = false); });
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 7.9, t1: 8.95};
+
+const SHOTS = [['title', 0], ['slowmo', c('almost', -.12)], ['paper', c('neuro', -.15)], ['tower', c('dropped', -.12)], ['wrist', c('wrist', -.12)],
+  ['result', c('afterwards', -.12)], ['reveal', c('but', -.1)], ['memory', c('brain', -.12)], ['after', c('slowmo', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_tower', 'pl_wrist', 'pl_film', 'paper', 'digits', 's31', 's10', 's36', 's0', 'stamp'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt, ca = 0;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  ghosts.forEach(g => g.g.visible = false);
+  poseCrowd(crowd, CROWD, t * .15);
+  // the punch, stretched over the whole "slow motion" part
+  const pk = seg(t, .3, c('neuro')), pt = p => .9 * ease(clamp(p));
+  poseA(A, t * .15, {punch: pt(pk)}); poseB(B, t * .15, {hit: .5 * ease(seg(pk, .55, 1)), shake: 0});
+
+  if (name === 'title' || name === 'slowmo') {
+    ghosts.forEach((g, i) => { g.g.visible = pk > .05; place(g, -HX, 0, Math.PI / 2); poseA(g, t * .15, {punch: pt(pk - .06 * (i + 1))}); });
+    const c0 = V3(0, 1.45, 0);
+    pos = orbitPos(c0, lerp(5.2, 3.8, ease(clamp(t / c('neuro')))), lerp(.95, .35, ease(clamp(t / c('neuro')))), .06); tgt = c0.clone().add(V3(0, -.15, 0)); fov = 34;
+    desat = .75; vign = .65; ca = 2.5;
+    if (name === 'title') {
+      gb = .35;
+      slamWords($('k_sec'), t, [c('second', -.05), c('eight', -.05)], s1 - .02, {from: 1.35, jolt: 10});
+      slamWords($('k_lie'), t, [c('lie', -.25), c('lie', -.05)], s1 - .02, {from: 1.6, jolt: 16});
+      black = 1 - seg(t, 0, .2); red = .2 * seg(t, c('lie'), c('lie', .2));
+    } else {
+      slamWords($('k_slowed'), t, [c('time1', -.05), c('slowed1', -.05), c('slowed1', .25)], c('survey', -.1), {from: 1.15, jolt: 0});
+      slamWords($('k_62'), t, [c('n62', -.05), c('slow1', -.4), c('slow1', -.2)], s1 - .02, {jolt: 10});
+    }
+  } else if (name === 'paper') {                 // the experiment, on paper
+    render3d = false; show($('pl_tower'), 1);
+    plate($('pl_tower'), 1, {zoom0: 1.1, zoom1: 1.1, bright: .3, blur: 8});
+    if (t > c('neuro', -.1)) { const e = $('k_tested'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('neuro', -.1), c('neuro', .3)) * (1 - seg(t, s1 - .2, s1))); }
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 120, tilt: 7, hl: [[c('eagleman', 0), c('tested', .3)], [c('tested', .4), c('tested', .9)]]});
+  } else if (name === 'tower') {                 // 31 m, about ten floors, into a net
+    render3d = false; show($('pl_tower'), 1);
+    plate($('pl_tower'), ease(k), {zoom0: 1.35, zoom1: 1.05, x0: 0, y0: 330, x1: 0, y1: 0, bright: .95});
+    flash = .3 * cut;
+    const a = seg(t, c('meters', -.2), c('meters', .1)), b = seg(t, c('floors', -.2), c('floors', .1));
+    $('s31').style.transform = `translate(-50%,-50%) scale(${lerp(1.3, 1, back(a))})`; show($('s31'), a * (1 - seg(t, s1 - .15, s1)));
+    $('s10').style.transform = `translate(-50%,-50%) scale(${lerp(1.3, 1, back(b))})`; show($('s10'), b * (1 - seg(t, s1 - .15, s1)));
+  } else if (name === 'wrist') {                 // the wrist display flashing numbers too fast to read
+    render3d = false; show($('pl_wrist'), 1);
+    plate($('pl_wrist'), ease(k), {zoom0: 1.05, zoom1: 1.25, x1: -60, y1: 30, bright: .9});
+    const z = lerp(1.05, 1.25, ease(k)), dg = $('digits');
+    dg.style.left = (960 + (1035 - 960) * z - 60 * ease(k)) + 'px'; dg.style.top = (540 + (440 - 540) * z + 30 * ease(k)) + 'px';
+    const fr = Math.floor(t * 30), r = rng(fr * 7 + 3);
+    dg.textContent = String(Math.floor(r() * 10)) + String(Math.floor(r() * 10)) + String(Math.floor(r() * 10)) + String(Math.floor(r() * 10));
+    dg.style.filter = `blur(${1.5 + (fr % 2) * 1.5}px)`; dg.style.opacity = .55 + .45 * (fr % 2);
+    show(dg, 1); flash = .3 * cut;
+    slamWords($('k_fast'), t, [c('numbers1', -.05), c('fast', -.15), c('fast', .05), c('fast', .2)], c('if', -.15), {jolt: 8});
+    slamWords($('k_if'), t, [c('if', -.05), c('if', .2), c('really', .1), c('able', -.4), c('read2', -.05)], s1 - .02, {jolt: 6});
+  } else if (name === 'result') {                // +36% felt longer
+    render3d = false; show($('pl_tower'), 1);
+    plate($('pl_tower'), 1, {zoom0: 1.05, zoom1: 1.05, bright: .22, blur: 6});
+    const a = seg(t, c('n36', -.1), c('n36', .2));
+    $('s36').style.transform = `translate(-50%,-50%) scale(${lerp(1.5, 1, back(a))})`; show($('s36'), a);
+    flash = .25 * cut;
+  } else if (name === 'reveal') {                // ...but they couldn't read the numbers. MYTH.
+    render3d = false; show($('pl_wrist'), 1);
+    plate($('pl_wrist'), 1, {zoom0: 1.25, zoom1: 1.25, x1: -60, y1: 30, bright: .2, blur: 6, sat: .3});
+    const a = seg(t, c('numbers2', -.1), c('numbers2', .2));
+    $('s0').style.transform = `translate(-50%,-50%) scale(${lerp(1.5, 1, back(a))})`; show($('s0'), a * (1 - seg(t, c('time3', -.2), c('time3'))));
+    const sk = seg(t, c('slowdown', .1), c('slowdown', .25));
+    $('stamp').style.transform = `translate(-50%,-50%) rotate(-8deg) scale(${lerp(2.2, 1, ei(sk))})`; show($('stamp'), sk);
+    flash = .6 * Math.exp(-Math.max(0, t - c('slowdown', .25)) * 7) * (t > c('slowdown', .25) ? 1 : 0); red = .25 * sk;
+    slamWords($('k_didnt'), t, [c('time3', -.05), c('didnt', -.05), c('slowdown', -.05), c('slowdown', .15)], s1 - .02, {jolt: 14});
+  } else if (name === 'memory') {                // your brain records the moment in extreme detail
+    render3d = false; show($('pl_film'), 1);
+    plate($('pl_film'), ease(k), {zoom0: 1.0, zoom1: 1.25, x1: 40, y1: 20, glowX: 960, glowY: 540, glow: .25 + .2 * seg(t, c('detail', -.2), c('detail', .3)), bright: 1.0});
+    flash = .3 * cut;
+    slamWords($('k_rec'), t, [c('records', -.05), c('records', .4), c('detail', -.05)], s1 - .02, {jolt: 10});
+  } else if (name === 'after') {                 // slow motion happens after — in memory
+    render3d = false; show($('pl_film'), 1);
+    plate($('pl_film'), ease(k), {zoom0: 1.25, zoom1: 1.6, x0: 40, y0: 20, x1: 160, y1: 60, glowX: 960, glowY: 540, glow: .4, bright: lerp(1, .6, k), blur: lerp(0, 3, k)});
+    slamWords($('k_after'), t, [c('during', -.3), c('during', -.05), c('after', -.05)], DUR - .05, {jolt: 12});
+    if (t > c('memory', -.2)) { const e = $('k_mem'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('memory', -.2), c('memory', .2))); }
+    black = seg(t, DUR - .3, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb; grade.ca.value = ca;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = '#fff'; $('blackout').style.opacity = Math.max(black, flash); }
+  else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>

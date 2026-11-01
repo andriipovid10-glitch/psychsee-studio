@@ -1,0 +1,790 @@
+{
+"source": "Speko transcription mapped through pause-tightening + atempo 1.05",
+"words": [
+{
+"text": "So",
+"start_ms": 114,
+"end_ms": 305
+},
+{
+"text": "here's",
+"start_ms": 305,
+"end_ms": 686
+},
+{
+"text": "how",
+"start_ms": 686,
+"end_ms": 876
+},
+{
+"text": "to",
+"start_ms": 876,
+"end_ms": 876
+},
+{
+"text": "stay",
+"start_ms": 876,
+"end_ms": 1162
+},
+{
+"text": "in",
+"start_ms": 1162,
+"end_ms": 1257
+},
+{
+"text": "control",
+"start_ms": 1257,
+"end_ms": 1924
+},
+{
+"text": "what",
+"start_ms": 2019,
+"end_ms": 2114
+},
+{
+"text": "I",
+"start_ms": 2114,
+"end_ms": 2210
+},
+{
+"text": "promised.",
+"start_ms": 2210,
+"end_ms": 2781
+},
+{
+"text": "One.",
+"start_ms": 3133,
+"end_ms": 3419
+},
+{
+"text": "Name",
+"start_ms": 3705,
+"end_ms": 4086
+},
+{
+"text": "it.",
+"start_ms": 4086,
+"end_ms": 4371
+},
+{
+"text": "When",
+"start_ms": 4657,
+"end_ms": 4752
+},
+{
+"text": "your",
+"start_ms": 4752,
+"end_ms": 4848
+},
+{
+"text": "heart",
+"start_ms": 4848,
+"end_ms": 5133
+},
+{
+"text": "slams,",
+"start_ms": 5133,
+"end_ms": 5705
+},
+{
+"text": "don't",
+"start_ms": 5705,
+"end_ms": 5895
+},
+{
+"text": "fight",
+"start_ms": 5895,
+"end_ms": 6181
+},
+{
+"text": "it.",
+"start_ms": 6181,
+"end_ms": 6371
+},
+{
+"text": "Tell",
+"start_ms": 6627,
+"end_ms": 6817
+},
+{
+"text": "yourself:",
+"start_ms": 6817,
+"end_ms": 7293
+},
+{
+"text": "\"This",
+"start_ms": 7293,
+"end_ms": 7579
+},
+{
+"text": "is",
+"start_ms": 7579,
+"end_ms": 7769
+},
+{
+"text": "my",
+"start_ms": 7769,
+"end_ms": 7865
+},
+{
+"text": "body",
+"start_ms": 7865,
+"end_ms": 8246
+},
+{
+"text": "getting",
+"start_ms": 8246,
+"end_ms": 8531
+},
+{
+"text": "ready.\"",
+"start_ms": 8531,
+"end_ms": 8817
+},
+{
+"text": "In",
+"start_ms": 9122,
+"end_ms": 9217
+},
+{
+"text": "a",
+"start_ms": 9217,
+"end_ms": 9312
+},
+{
+"text": "Harvard",
+"start_ms": 9312,
+"end_ms": 9693
+},
+{
+"text": "study,",
+"start_ms": 9693,
+"end_ms": 9979
+},
+{
+"text": "people",
+"start_ms": 9979,
+"end_ms": 10265
+},
+{
+"text": "who",
+"start_ms": 10265,
+"end_ms": 10360
+},
+{
+"text": "said",
+"start_ms": 10360,
+"end_ms": 10741
+},
+{
+"text": "\"I'm",
+"start_ms": 10836,
+"end_ms": 11027
+},
+{
+"text": "excited\"",
+"start_ms": 11027,
+"end_ms": 11598
+},
+{
+"text": "before",
+"start_ms": 11598,
+"end_ms": 11884
+},
+{
+"text": "a",
+"start_ms": 11884,
+"end_ms": 11884
+},
+{
+"text": "stressful",
+"start_ms": 11884,
+"end_ms": 12360
+},
+{
+"text": "task",
+"start_ms": 12360,
+"end_ms": 12928
+},
+{
+"text": "did",
+"start_ms": 12928,
+"end_ms": 13118
+},
+{
+"text": "better",
+"start_ms": 13118,
+"end_ms": 13499
+},
+{
+"text": "than",
+"start_ms": 13499,
+"end_ms": 13690
+},
+{
+"text": "people",
+"start_ms": 13690,
+"end_ms": 13880
+},
+{
+"text": "who",
+"start_ms": 13880,
+"end_ms": 13975
+},
+{
+"text": "told",
+"start_ms": 13975,
+"end_ms": 14261
+},
+{
+"text": "themselves",
+"start_ms": 14261,
+"end_ms": 14642
+},
+{
+"text": "to",
+"start_ms": 14642,
+"end_ms": 14737
+},
+{
+"text": "calm",
+"start_ms": 14737,
+"end_ms": 15023
+},
+{
+"text": "down.",
+"start_ms": 15023,
+"end_ms": 15309
+},
+{
+"text": "Now",
+"start_ms": 15750,
+"end_ms": 15845
+},
+{
+"text": "you",
+"start_ms": 15845,
+"end_ms": 15940
+},
+{
+"text": "know",
+"start_ms": 15940,
+"end_ms": 16131
+},
+{
+"text": "what",
+"start_ms": 16131,
+"end_ms": 16321
+},
+{
+"text": "every",
+"start_ms": 16321,
+"end_ms": 16702
+},
+{
+"text": "symptom",
+"start_ms": 16702,
+"end_ms": 17083
+},
+{
+"text": "means.",
+"start_ms": 17083,
+"end_ms": 17559
+},
+{
+"text": "That's",
+"start_ms": 17655,
+"end_ms": 17845
+},
+{
+"text": "already",
+"start_ms": 17845,
+"end_ms": 18131
+},
+{
+"text": "half",
+"start_ms": 18131,
+"end_ms": 18417
+},
+{
+"text": "of",
+"start_ms": 18417,
+"end_ms": 18512
+},
+{
+"text": "it.",
+"start_ms": 18512,
+"end_ms": 18607
+},
+{
+"text": "Two.",
+"start_ms": 18898,
+"end_ms": 19279
+},
+{
+"text": "Breathe.",
+"start_ms": 19660,
+"end_ms": 20517
+},
+{
+"text": "Two",
+"start_ms": 20708,
+"end_ms": 20898
+},
+{
+"text": "short",
+"start_ms": 20898,
+"end_ms": 21279
+},
+{
+"text": "breaths",
+"start_ms": 21279,
+"end_ms": 21565
+},
+{
+"text": "in",
+"start_ms": 21565,
+"end_ms": 21755
+},
+{
+"text": "through",
+"start_ms": 21755,
+"end_ms": 21851
+},
+{
+"text": "the",
+"start_ms": 21851,
+"end_ms": 21946
+},
+{
+"text": "nose\u2026",
+"start_ms": 21946,
+"end_ms": 22613
+},
+{
+"text": "and",
+"start_ms": 22803,
+"end_ms": 23089
+},
+{
+"text": "one",
+"start_ms": 23089,
+"end_ms": 23565
+},
+{
+"text": "long",
+"start_ms": 23565,
+"end_ms": 23946
+},
+{
+"text": "breath",
+"start_ms": 23946,
+"end_ms": 24327
+},
+{
+"text": "out.",
+"start_ms": 24327,
+"end_ms": 24708
+},
+{
+"text": "The",
+"start_ms": 24963,
+"end_ms": 25058
+},
+{
+"text": "long",
+"start_ms": 25058,
+"end_ms": 25439
+},
+{
+"text": "exhale",
+"start_ms": 25439,
+"end_ms": 25820
+},
+{
+"text": "is",
+"start_ms": 25820,
+"end_ms": 25915
+},
+{
+"text": "your",
+"start_ms": 25915,
+"end_ms": 26010
+},
+{
+"text": "body's",
+"start_ms": 26010,
+"end_ms": 26391
+},
+{
+"text": "brake",
+"start_ms": 26391,
+"end_ms": 26677
+},
+{
+"text": "pedal.",
+"start_ms": 26677,
+"end_ms": 26963
+},
+{
+"text": "In",
+"start_ms": 27558,
+"end_ms": 27653
+},
+{
+"text": "a",
+"start_ms": 27653,
+"end_ms": 27653
+},
+{
+"text": "study",
+"start_ms": 27653,
+"end_ms": 27939
+},
+{
+"text": "with",
+"start_ms": 27939,
+"end_ms": 28129
+},
+{
+"text": "police",
+"start_ms": 28129,
+"end_ms": 28415
+},
+{
+"text": "officers,",
+"start_ms": 28415,
+"end_ms": 28986
+},
+{
+"text": "the",
+"start_ms": 28986,
+"end_ms": 29082
+},
+{
+"text": "ones",
+"start_ms": 29082,
+"end_ms": 29367
+},
+{
+"text": "trained",
+"start_ms": 29367,
+"end_ms": 29653
+},
+{
+"text": "to",
+"start_ms": 29653,
+"end_ms": 29748
+},
+{
+"text": "control",
+"start_ms": 29748,
+"end_ms": 30225
+},
+{
+"text": "their",
+"start_ms": 30225,
+"end_ms": 30320
+},
+{
+"text": "breathing",
+"start_ms": 30320,
+"end_ms": 30701
+},
+{
+"text": "and",
+"start_ms": 30701,
+"end_ms": 30891
+},
+{
+"text": "stress",
+"start_ms": 30891,
+"end_ms": 31367
+},
+{
+"text": "made",
+"start_ms": 31558,
+"end_ms": 31748
+},
+{
+"text": "more",
+"start_ms": 31748,
+"end_ms": 32129
+},
+{
+"text": "correct",
+"start_ms": 32129,
+"end_ms": 32510
+},
+{
+"text": "decisions",
+"start_ms": 32510,
+"end_ms": 33082
+},
+{
+"text": "in",
+"start_ms": 33082,
+"end_ms": 33272
+},
+{
+"text": "realistic",
+"start_ms": 33272,
+"end_ms": 33844
+},
+{
+"text": "use-of-force",
+"start_ms": 33844,
+"end_ms": 34510
+},
+{
+"text": "scenarios.",
+"start_ms": 34510,
+"end_ms": 35177
+},
+{
+"text": "Three.",
+"start_ms": 35625,
+"end_ms": 36006
+},
+{
+"text": "Widen.",
+"start_ms": 36358,
+"end_ms": 37025
+},
+{
+"text": "Tunnel",
+"start_ms": 37368,
+"end_ms": 37654
+},
+{
+"text": "vision",
+"start_ms": 37654,
+"end_ms": 37940
+},
+{
+"text": "wants",
+"start_ms": 37940,
+"end_ms": 38226
+},
+{
+"text": "you",
+"start_ms": 38226,
+"end_ms": 38321
+},
+{
+"text": "to",
+"start_ms": 38321,
+"end_ms": 38416
+},
+{
+"text": "stare.",
+"start_ms": 38416,
+"end_ms": 38892
+},
+{
+"text": "Look",
+"start_ms": 39178,
+"end_ms": 39368
+},
+{
+"text": "around",
+"start_ms": 39368,
+"end_ms": 39559
+},
+{
+"text": "on",
+"start_ms": 39559,
+"end_ms": 39654
+},
+{
+"text": "purpose",
+"start_ms": 39654,
+"end_ms": 40226
+},
+{
+"text": "who",
+"start_ms": 40416,
+"end_ms": 40511
+},
+{
+"text": "else",
+"start_ms": 40511,
+"end_ms": 40797
+},
+{
+"text": "is",
+"start_ms": 40797,
+"end_ms": 40892
+},
+{
+"text": "there,",
+"start_ms": 40892,
+"end_ms": 41178
+},
+{
+"text": "where's",
+"start_ms": 41178,
+"end_ms": 41464
+},
+{
+"text": "the",
+"start_ms": 41464,
+"end_ms": 41654
+},
+{
+"text": "exit.",
+"start_ms": 41654,
+"end_ms": 42112
+},
+{
+"text": "That's",
+"start_ms": 42286,
+"end_ms": 42572
+},
+{
+"text": "the",
+"start_ms": 42572,
+"end_ms": 42762
+},
+{
+"text": "edge",
+"start_ms": 42762,
+"end_ms": 42953
+},
+{
+"text": "most",
+"start_ms": 42953,
+"end_ms": 43143
+},
+{
+"text": "people",
+"start_ms": 43143,
+"end_ms": 43334
+},
+{
+"text": "never",
+"start_ms": 43334,
+"end_ms": 43619
+},
+{
+"text": "get.",
+"start_ms": 43619,
+"end_ms": 44000
+},
+{
+"text": "Not",
+"start_ms": 44191,
+"end_ms": 44286
+},
+{
+"text": "a",
+"start_ms": 44286,
+"end_ms": 44381
+},
+{
+"text": "harder",
+"start_ms": 44381,
+"end_ms": 44667
+},
+{
+"text": "punch.",
+"start_ms": 44667,
+"end_ms": 45238
+},
+{
+"text": "A",
+"start_ms": 45238,
+"end_ms": 45334
+},
+{
+"text": "clear",
+"start_ms": 45334,
+"end_ms": 45810
+},
+{
+"text": "head.",
+"start_ms": 45810,
+"end_ms": 46191
+},
+{
+"text": "And",
+"start_ms": 46548,
+"end_ms": 46643
+},
+{
+"text": "a",
+"start_ms": 46643,
+"end_ms": 46738
+},
+{
+"text": "clear",
+"start_ms": 46738,
+"end_ms": 46929
+},
+{
+"text": "head",
+"start_ms": 46929,
+"end_ms": 47310
+},
+{
+"text": "usually",
+"start_ms": 47310,
+"end_ms": 47691
+},
+{
+"text": "makes",
+"start_ms": 47691,
+"end_ms": 47881
+},
+{
+"text": "the",
+"start_ms": 47881,
+"end_ms": 47976
+},
+{
+"text": "smartest",
+"start_ms": 47976,
+"end_ms": 48357
+},
+{
+"text": "move",
+"start_ms": 48357,
+"end_ms": 48548
+},
+{
+"text": "of",
+"start_ms": 48548,
+"end_ms": 48738
+},
+{
+"text": "all:",
+"start_ms": 48738,
+"end_ms": 49024
+},
+{
+"text": "walking",
+"start_ms": 49181,
+"end_ms": 49562
+},
+{
+"text": "away",
+"start_ms": 49562,
+"end_ms": 49752
+},
+{
+"text": "before",
+"start_ms": 49752,
+"end_ms": 50133
+},
+{
+"text": "it",
+"start_ms": 50133,
+"end_ms": 50228
+},
+{
+"text": "starts.",
+"start_ms": 50228,
+"end_ms": 50705
+}
+]
+}
