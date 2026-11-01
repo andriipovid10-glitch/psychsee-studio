@@ -1,7 +1,7 @@
 # EP02 v2 — first 30 seconds (draft)
 
 Rewrite after the creator's feedback on `engine/ep02`: simple, punchy keywords on every beat, real-looking places, inside-the-body only as a 1–2 s accent.
-Script: `scripts/ep02-v2-first-minute.md` (section `// 00`).
+Script: `scripts/ep02-v2.md` (section `// 00`).
 
 ## Build
 ```bash

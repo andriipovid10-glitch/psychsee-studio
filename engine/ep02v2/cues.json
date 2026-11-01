@@ -1,6 +1,6 @@
 {
  "_doc": "Cue = the word that triggers an animation beat. 'word' = 1st occurrence, 'word#n' = n-th, '.end' = end of that word. align.py writes scene-second times to timing_s00.json. Same system as engine/ep02.",
- "script": "scripts/ep02-v2-first-minute.md",
+ "script": "scripts/ep02-v2.md",
  "s00": {
   "section": "// 00",
   "lead": 0.35,
