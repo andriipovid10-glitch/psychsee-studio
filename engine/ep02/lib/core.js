@@ -124,6 +124,7 @@ export function pose(M, o = {}) {
   B.forEach(([a, c, rr], i) => { bone(M.limbs[i], a, c, rr); bone(M.nerves[i], a, c, rr * .38); });
   [hip, neck, eL, hL, eR, hR, kL, fL, kR, fR, sh].forEach((p, i) => { M.joints[i].position.copy(p); M.joints[i].scale.setScalar(r * 1.05); });
   M.P = {hip, neck, sh, head, eL, hL, eR, hR, kL, fL, kR, fR};
+  if (M.after) M.after(M);
 }
 export function setXray(M, k, nerve = 0) {
   M.mat.opacity = 1 - .84 * k; M.mat.depthWrite = k < .2;

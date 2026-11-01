@@ -32,7 +32,10 @@ Chromium + Playwright are preinstalled in the cloud environment (don't reinstall
 6. Deliver: send the finished MP4 to the creator and tell them in one or two lines what's in it.
 
 ## Rules
-- Characters are always plain 3D stickmen (no faces). Emotion via body language.
+- Characters are 3D stickmen with simple faces (eyes, brows, nose, mouth) and simple clothes — see STYLE_GUIDE §1.
+- Never put text labels in the screen corners (section labels, timecodes, episode tags, clocks).
+- Show body parts on our own stickman (his eye, his hand, his mouth, fingers on his neck) clearly, rather than photos of real human organs, unless an organ can't be shown on the stickman.
+- Quality: final renders at 1920x1080, high bitrate.
 - Camera never sits still longer than ~6 s. Something changes every 3–6 s.
 - Red is reserved for the important thing (stress, the lie, the reveal).
 - Facts must be accurate. Use the fact notes in the script; if you add a claim, verify it and hedge estimates ("by some estimates").

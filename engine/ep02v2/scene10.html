@@ -38,7 +38,7 @@ $('kitcss').textContent = KW_CSS + PLATE_CSS;
 const TM = await loadTiming('s10'), c = TM.cue, DUR = TM.duration; window.DURATION = DUR;
 const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
 const street = makeStreet(scene);
-const B = man(scene);
+const B = man(scene, undefined, 'you');
 const SHOTS = [['clock', 0], ['hear', c('hearing', -.12)], ['vis', c('vision', -.12)], ['pain', c('pain', -.12)], ['time', c('memory', -.12)], ['wheel', c('now', -.12)], ['end', c('next', -.15)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 const PL = {hear: 'pl_ear', vis: 'pl_eye', pain: 'pl_arm', time: 'pl_film'};

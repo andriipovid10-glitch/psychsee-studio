@@ -22,11 +22,11 @@ async function open(scene) {
 async function chunk(scene, out, f0, f1) {
   const {browser, page} = await open(scene);
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
-    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '19', '-pix_fmt', 'yuv420p', '-r', String(FPS), out], {stdio: ['pipe', 'ignore', 'inherit']});
+    '-c:v', 'libx264', '-preset', process.env.PRESET || 'veryfast', '-crf', process.env.CRF || '19', '-pix_fmt', 'yuv420p', '-r', String(FPS), out], {stdio: ['pipe', 'ignore', 'inherit']});
   const t0 = Date.now();
   for (let i = f0; i < f1; i++) {
     await page.evaluate(t => draw(t), i / FPS);
-    const buf = await page.screenshot({type: 'jpeg', quality: 92});
+    const buf = await page.screenshot({type: 'jpeg', quality: +(process.env.JPEGQ || 92)});
     if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
     if ((i - f0) % 90 === 0) console.log(scene, `frames ${f0}-${f1}`, i, ((Date.now() - t0) / 1000).toFixed(0) + 's');
   }

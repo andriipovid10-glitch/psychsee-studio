@@ -50,7 +50,7 @@ const TM = await loadTiming('s05'), c = TM.cue, DUR = TM.duration;
 window.DURATION = DUR;
 const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
 const street = makeStreet(scene);
-const A = man(scene), B = man(scene);
+const A = man(scene, undefined, 'thug'), B = man(scene, undefined, 'you');
 const crowd = makeCrowd(scene, 5);
 const CROWD = [[-2.4, -1.6, 2.3, 0], [2.6, -1.9, -2.4, 2], [-3.6, -.4, 2.0, 1], [3.7, -.2, -1.9, 0], [.3, -2.6, 3.1, 1]];
 const HX = .9;

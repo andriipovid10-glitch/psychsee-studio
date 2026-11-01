@@ -8,7 +8,7 @@ The approved look is the **3D dark** reference test: `engine/reference-ep00` (va
 Open it and match it. When in doubt, copy what it does.
 
 ## 1. Characters
-- **Plain stickmen, in 3D.** Sphere head, thin cylinder limbs with rounded joints. **No faces, no clothes, no hair.** Emotion is shown with **body language** only (posture, arms, head tilt, speed of movement, shaking, sweat drops).
+- **Stickmen in 3D with personality** (creator update, Nov 2026): sphere head with a simple **face** (eyes with pupils, brows, small nose, mouth) and **simple clothes** (t-shirt/hoodie, pants, shoes, hair or cap) so each character is recognisable. Body language still carries the emotion; the face supports it (wide pupils, open mouth, frown).
 - Colour: soft white `#e6ebf5`, slightly glossy (roughness ~0.42).
 - Every person in an example is a stickman. Never realistic humans.
 - They should move **all the time**: idle breathing bob, weight shifts, gestures on key words.
@@ -36,9 +36,7 @@ Open it and match it. When in doubt, copy what it does.
 - Words animate in one by one (slide up from blur, back-ease overshoot).
 - Speech: words appear **over the speaker's head**, with a small mono tag (`// question`, `// answer`).
 - Mono "showreel" details (DejaVu Sans Mono, uppercase, letter-spacing .06em, grey `#8a97b3`):
-  - top-left: section label `// 03 — inside the body`
-  - top-right: `PSYCHSEE  00:00:07:15` running timecode
-  - bottom-left: episode tag
+  - **NO corner labels** (no section label, no timecode, no episode tag, no T+ clock in the corners). The creator does not want them — never add them.
 - Data cards (dark glass `rgba(20,30,52,.82)`, 22px radius): big number + mono label (heart rate, cortisol, etc.). Slide in from the right, staggered.
 - Live graphs: ECG line, counters that tick up.
 

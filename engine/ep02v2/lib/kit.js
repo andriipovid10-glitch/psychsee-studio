@@ -1,6 +1,8 @@
 // EP02 v2 — shared kit for scenes 01+: timing, poses, crowd, kinetic words, photo plates, article cards.
 // (scene00 keeps its own inline copies; the behaviour here matches it.)
 import {THREE, clamp, lerp, seg, ease, eo, back, V3, vlerp, pose, makeMan, $, show, FPS} from '../../ep02/lib/core.js';
+import {dress} from './look.js';
+export {dress};
 
 // ---------------------------------------------------------------- timing
 export const ORDER = ['s00', 's01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'];
@@ -21,8 +23,9 @@ export function timecode(el, globalT) {
 
 // ---------------------------------------------------------------- cast
 const fistGeo = new THREE.SphereGeometry(1, 24, 16);
-export function man(scene, color) {
+export function man(scene, color, look) {
   const M = makeMan(scene, color);
+  if (look !== null) dress(M, look || 'c1');
   M.fists = [0, 1].map(() => { const f = new THREE.Mesh(fistGeo, M.mat); f.castShadow = true; M.g.add(f); return f; });
   return M;
 }
@@ -32,6 +35,7 @@ export const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) *
 // aggressor: o.punch 0..1, o.push 0..1 (two-hand shove)
 export function poseA(M, t, o = {}) {
   const br = Math.sin(t * 3.1) * .012, p = o.punch || 0, pp = back(clamp(p)), sh = o.push || 0, sb = back(clamp(sh));
+  M.face = {pupil: 1, mouth: .15 + .5 * Math.max(p, sh), brow: -1};
   let uaR = vlerp(V3(-.42, -.88, .12), V3(-.06, .16, 1), pp), laR = vlerp(V3(-.18, -.75, .5), V3(-.03, .08, 1), pp);
   let uaL = V3(.42, -.88 + .3 * p, .12), laL = V3(.18, -.75 + .9 * p, .5);
   if (sh) { uaL = vlerp(uaL, V3(.2, .02, 1), sb); laL = vlerp(laL, V3(.05, .08, 1), sb); uaR = vlerp(uaR, V3(-.2, .02, 1), sb); laR = vlerp(laR, V3(-.05, .08, 1), sb); }
@@ -45,6 +49,7 @@ export function poseB(M, t, o = {}) {
   const rate = o.rate || 4.2, br = Math.sin(t * rate) * (o.breath ?? .014);
   const sh = o.shake || 0, tr = tremor(t, sh), tr2 = tremor(t + 3.3, sh);
   const h = o.hit || 0, cm = o.calm || 0;
+  M.face = {pupil: o.pupil ?? (1.15 + .4 * Math.min(1, sh * 10)) * (1 - .3 * cm), mouth: o.mouth ?? (.15 + .5 * h) * (1 - cm), brow: o.brow ?? (.5 - .5 * cm)};
   let ua = {L: V3(.32, -.8, .45), R: V3(-.32, -.8, .45)}, la = {L: V3(.08, .8, .55).add(tr), R: V3(-.08, .8, .55).add(tr2)};
   if (h) { ua = {L: vlerp(ua.L, V3(.55, .35, .75), h), R: vlerp(ua.R, V3(-.7, .05, .7), h)}; la = {L: vlerp(la.L, V3(.35, .75, .55), h), R: vlerp(la.R, V3(-.45, .55, .7), h)}; }
   if (cm) { ua = {L: vlerp(ua.L, V3(.22, -.97, .05), cm), R: vlerp(ua.R, V3(-.22, -.97, .05), cm)}; la = {L: vlerp(la.L, V3(.06, -.99, .1), cm), R: vlerp(la.R, V3(-.06, -.99, .1), cm)}; }
@@ -53,7 +58,7 @@ export function poseB(M, t, o = {}) {
   fists(M, o.squeeze || 1);
 }
 // bystanders watching: list of [x, z, face, variant]
-export function makeCrowd(scene, n = 5) { return Array.from({length: n}, () => man(scene, 0x8e99ad)); }
+export function makeCrowd(scene, n = 5) { return Array.from({length: n}, (_, i) => man(scene, 0xc9cfda, 'c' + (1 + i % 5))); }
 export function poseCrowd(crowd, L, t, o = {}) {
   crowd.forEach((M, i) => {
     M.g.visible = i < L.length; if (!M.g.visible) return;
@@ -62,6 +67,7 @@ export function poseCrowd(crowd, L, t, o = {}) {
     const ua = [{L: V3(.5, -.6, .55), R: V3(-.5, -.6, .55)}, {L: V3(.3, -.95, .05), R: V3(-.3, -.95, .05)}, {L: V3(.4, -.4, .7), R: V3(-.25, -.95, 0)}][v];
     const la = [{L: V3(-.7, .1, .5), R: V3(.7, .15, .5)}, {L: V3(.1, -.99, 0), R: V3(-.1, -.99, 0)}, {L: V3(-.2, .9, .3), R: V3(-.1, -.99, .05)}][v];
     if (yell) { ua.L = vlerp(ua.L, V3(.6, .5, .5), yell); ua.R = vlerp(ua.R, V3(-.6, .5, .5), yell); la.L = vlerp(la.L, V3(.3, .9, .3), yell); la.R = vlerp(la.R, V3(-.3, .9, .3), yell); }
+    M.face = {pupil: 1.1, mouth: .1 + .8 * yell, brow: yell ? -.6 : .2};
     pose(M, {bob: br + .02 * yell, lean: lean + .1 * yell, headLean: .1 + .05 * Math.sin(t * .7 + i), roll: .03 * Math.sin(t * .5 + i), ua, la});
     fists(M, .95);
   });
@@ -89,6 +95,7 @@ export function slamWords(el, t, times, t1, o = {}) {
   });
 }
 export const KW_CSS = `
+#tl,#tr,#bl,#tclock,#fz{display:none!important}
 .kw{position:absolute;font-weight:900;letter-spacing:-.045em;line-height:.9;white-space:nowrap;transform-origin:50% 50%;will-change:transform;visibility:hidden;text-shadow:0 6px 40px rgba(0,0,0,.55)}
 .kw span{display:inline-block;will-change:transform}
 .kw .r{color:#ff3340;text-shadow:0 0 40px rgba(255,40,60,.45),0 6px 40px rgba(0,0,0,.55)}

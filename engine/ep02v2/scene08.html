@@ -34,7 +34,7 @@ $('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
 const TM = await loadTiming('s08'), c = TM.cue, DUR = TM.duration; window.DURATION = DUR;
 const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
 const street = makeStreet(scene);
-const A = man(scene), B = man(scene);
+const A = man(scene, undefined, 'thug'), B = man(scene, undefined, 'you');
 const crowd = makeCrowd(scene, 4);
 const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
 const clk = makeTClock(document.body);
