@@ -16,9 +16,9 @@
 #scanring{position:absolute;width:176px;height:176px;margin:-88px 0 0 -88px;border:4px solid #ff3340;border-radius:50%;box-shadow:0 0 30px rgba(255,40,60,.7);visibility:hidden}
 #dial{position:absolute;left:960px;top:440px;width:680px;height:680px;margin:-340px 0 0 -340px;visibility:hidden}
 #dial svg{position:absolute;inset:0}
-#dial .num{position:absolute;left:0;right:0;top:50%;transform:translateY(-52%);text-align:center;font-weight:900;font-size:220px;letter-spacing:-.05em}
+#dial .num{position:absolute;left:0;right:0;top:50%;transform:translateY(-52%);text-align:center;font-weight:900;font-size:168px;letter-spacing:-.05em}
 #dial .num small{font-size:80px;color:#8a97b3;margin-left:6px;letter-spacing:-.02em}
-#dial .cap{position:absolute;left:0;right:0;top:130px;text-align:center}
+#dial .cap{position:absolute;left:0;right:0;top:-34px;text-align:center}
 #fz{position:absolute;left:50%;top:40px;transform:translateX(-50%);visibility:hidden}
 #blackout{position:absolute;inset:0;background:#000}
 </style></head><body>
@@ -71,17 +71,7 @@ const wordAt = (n, nth = 1) => { let k = 0; for (const w of WD) { if (w.w.toLowe
 const st = setupStage($('gl'));
 const {scene, cam, composer, grade, key, rim, hemi} = st;
 const SETS = {void: makeVoid(scene), school: makeSchool(scene), bar: makeBar(scene), street: makeStreet(scene)};
-// photoreal background plates (AI-generated, graded navy) — the stickmen are 3D and cast real shadows on top
-const BG = {};
-await Promise.all(['school', 'bar', 'street', 'bokeh'].map(n => new Promise(res => {
-  new THREE.TextureLoader().load(`bg/${n}.jpg`, tx => { tx.colorSpace = THREE.SRGBColorSpace; BG[n] = tx; res(); }, undefined, () => res());
-})));
-// z = zoom (1 = full frame), (px, py) = pan in fractions of the frame
-function plate(n, z = 1, px = 0, py = 0) {
-  const tx = BG[n]; if (!tx) { scene.background = new THREE.Color(0x0b1222); return; }
-  tx.repeat.set(1 / z, 1 / z); tx.offset.set(clamp(.5 - .5 / z + px, 0, 1 - 1 / z), clamp(.5 - .5 / z + py, 0, 1 - 1 / z));
-  tx.updateMatrix(); scene.background = tx;
-}
+function plate() {}   // all locations are 3D (photo plates were tried and dropped)
 const A = makeMan(scene), B = makeMan(scene);
 const ghosts = [0, 1, 2].map(() => makeMan(scene));
 ghosts.forEach((g, i) => { g.mat.opacity = [.22, .13, .07][i]; g.mat.depthWrite = false; g.g.children.forEach(m => m.castShadow = false); });
@@ -90,11 +80,11 @@ function addFists(M) { M.fists = [0, 1].map(() => { const f = new THREE.Mesh(fis
 [A, B, ...ghosts].forEach(addFists);
 const chest = makeChest(B);
 // bystanders (crowd) — also stickmen, a bit darker, watching the fight
-const crowd = [0, 1, 2, 3, 4].map(() => { const M = makeMan(scene, 0xb9c3d6); addFists(M); return M; });
+const crowd = [0, 1, 2, 3, 4].map(() => { const M = makeMan(scene, 0x8e99ad); addFists(M); return M; });
 const CROWD = {   // [x, z, facing angle (rad, 0 = +z), pose variant]
-  school: [[-1.55, -2.2, 2.4, 0], [1.7, -2.8, -2.3, 1], [-1.2, -4.6, 2.7, 2], [1.35, -5.6, -2.8, 0], [.3, -7.5, 3.1, 1]],
-  bar: [[-2.3, -1.15, 2.3, 1], [-1.6, -2.3, 2.9, 2], [2.0, -2.2, -2.7, 0], [2.7, -1.0, -2.2, 1], [.5, -3.6, 3.0, 2]],
-  street: [[-3.0, -2.6, 2.2, 0], [3.4, -3.4, -2.4, 2], [-4.2, -5.0, 2.6, 1]],
+  school: [[-1.45, -3.2, 2.5, 0], [1.5, -3.8, -2.4, 1], [-1.3, -5.8, 2.8, 2], [1.25, -7.2, -2.8, 0], [.2, -10, 3.1, 1]],
+  bar: [[-3.7, -1.2, 2.4, 1], [3.6, -1.25, -2.4, 0], [-5.0, -.2, 2.1, 2], [4.9, .1, -2.0, 1]],
+  street: [[-4.6, -3.0, 2.2, 0], [5.4, -4.2, -2.4, 2]],
 };
 function poseCrowd(set, t) {
   const L = CROWD[set] || [];
@@ -140,8 +130,9 @@ const SHOTS = [
   ['silence', c('everything', -.05)], ['slowmo', c('felt2', -.05)], ['twist', c('heres', -.12)], ['inside', c('this', -.05)], ['dial', c('inside', .05)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 // 3D sets only for the void shots; real locations are photo plates (see PLATE_OF)
-const SET_OF = {void: 'void', twist: 'void', inside: 'void', dial: 'void'};
-const PLATE_OF = {school: 'school', bar: 'bar', street: 'street', silence: 'street', panic: 'bokeh', chest: 'bokeh', hand: 'bokeh', head: 'bokeh', slowmo: 'bokeh'};
+const SET_OF = {void: 'void', school: 'school', bar: 'bar', street: 'street', panic: 'street', chest: 'street', hand: 'street', head: 'street',
+  silence: 'street', slowmo: 'street', twist: 'void', inside: 'void', dial: 'void'};
+const PLATE_OF = {};
 
 // ---------------------------------------------------------------- DOM: kinetic words
 const K = id => $(id), spans = id => [...$(id).querySelectorAll('span')];
@@ -211,6 +202,7 @@ function draw(t) {
   const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
   const lt = t - s0, d = s1 - s0, k = clamp(lt / d);
   for (const [n, S] of Object.entries(SETS)) S.g.visible = n === SET_OF[name];
+  SETS.school.flicker(t);
   hideAll();
   icEls.forEach(e => show(e, 0)); lineEls.forEach(l => l.style.opacity = 0); dots.forEach(l => l.style.opacity = 0);
   show($('scanring'), 0); show($('dial'), 0); show($('fz'), 0);
@@ -222,8 +214,8 @@ function draw(t) {
   poseCrowd(['school', 'bar', 'street'].includes(name) ? name : '', t);
   key.intensity = 1.4; rim.intensity = 3.0; hemi.intensity = .55; scene.fog.near = 9; scene.fog.far = 24;
   key.color.set(0xffffff); key.position.set(-4, 8, 6); key.target.position.set(0, 0, 0); rim.color.set(0x7fb2ff);
-  if (PLATE_OF[name]) plate(PLATE_OF[name]); else scene.background = new THREE.Color(0x0b1222);
-  let desat = .25, vign = .42, red = 0, flash = 0, black = 0, ca = 0;
+
+  let desat = .25, vign = .42, red = 0, flash = 0, black = 0, ca = 0, gb = 0;
   let pos, tgt, fov = 34, shk = 0;
   const cutHit = Math.exp(-lt * 9);          // decays after every cut
 
@@ -239,26 +231,26 @@ function draw(t) {
   } else if (name === 'school') {             // corridor, low angle, quick dolly
     hemi.intensity = .6; key.intensity = 1.1; key.color.set(0xcfe0ff); key.position.set(.5, 9, 2); rim.intensity = 2.4;
     scene.fog.near = 14; scene.fog.far = 40;
-    pos = V3(0, 1.5, lerp(6.6, 6.0, eo(k))); tgt = V3(0, 1.45, 0); fov = 36;
+    pos = V3(.15, 1.55, lerp(8.4, 7.6, eo(k))); tgt = V3(0, 1.3, 0); fov = 38;
     plate('school', lerp(1.0, 1.06, eo(k)), 0, 0);
     slam(K('k_school'), t, c('school'), s1 - .02); shk = .05 * cutHit; flash = .35 * cutHit;
   } else if (name === 'bar') {                 // over A's shoulder
     key.intensity = 1.0; key.color.set(0xffc489); key.position.set(-3, 7, 1); hemi.intensity = .35; rim.intensity = 2.8;
     scene.fog.near = 14; scene.fog.far = 40;
-    pos = V3(lerp(-.6, -.4, eo(k)), 1.35, lerp(6.4, 5.9, eo(k))); tgt = V3(.45, 1.3, 0); fov = 36;
+    pos = V3(lerp(-.7, -.4, eo(k)), 1.55, lerp(7.6, 7.0, eo(k))); tgt = V3(0, 1.4, -.5); fov = 38;
     plate('bar', lerp(1.0, 1.05, eo(k)), .01 * k, 0);
     slam(K('k_bar'), t, c('bar'), s1 - .02); shk = .05 * cutHit; flash = .35 * cutHit;
   } else if (name === 'street') {             // wide under the street lamp -> drift in to B over A's shoulder
     key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
     scene.fog.near = 20; scene.fog.far = 50;
     const kk = ease(seg(lt, .6, d));
-    pos = vlerp(V3(0, 2.2, 14), V3(-.3, 1.75, 7.5), kk); tgt = vlerp(V3(1.2, 1.9, 0), V3(.75, 1.5, 0), kk); fov = 36;
+    pos = vlerp(V3(1.5, 2.6, 10.5), V3(-2.6, 1.8, 3.4), kk); tgt = vlerp(V3(.3, 1.5, -1), V3(.9, 1.5, 0), kk); fov = 36;
     plate('street', lerp(1.0, 1.45, kk), lerp(0, -.06, kk), lerp(0, -.1, kk));
     slam(K('k_street'), t, c('street'), c('remember2', .35)); shk = .05 * cutHit; flash = .35 * cutHit;
   } else if (name === 'panic') {              // medium-close on B, hard handheld
     key.intensity = .45; hemi.intensity = .3;
     poseB(B, t, {shake: .05, rate: 9, breath: .02});
-    pos = V3(lerp(-1.0, -.75, k), 1.75, lerp(2.7, 2.4, k)); tgt = V3(HX, 1.55, 0);
+    pos = V3(lerp(-2.7, -2.4, k), 1.8, lerp(2.3, 2.0, k)); tgt = V3(HX, 1.55, 0);
     shk = .035 + .06 * cutHit; red = .4 * Math.exp(-(t - c('panic')) * 5) * (t > c('panic') ? 1 : 0); desat = .4;
     slam(K('k_panic'), t, c('panic'), s1 - .02, {from: 1.8, jolt: 22});
   } else if (name === 'chest') {              // 1.5 s x-ray accent: heart slamming
@@ -288,7 +280,7 @@ function draw(t) {
     key.intensity = .55;
     poseB(B, t, {shake: .03, rate: 11, breath: .02});
     const hd = W2(B, B.P.head);
-    A.g.visible = false; pos = hd.clone().add(V3(lerp(-1.05, -.9, k), lerp(-.1, -.04, k), lerp(.5, .7, k))); tgt = hd.clone().add(V3(.02, -.06, 0));
+    A.g.visible = false; pos = hd.clone().add(V3(lerp(-1.7, -1.5, k), lerp(-.15, -.08, k), lerp(.8, 1.05, k))); tgt = hd.clone().add(V3(.02, -.06, 0));
     shk = .01; red = .35 * Math.exp(-lt * 4); desat = .4;
     slamWords(K('k_dry'), t, [c('mouth'), c('dry')], s1 - .02, {jolt: 12});
   } else if (name === 'silence') {            // world drains; only the heart is left
@@ -310,7 +302,7 @@ function draw(t) {
     poseA(A, t, {punch: pt(pk)}); poseB(B, t, {flinch: .6 * ease(seg(pk, .45, 1)), shake: .01});
     ghosts.forEach((g, i) => { g.g.visible = pk > .05; place(g, -HX, 1); poseA(g, t, {punch: pt(pk - .08 * (i + 1))}); });
     const c0 = V3(0, 1.45, 0);
-    pos = orbitPos(c0, lerp(3.4, 2.9, k), lerp(.95, .55, ease(k)), lerp(.0, .08, k)); tgt = c0; fov = 30;
+    pos = orbitPos(c0, lerp(4.6, 4.0, k), lerp(.95, .6, ease(k)), lerp(.02, .08, k)); tgt = c0.clone().add(V3(0, -.15, 0)); fov = 32;
     desat = .75; vign = .7; ca = 2.5;
     slamWords(K('k_slow'), t, [c('slow'), c('slow', .32)], s1 - .02, {from: 1.15, jolt: 0});
     spans('k_slow').forEach((sp, i) => { const kk = seg(t, c('slow') + i * .32, c('slow') + i * .32 + .9); sp.style.transform = `scale(${lerp(1.18, 1, eo(kk))})`; sp.style.filter = `blur(${(1 - kk) * 6}px)`; });
@@ -368,7 +360,7 @@ function draw(t) {
   } else if (name === 'dial') {               // full-screen 0.00 clock, ticking
     A.g.visible = false; B.g.visible = false;
     pos = V3(0, 1.4, 6); tgt = V3(0, 1.2, 0);
-    black = .9;
+    gb = .85;
     const dk = seg(lt, 0, .35), dl = $('dial');
     dl.style.transform = `scale(${lerp(1.25, 1, eo(dk)) * (1 + .02 * k)})`; dl.style.filter = `blur(${(1 - dk) * 12}px)`; show(dl, dk);
     flash = .3 * Math.exp(-lt * 8);
@@ -379,7 +371,7 @@ function draw(t) {
     $('dnum').style.opacity = 1;
     slamWords(K('k_title'), t, [c('first2', -.22), c('first2'), c('ten'), c('seconds')], DUR + 1, {jolt: 10});
     if (t > c('second', -.05)) { const e = K('k_sbs'), kk = seg(t, c('second', -.05), c('second', .4)); e.style.transform = 'translate(-50%,-50%)'; show(e, kk); }
-    black = .9 + .1 * seg(t, DUR - .35, DUR);
+    black = seg(t, DUR - .35, DUR);
     if (t > DUR - .35) { document.querySelectorAll('.kw,#dial').forEach(e => e.style.opacity = 1 - seg(t, DUR - .35, DUR)); }
   }
 
@@ -390,7 +382,7 @@ function draw(t) {
   $('tl').textContent = sec[si < 4 ? 0 : si < 10 ? 1 : si < 12 ? 2 : 3];
   timecode($('tc'), t);
   // grade
-  grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.ca.value = ca;
+  grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.ca.value = ca; grade.black.value = gb;
   grade.seed.value = (Math.floor(t * 30) % 97) * .37;
   $('rflash').style.opacity = clamp(red * 1.4);
   $('blackout').style.opacity = black;
