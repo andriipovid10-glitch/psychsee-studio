@@ -1,0 +1,96 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>#gl{width:1920px;height:1080px}
+.stat{position:absolute;text-align:center;visibility:hidden;transform:translate(-50%,-50%)}
+.stat b{display:block;font-weight:900;font-size:220px;letter-spacing:-.05em;line-height:.9;color:#ff3340}
+.stat span{font-family:'DejaVu Sans Mono',monospace;font-size:26px;letter-spacing:.2em;color:#cfd8ea;text-transform:uppercase}</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_gap" class="plate"><img src="img/flow_filmgap.jpg"><i class="shade"></i></div>
+<div id="pl_calm" class="plate"><img src="img/flow_calm.jpg"><i class="shade"></i></div>
+<div id="s52" class="stat" style="left:960px;top:470px"><b>52%</b><span>couldn't remember parts of it</span></div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 08 — the crash</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+<div id="k_sec" class="kw" style="left:960px;top:150px;font-size:110px"><span>SECOND</span> <span class="r">9</span></div>
+<div id="k_gaps" class="kw" style="left:960px;top:900px;font-size:130px"><span>MEMORY</span> <span class="r">GAPS.</span></div>
+<div id="k_ends" class="kw" style="left:960px;top:880px;font-size:140px"><span>IT</span> <span>ENDS.</span></div>
+<div id="k_bill" class="kw" style="left:960px;top:880px;font-size:140px"><span>THE</span> <span>BILL</span> <span class="r">ARRIVES.</span></div>
+<div id="k_left" class="kw sm" style="left:960px;top:150px">// adrenaline still in the blood · nothing to spend it on</div>
+<div id="k_shake" class="kw" style="left:960px;top:880px;font-size:120px"><span>SHAKING.</span> <span>SICK.</span> <span>LAUGH.</span> <span>CRY.</span></div>
+<div id="k_weak" class="kw" style="left:960px;top:900px;font-size:150px"><span>NOT</span> <span class="b">WEAKNESS.</span></div>
+<div id="k_but" class="kw sm" style="left:960px;top:985px">// but you don't have to just wait</div>
+<div id="blackout"></div>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, back, V3, vlerp, pose, shake, $, show, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+const TM = await loadTiming('s08'), c = TM.cue, DUR = TM.duration; window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 8.95, t1: 10.0};
+const SHOTS = [['gaps', 0], ['ends', c('then', -.12)], ['shake', c('adren', -.12)], ['calm', c('notweak', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_gap', 'pl_calm', 's52'].forEach(id => show($(id), 0));
+  let desat = .35, vign = .45, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.2; hemi.intensity = .3; rim.intensity = 2.6;
+  // the fight is over: A walks off, the crowd thins out
+  const leave = seg(t, c('ends', -.3), c('adren'));
+  place(A, lerp(-.9, -4.5, leave), lerp(0, -2.2, leave), Math.PI / 2 + Math.PI * .8 * seg(t, c('ends', -.3), c('ends', .3)));
+  const sw = Math.sin(t * 7) * .3 * (leave > 0 && leave < 1 ? 1 : 0);
+  pose(A, {lean: .05, ua: {L: V3(.25, -.97, .1 - sw * .3), R: V3(-.25, -.97, .1 + sw * .3)}, la: {L: V3(.1, -.99, .1), R: V3(-.1, -.99, .1)}, th: {L: V3(.12, -.97, sw), R: V3(-.12, -.97, -sw)}}); fists(A, 1);
+  place(B, .9, 0, -Math.PI / 2 + .6 * leave);
+  poseB(B, t, {shake: name === 'shake' ? .12 : .04, rate: 8, breath: .035, calm: .6 * leave});
+  poseCrowd(crowd, CROWD.slice(0, Math.max(0, 4 - Math.floor(leave * 4))), t);
+  if (name === 'gaps') {
+    render3d = false; show($('pl_gap'), 1);
+    plate($('pl_gap'), ease(k), {zoom0: 1.0, zoom1: 1.2, x1: -80, bright: .9});
+    slamWords($('k_sec'), t, [.05, .3], s1 - .02, {jolt: 6});
+    const a = seg(t, c('half', -.2), c('half', .2)); $('s52').style.transform = `translate(-50%,-50%) scale(${lerp(1.4, 1, back(a))})`; show($('s52'), a);
+    slamWords($('k_gaps'), t, [c('messy', -.4), c('messy', -.1)], s1 - .02, {jolt: 10});
+    black = 1 - seg(t, 0, .2);
+  } else if (name === 'ends') {
+    pos = vlerp(V3(.2, 2.2, 7.6), V3(.6, 2.0, 6.4), ease(k)); tgt = V3(-.6, 1.1, -.6); desat = .5; flash = .25 * cut;
+    slamWords($('k_ends'), t, [c('then', -.05), c('ends', -.05)], c('bill', -.15), {jolt: 6});
+    slamWords($('k_bill'), t, [c('bill', -.2), c('bill', -.05), c('arrives', -.05)], s1 - .02, {jolt: 12});
+  } else if (name === 'shake') {
+    const hd = B.g.localToWorld(B.P.hip.clone().lerp(B.P.sh, .6));
+    pos = hd.clone().add(V3(lerp(-3.8, -3.2, k), .35, lerp(3.6, 3.0, k))); tgt = hd.clone().add(V3(0, -.05, 0)); A.g.visible = false;
+    red = .15 * pulse(t * 2.6); desat = .45; flash = .25 * cut; shk = .01;
+    if (t < c('legs', -.2)) { const e = $('k_left'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, s0, s0 + .3)); }
+    slamWords($('k_shake'), t, [c('shake', -.05), c('sick', -.05), c('laugh', -.05), c('cry', -.05)], s1 - .02, {jolt: 10});
+  } else if (name === 'calm') {
+    render3d = false; show($('pl_calm'), 1);
+    plate($('pl_calm'), ease(k), {zoom0: 1.0, zoom1: 1.15, y1: 30, bright: .95});
+    flash = .3 * cut;
+    slamWords($('k_weak'), t, [c('notweak', -.05), c('weakness', -.05)], DUR - .05, {jolt: 8});
+    if (t > c('but', -.1)) { const e = $('k_but'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('but', -.1), c('but', .2))); }
+    black = seg(t, DUR - .25, DUR);
+  }
+  A.g.visible = A.g.visible && name !== 'shake';
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb; grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden'; $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = '#fff'; $('blackout').style.opacity = Math.max(black, flash); } else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+  A.g.visible = true;
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>

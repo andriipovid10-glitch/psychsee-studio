@@ -272,144 +272,64 @@
 "end_ms": 18816
 },
 {
-"text": "That's",
+"text": "But",
 "start_ms": 19124,
 "end_ms": 19314
 },
 {
-"text": "a",
+"text": "you",
 "start_ms": 19314,
-"end_ms": 19409
+"end_ms": 19314
 },
 {
-"text": "system",
-"start_ms": 19409,
+"text": "don't",
+"start_ms": 19314,
+"end_ms": 19505
+},
+{
+"text": "have",
+"start_ms": 19505,
+"end_ms": 19695
+},
+{
+"text": "to",
+"start_ms": 19695,
+"end_ms": 19790
+},
+{
+"text": "just",
+"start_ms": 19790,
 "end_ms": 19981
 },
 {
-"text": "built",
+"text": "wait",
 "start_ms": 19981,
-"end_ms": 20362
+"end_ms": 20266
 },
 {
 "text": "for",
-"start_ms": 20362,
+"start_ms": 20266,
+"end_ms": 20457
+},
+{
+"text": "it",
+"start_ms": 20457,
 "end_ms": 20552
 },
 {
-"text": "a",
+"text": "to",
 "start_ms": 20552,
 "end_ms": 20647
 },
 {
-"text": "predator",
-"start_ms": 20647,
-"end_ms": 21028
-},
-{
-"text": "attack,",
-"start_ms": 21028,
-"end_ms": 21662
-},
-{
-"text": "trying",
-"start_ms": 21758,
-"end_ms": 22043
-},
-{
-"text": "to",
-"start_ms": 22043,
-"end_ms": 22139
-},
-{
-"text": "switch",
-"start_ms": 22139,
-"end_ms": 22520
-},
-{
-"text": "off",
-"start_ms": 22520,
-"end_ms": 22805
-},
-{
-"text": "in",
-"start_ms": 22805,
-"end_ms": 22900
-},
-{
-"text": "a",
-"start_ms": 22900,
-"end_ms": 22996
-},
-{
-"text": "parking",
-"start_ms": 22996,
-"end_ms": 23281
-},
-{
-"text": "lot.",
-"start_ms": 23281,
-"end_ms": 23567
-},
-{
-"text": "But",
-"start_ms": 23904,
-"end_ms": 24094
-},
-{
-"text": "you",
-"start_ms": 24094,
-"end_ms": 24094
-},
-{
-"text": "don't",
-"start_ms": 24094,
-"end_ms": 24285
-},
-{
-"text": "have",
-"start_ms": 24285,
-"end_ms": 24475
-},
-{
-"text": "to",
-"start_ms": 24475,
-"end_ms": 24570
-},
-{
-"text": "just",
-"start_ms": 24570,
-"end_ms": 24761
-},
-{
-"text": "wait",
-"start_ms": 24761,
-"end_ms": 25046
-},
-{
-"text": "for",
-"start_ms": 25046,
-"end_ms": 25237
-},
-{
-"text": "it",
-"start_ms": 25237,
-"end_ms": 25332
-},
-{
-"text": "to",
-"start_ms": 25332,
-"end_ms": 25427
-},
-{
 "text": "wear",
-"start_ms": 25427,
-"end_ms": 25713
+"start_ms": 20647,
+"end_ms": 20933
 },
 {
 "text": "off.",
-"start_ms": 25713,
-"end_ms": 25904
+"start_ms": 20933,
+"end_ms": 21124
 }
 ]
 }

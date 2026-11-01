@@ -57,7 +57,7 @@ const clk = makeTClock(document.body);
 const STORY = {from_cue: null, t0: 5.95, t1: 7.9};
 
 const SHOTS = [['title', 0], ['pain', c('strangest', -.12)], ['endo', c('stress', -.12)], ['paper', c('family', -.6)], ['fighters', c('fighters', -.12)],
-  ['crash', c('people', -.12)], ['hide', c('body', -.12)]];
+  ['hide', c('body', -.12)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 const W2 = (M, p) => M.g.localToWorld(p.clone());
 

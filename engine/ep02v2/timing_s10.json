@@ -3,8 +3,8 @@
  "audio": "audio/ep02v2/vo_temp_s10.wav",
  "source": "asr-json:engine/ep02v2/asr/vo_temp_s10.asr.json (match 100%)",
  "vo_offset": 0.25,
- "audio_duration": 21.435,
- "duration": 23.685,
+ "audio_duration": 17.689,
+ "duration": 19.939,
  "cues": {
   "so": 0.364,
   "ten": 0.936,
@@ -16,19 +16,16 @@
   "memory": 6.174,
   "lied": 6.65,
   "time": 7.507,
-  "body": 8.467,
-  "calls": 9.896,
-  "vote": 11.229,
-  "now": 12.023,
-  "driving": 12.69,
-  "wheel": 14.201,
-  "back": 14.391,
-  "next": 15.173,
-  "video": 15.363,
-  "happens": 16.043,
-  "attracted": 19.472,
-  "subscribe": 20.487,
-  "end": 21.439
+  "now": 8.277,
+  "driving": 8.944,
+  "wheel": 10.455,
+  "back": 10.645,
+  "next": 11.427,
+  "video": 11.617,
+  "happens": 12.297,
+  "attracted": 15.726,
+  "subscribe": 16.741,
+  "end": 17.693
  },
  "words": [
   {
@@ -159,303 +156,225 @@
   },
   {
    "i": 21,
-   "w": "Your",
+   "w": "Now",
    "start": 8.277,
-   "end": 8.467
+   "end": 8.468
   },
   {
    "i": 22,
-   "w": "body",
-   "start": 8.467,
-   "end": 8.848
+   "w": "you",
+   "start": 8.468,
+   "end": 8.563
   },
   {
    "i": 23,
-   "w": "made",
-   "start": 8.848,
-   "end": 9.134
+   "w": "know",
+   "start": 8.563,
+   "end": 8.753
   },
   {
    "i": 24,
-   "w": "every",
-   "start": 9.134,
-   "end": 9.515
+   "w": "who's",
+   "start": 8.753,
+   "end": 8.944
   },
   {
    "i": 25,
-   "w": "one",
-   "start": 9.515,
-   "end": 9.61
+   "w": "driving",
+   "start": 8.944,
+   "end": 9.42
   },
   {
    "i": 26,
-   "w": "of",
-   "start": 9.61,
-   "end": 9.705
+   "w": "and",
+   "start": 9.597,
+   "end": 9.978
   },
   {
    "i": 27,
-   "w": "those",
-   "start": 9.705,
-   "end": 9.896
+   "w": "how",
+   "start": 9.978,
+   "end": 10.074
   },
   {
    "i": 28,
-   "w": "calls",
-   "start": 9.896,
-   "end": 10.277
+   "w": "to",
+   "start": 10.074,
+   "end": 10.169
   },
   {
    "i": 29,
-   "w": "before",
-   "start": 10.277,
-   "end": 10.848
+   "w": "take",
+   "start": 10.169,
+   "end": 10.359
   },
   {
    "i": 30,
-   "w": "you",
-   "start": 10.848,
-   "end": 11.039
+   "w": "the",
+   "start": 10.359,
+   "end": 10.455
   },
   {
    "i": 31,
-   "w": "got",
-   "start": 11.039,
-   "end": 11.229
+   "w": "wheel",
+   "start": 10.455,
+   "end": 10.645
   },
   {
    "i": 32,
-   "w": "a",
-   "start": 11.229,
-   "end": 11.229
+   "w": "back.",
+   "start": 10.645,
+   "end": 11.026
   },
   {
    "i": 33,
-   "w": "vote.",
-   "start": 11.229,
-   "end": 11.61
+   "w": "Next",
+   "start": 11.427,
+   "end": 11.617
   },
   {
    "i": 34,
-   "w": "Now",
-   "start": 12.023,
-   "end": 12.214
+   "w": "video:",
+   "start": 11.617,
+   "end": 11.998
   },
   {
    "i": 35,
-   "w": "you",
-   "start": 12.214,
-   "end": 12.309
+   "w": "what",
+   "start": 12.107,
+   "end": 12.297
   },
   {
    "i": 36,
-   "w": "know",
-   "start": 12.309,
-   "end": 12.499
+   "w": "happens",
+   "start": 12.297,
+   "end": 12.583
   },
   {
    "i": 37,
-   "w": "who's",
-   "start": 12.499,
-   "end": 12.69
+   "w": "in",
+   "start": 12.583,
+   "end": 12.678
   },
   {
    "i": 38,
-   "w": "driving",
-   "start": 12.69,
-   "end": 13.166
+   "w": "your",
+   "start": 12.678,
+   "end": 12.773
   },
   {
    "i": 39,
-   "w": "and",
-   "start": 13.343,
-   "end": 13.724
+   "w": "body",
+   "start": 12.773,
+   "end": 13.154
   },
   {
    "i": 40,
-   "w": "how",
-   "start": 13.724,
-   "end": 13.82
+   "w": "in",
+   "start": 13.154,
+   "end": 13.249
   },
   {
    "i": 41,
-   "w": "to",
-   "start": 13.82,
-   "end": 13.915
+   "w": "the",
+   "start": 13.249,
+   "end": 13.345
   },
   {
    "i": 42,
-   "w": "take",
-   "start": 13.915,
-   "end": 14.105
+   "w": "first",
+   "start": 13.345,
+   "end": 13.821
   },
   {
    "i": 43,
-   "w": "the",
-   "start": 14.105,
-   "end": 14.201
+   "w": "few",
+   "start": 13.821,
+   "end": 14.011
   },
   {
    "i": 44,
-   "w": "wheel",
-   "start": 14.201,
-   "end": 14.391
+   "w": "seconds",
+   "start": 14.011,
+   "end": 14.487
   },
   {
    "i": 45,
-   "w": "back.",
-   "start": 14.391,
-   "end": 14.772
+   "w": "after",
+   "start": 14.487,
+   "end": 14.773
   },
   {
    "i": 46,
-   "w": "Next",
-   "start": 15.173,
-   "end": 15.363
+   "w": "you",
+   "start": 14.773,
+   "end": 14.868
   },
   {
    "i": 47,
-   "w": "video:",
-   "start": 15.363,
-   "end": 15.744
+   "w": "see",
+   "start": 14.868,
+   "end": 15.154
   },
   {
    "i": 48,
-   "w": "what",
-   "start": 15.853,
-   "end": 16.043
+   "w": "someone",
+   "start": 15.154,
+   "end": 15.535
   },
   {
    "i": 49,
-   "w": "happens",
-   "start": 16.043,
-   "end": 16.329
+   "w": "you're",
+   "start": 15.535,
+   "end": 15.726
   },
   {
    "i": 50,
-   "w": "in",
-   "start": 16.329,
-   "end": 16.424
+   "w": "attracted",
+   "start": 15.726,
+   "end": 16.202
   },
   {
    "i": 51,
-   "w": "your",
-   "start": 16.424,
-   "end": 16.519
+   "w": "to.",
+   "start": 16.202,
+   "end": 16.392
   },
   {
    "i": 52,
-   "w": "body",
-   "start": 16.519,
-   "end": 16.9
+   "w": "Subscribe",
+   "start": 16.741,
+   "end": 17.217
   },
   {
    "i": 53,
-   "w": "in",
-   "start": 16.9,
-   "end": 16.995
+   "w": "so",
+   "start": 17.217,
+   "end": 17.312
   },
   {
    "i": 54,
-   "w": "the",
-   "start": 16.995,
-   "end": 17.091
+   "w": "you",
+   "start": 17.312,
+   "end": 17.312
   },
   {
    "i": 55,
-   "w": "first",
-   "start": 17.091,
-   "end": 17.567
+   "w": "don't",
+   "start": 17.312,
+   "end": 17.503
   },
   {
    "i": 56,
-   "w": "few",
-   "start": 17.567,
-   "end": 17.757
+   "w": "miss",
+   "start": 17.503,
+   "end": 17.598
   },
   {
    "i": 57,
-   "w": "seconds",
-   "start": 17.757,
-   "end": 18.233
-  },
-  {
-   "i": 58,
-   "w": "after",
-   "start": 18.233,
-   "end": 18.519
-  },
-  {
-   "i": 59,
-   "w": "you",
-   "start": 18.519,
-   "end": 18.614
-  },
-  {
-   "i": 60,
-   "w": "see",
-   "start": 18.614,
-   "end": 18.9
-  },
-  {
-   "i": 61,
-   "w": "someone",
-   "start": 18.9,
-   "end": 19.281
-  },
-  {
-   "i": 62,
-   "w": "you're",
-   "start": 19.281,
-   "end": 19.472
-  },
-  {
-   "i": 63,
-   "w": "attracted",
-   "start": 19.472,
-   "end": 19.948
-  },
-  {
-   "i": 64,
-   "w": "to.",
-   "start": 19.948,
-   "end": 20.138
-  },
-  {
-   "i": 65,
-   "w": "Subscribe",
-   "start": 20.487,
-   "end": 20.963
-  },
-  {
-   "i": 66,
-   "w": "so",
-   "start": 20.963,
-   "end": 21.058
-  },
-  {
-   "i": 67,
-   "w": "you",
-   "start": 21.058,
-   "end": 21.058
-  },
-  {
-   "i": 68,
-   "w": "don't",
-   "start": 21.058,
-   "end": 21.249
-  },
-  {
-   "i": 69,
-   "w": "miss",
-   "start": 21.249,
-   "end": 21.344
-  },
-  {
-   "i": 70,
    "w": "it.",
-   "start": 21.344,
-   "end": 21.439
+   "start": 17.598,
+   "end": 17.693
   }
  ]
 }

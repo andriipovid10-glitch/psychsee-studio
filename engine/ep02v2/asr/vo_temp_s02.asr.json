@@ -207,224 +207,189 @@
 "end_ms": 13120
 },
 {
-"text": "Every",
-"start_ms": 13786,
-"end_ms": 13977
-},
-{
-"text": "beat",
-"start_ms": 13977,
-"end_ms": 14263
-},
-{
-"text": "gets",
-"start_ms": 14263,
-"end_ms": 14453
-},
-{
-"text": "harder,",
-"start_ms": 14453,
-"end_ms": 15025
-},
-{
-"text": "not",
-"start_ms": 15215,
-"end_ms": 15310
-},
-{
-"text": "just",
-"start_ms": 15310,
-"end_ms": 15501
-},
-{
-"text": "faster.",
-"start_ms": 15501,
-"end_ms": 15977
-},
-{
 "text": "Your",
-"start_ms": 16453,
-"end_ms": 16548
+"start_ms": 13786,
+"end_ms": 13881
 },
 {
 "text": "lungs",
-"start_ms": 16548,
-"end_ms": 16929
+"start_ms": 13881,
+"end_ms": 14262
 },
 {
 "text": "open",
-"start_ms": 16929,
-"end_ms": 17215
+"start_ms": 14262,
+"end_ms": 14548
 },
 {
 "text": "up",
+"start_ms": 14548,
+"end_ms": 14643
+},
+{
+"text": "to",
+"start_ms": 14643,
+"end_ms": 14739
+},
+{
+"text": "pull",
+"start_ms": 14739,
+"end_ms": 15024
+},
+{
+"text": "in",
+"start_ms": 15024,
+"end_ms": 15119
+},
+{
+"text": "more",
+"start_ms": 15119,
+"end_ms": 15310
+},
+{
+"text": "air.",
+"start_ms": 15310,
+"end_ms": 15691
+},
+{
+"text": "Your",
+"start_ms": 15881,
+"end_ms": 15977
+},
+{
+"text": "pupils",
+"start_ms": 15977,
+"end_ms": 16453
+},
+{
+"text": "get",
+"start_ms": 16453,
+"end_ms": 16643
+},
+{
+"text": "bigger",
+"start_ms": 16643,
+"end_ms": 16929
+},
+{
+"text": "to",
+"start_ms": 16929,
+"end_ms": 17024
+},
+{
+"text": "let",
+"start_ms": 17024,
+"end_ms": 17215
+},
+{
+"text": "in",
 "start_ms": 17215,
 "end_ms": 17310
 },
 {
-"text": "to",
+"text": "more",
 "start_ms": 17310,
-"end_ms": 17406
-},
-{
-"text": "pull",
-"start_ms": 17406,
-"end_ms": 17691
-},
-{
-"text": "in",
-"start_ms": 17691,
-"end_ms": 17786
-},
-{
-"text": "more",
-"start_ms": 17786,
-"end_ms": 17977
-},
-{
-"text": "air.",
-"start_ms": 17977,
-"end_ms": 18358
-},
-{
-"text": "Your",
-"start_ms": 18548,
-"end_ms": 18644
-},
-{
-"text": "pupils",
-"start_ms": 18644,
-"end_ms": 19120
-},
-{
-"text": "get",
-"start_ms": 19120,
-"end_ms": 19310
-},
-{
-"text": "bigger",
-"start_ms": 19310,
-"end_ms": 19596
-},
-{
-"text": "to",
-"start_ms": 19596,
-"end_ms": 19691
-},
-{
-"text": "let",
-"start_ms": 19691,
-"end_ms": 19882
-},
-{
-"text": "in",
-"start_ms": 19882,
-"end_ms": 19977
-},
-{
-"text": "more",
-"start_ms": 19977,
-"end_ms": 20167
+"end_ms": 17500
 },
 {
 "text": "light.",
-"start_ms": 20167,
-"end_ms": 20644
+"start_ms": 17500,
+"end_ms": 17977
 },
 {
 "text": "Your",
-"start_ms": 20834,
-"end_ms": 20929
+"start_ms": 18167,
+"end_ms": 18262
 },
 {
 "text": "liver",
-"start_ms": 20929,
-"end_ms": 21310
+"start_ms": 18262,
+"end_ms": 18643
 },
 {
 "text": "dumps",
-"start_ms": 21310,
-"end_ms": 21596
+"start_ms": 18643,
+"end_ms": 18929
 },
 {
 "text": "sugar",
-"start_ms": 21596,
-"end_ms": 21882
+"start_ms": 18929,
+"end_ms": 19215
 },
 {
 "text": "into",
-"start_ms": 21882,
-"end_ms": 22072
+"start_ms": 19215,
+"end_ms": 19405
 },
 {
 "text": "your",
-"start_ms": 22072,
-"end_ms": 22167
+"start_ms": 19405,
+"end_ms": 19500
 },
 {
 "text": "blood.",
-"start_ms": 22167,
-"end_ms": 22644
+"start_ms": 19500,
+"end_ms": 19977
 },
 {
 "text": "Fuel.",
-"start_ms": 22929,
-"end_ms": 23406
+"start_ms": 20262,
+"end_ms": 20739
 },
 {
 "text": "Your",
-"start_ms": 23715,
-"end_ms": 23906
+"start_ms": 21048,
+"end_ms": 21239
 },
 {
 "text": "whole",
-"start_ms": 23906,
-"end_ms": 24096
+"start_ms": 21239,
+"end_ms": 21429
 },
 {
 "text": "body",
-"start_ms": 24096,
-"end_ms": 24477
+"start_ms": 21429,
+"end_ms": 21810
 },
 {
 "text": "is",
-"start_ms": 24477,
-"end_ms": 24668
+"start_ms": 21810,
+"end_ms": 22001
 },
 {
 "text": "going",
-"start_ms": 24668,
-"end_ms": 24953
+"start_ms": 22001,
+"end_ms": 22286
 },
 {
 "text": "all-in",
-"start_ms": 24953,
-"end_ms": 25525
+"start_ms": 22286,
+"end_ms": 22858
 },
 {
 "text": "on",
-"start_ms": 25525,
-"end_ms": 25620
+"start_ms": 22858,
+"end_ms": 22953
 },
 {
 "text": "the",
-"start_ms": 25620,
-"end_ms": 25715
+"start_ms": 22953,
+"end_ms": 23048
 },
 {
 "text": "next",
-"start_ms": 25715,
-"end_ms": 26001
+"start_ms": 23048,
+"end_ms": 23334
 },
 {
 "text": "ten",
-"start_ms": 26001,
-"end_ms": 26287
+"start_ms": 23334,
+"end_ms": 23620
 },
 {
 "text": "seconds.",
-"start_ms": 26287,
-"end_ms": 26858
+"start_ms": 23620,
+"end_ms": 24191
 }
 ]
 }

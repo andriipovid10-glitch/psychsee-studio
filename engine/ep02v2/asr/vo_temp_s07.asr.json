@@ -32,549 +32,459 @@
 "end_ms": 2014
 },
 {
-"text": "Almost",
-"start_ms": 2387,
-"end_ms": 2863
-},
-{
-"text": "everyone",
-"start_ms": 2863,
-"end_ms": 3530
-},
-{
-"text": "says",
-"start_ms": 3530,
-"end_ms": 3720
-},
-{
-"text": "it:",
-"start_ms": 3720,
-"end_ms": 3911
-},
-{
-"text": "time",
-"start_ms": 4103,
-"end_ms": 4484
-},
-{
-"text": "slowed",
-"start_ms": 4484,
-"end_ms": 4960
-},
-{
-"text": "down.",
-"start_ms": 4960,
-"end_ms": 5341
-},
-{
 "text": "In",
-"start_ms": 5727,
-"end_ms": 5822
+"start_ms": 2387,
+"end_ms": 2482
 },
 {
 "text": "that",
-"start_ms": 5822,
-"end_ms": 5918
+"start_ms": 2482,
+"end_ms": 2578
 },
 {
 "text": "police",
-"start_ms": 5918,
-"end_ms": 6203
+"start_ms": 2578,
+"end_ms": 2863
 },
 {
 "text": "survey,",
-"start_ms": 6203,
-"end_ms": 6584
+"start_ms": 2863,
+"end_ms": 3244
 },
 {
 "text": "62%",
-"start_ms": 6870,
-"end_ms": 8013
+"start_ms": 3530,
+"end_ms": 4673
 },
 {
 "text": "said",
-"start_ms": 8013,
-"end_ms": 8108
+"start_ms": 4673,
+"end_ms": 4768
 },
 {
 "text": "it",
-"start_ms": 8108,
-"end_ms": 8203
+"start_ms": 4768,
+"end_ms": 4863
 },
 {
 "text": "felt",
-"start_ms": 8203,
-"end_ms": 8394
+"start_ms": 4863,
+"end_ms": 5054
 },
 {
 "text": "like",
-"start_ms": 8394,
-"end_ms": 8584
+"start_ms": 5054,
+"end_ms": 5244
 },
 {
 "text": "slow",
-"start_ms": 8584,
-"end_ms": 8775
+"start_ms": 5244,
+"end_ms": 5435
 },
 {
 "text": "motion.",
-"start_ms": 8775,
-"end_ms": 9251
+"start_ms": 5435,
+"end_ms": 5911
 },
 {
 "text": "So",
-"start_ms": 9822,
-"end_ms": 10108
+"start_ms": 6482,
+"end_ms": 6768
 },
 {
 "text": "a",
-"start_ms": 10108,
-"end_ms": 10203
+"start_ms": 6768,
+"end_ms": 6863
 },
 {
 "text": "neuroscientist",
-"start_ms": 10203,
-"end_ms": 11060
+"start_ms": 6863,
+"end_ms": 7720
 },
 {
 "text": "named",
-"start_ms": 11060,
-"end_ms": 11251
+"start_ms": 7720,
+"end_ms": 7911
 },
 {
 "text": "David",
-"start_ms": 11251,
-"end_ms": 11537
+"start_ms": 7911,
+"end_ms": 8197
 },
 {
 "text": "Eagleman",
-"start_ms": 11632,
-"end_ms": 12108
+"start_ms": 8292,
+"end_ms": 8768
 },
 {
 "text": "tested",
-"start_ms": 12299,
-"end_ms": 12584
+"start_ms": 8959,
+"end_ms": 9244
 },
 {
 "text": "it.",
-"start_ms": 12584,
-"end_ms": 12775
+"start_ms": 9244,
+"end_ms": 9435
 },
 {
 "text": "He",
-"start_ms": 13346,
-"end_ms": 13441
+"start_ms": 10006,
+"end_ms": 10101
 },
 {
 "text": "dropped",
-"start_ms": 13441,
-"end_ms": 13822
+"start_ms": 10101,
+"end_ms": 10482
 },
 {
 "text": "people",
-"start_ms": 13822,
-"end_ms": 14108
+"start_ms": 10482,
+"end_ms": 10768
 },
 {
 "text": "thirty-one",
-"start_ms": 14108,
-"end_ms": 14680
+"start_ms": 10768,
+"end_ms": 11340
 },
 {
 "text": "meters",
-"start_ms": 14680,
-"end_ms": 14965
+"start_ms": 11340,
+"end_ms": 11625
 },
 {
 "text": "about",
-"start_ms": 15060,
-"end_ms": 15346
+"start_ms": 11720,
+"end_ms": 12006
 },
 {
 "text": "ten",
-"start_ms": 15346,
-"end_ms": 15632
+"start_ms": 12006,
+"end_ms": 12292
 },
 {
 "text": "floors",
-"start_ms": 15632,
-"end_ms": 16013
+"start_ms": 12292,
+"end_ms": 12673
 },
 {
 "text": "into",
-"start_ms": 16239,
-"end_ms": 16429
+"start_ms": 12899,
+"end_ms": 13089
 },
 {
 "text": "a",
-"start_ms": 16429,
-"end_ms": 16525
+"start_ms": 13089,
+"end_ms": 13185
 },
 {
 "text": "net.",
-"start_ms": 16525,
-"end_ms": 16906
+"start_ms": 13185,
+"end_ms": 13566
 },
 {
 "text": "On",
-"start_ms": 17357,
-"end_ms": 17453
+"start_ms": 14017,
+"end_ms": 14113
 },
 {
 "text": "their",
-"start_ms": 17453,
-"end_ms": 17548
+"start_ms": 14113,
+"end_ms": 14208
 },
 {
 "text": "wrist:",
-"start_ms": 17548,
-"end_ms": 18024
+"start_ms": 14208,
+"end_ms": 14684
 },
 {
 "text": "a",
-"start_ms": 18145,
-"end_ms": 18240
+"start_ms": 14805,
+"end_ms": 14900
 },
 {
 "text": "screen",
-"start_ms": 18240,
-"end_ms": 18716
+"start_ms": 14900,
+"end_ms": 15376
 },
 {
 "text": "flashing",
-"start_ms": 18716,
-"end_ms": 19193
+"start_ms": 15376,
+"end_ms": 15853
 },
 {
 "text": "numbers",
-"start_ms": 19193,
-"end_ms": 19574
+"start_ms": 15853,
+"end_ms": 16234
 },
 {
 "text": "too",
-"start_ms": 19574,
-"end_ms": 19764
+"start_ms": 16234,
+"end_ms": 16424
 },
 {
 "text": "fast",
-"start_ms": 19764,
-"end_ms": 20145
+"start_ms": 16424,
+"end_ms": 16805
 },
 {
 "text": "to",
-"start_ms": 20145,
-"end_ms": 20240
+"start_ms": 16805,
+"end_ms": 16900
 },
 {
 "text": "read.",
-"start_ms": 20240,
-"end_ms": 20621
-},
-{
-"text": "If",
-"start_ms": 21346,
-"end_ms": 21441
-},
-{
-"text": "time",
-"start_ms": 21441,
-"end_ms": 21917
-},
-{
-"text": "really",
-"start_ms": 21917,
-"end_ms": 22203
-},
-{
-"text": "slowed",
-"start_ms": 22203,
-"end_ms": 22488
-},
-{
-"text": "down,",
-"start_ms": 22488,
-"end_ms": 22869
-},
-{
-"text": "they'd",
-"start_ms": 23114,
-"end_ms": 23209
-},
-{
-"text": "be",
-"start_ms": 23209,
-"end_ms": 23305
-},
-{
-"text": "able",
-"start_ms": 23305,
-"end_ms": 23495
-},
-{
-"text": "to",
-"start_ms": 23495,
-"end_ms": 23590
-},
-{
-"text": "read",
-"start_ms": 23590,
-"end_ms": 23781
-},
-{
-"text": "them.",
-"start_ms": 23781,
-"end_ms": 23971
+"start_ms": 16900,
+"end_ms": 17281
 },
 {
 "text": "Afterwards,",
-"start_ms": 24380,
-"end_ms": 24952
+"start_ms": 18006,
+"end_ms": 18578
 },
 {
 "text": "they",
-"start_ms": 25142,
-"end_ms": 25237
+"start_ms": 18768,
+"end_ms": 18863
 },
 {
 "text": "said",
-"start_ms": 25237,
-"end_ms": 25428
+"start_ms": 18863,
+"end_ms": 19054
 },
 {
 "text": "their",
-"start_ms": 25428,
-"end_ms": 25618
+"start_ms": 19054,
+"end_ms": 19244
 },
 {
 "text": "fall",
-"start_ms": 25618,
-"end_ms": 25999
+"start_ms": 19244,
+"end_ms": 19625
 },
 {
 "text": "felt",
-"start_ms": 25999,
-"end_ms": 26380
+"start_ms": 19625,
+"end_ms": 20006
 },
 {
 "text": "36%",
-"start_ms": 26380,
-"end_ms": 27618
+"start_ms": 20006,
+"end_ms": 21244
 },
 {
 "text": "longer.",
-"start_ms": 27618,
-"end_ms": 27999
+"start_ms": 21244,
+"end_ms": 21625
 },
 {
 "text": "But",
-"start_ms": 28389,
-"end_ms": 28484
+"start_ms": 22015,
+"end_ms": 22110
 },
 {
 "text": "they",
-"start_ms": 28484,
-"end_ms": 28675
+"start_ms": 22110,
+"end_ms": 22301
 },
 {
 "text": "couldn't",
-"start_ms": 28675,
-"end_ms": 29151
+"start_ms": 22301,
+"end_ms": 22777
 },
 {
 "text": "read",
-"start_ms": 29151,
-"end_ms": 29342
+"start_ms": 22777,
+"end_ms": 22968
 },
 {
 "text": "the",
-"start_ms": 29342,
-"end_ms": 29532
+"start_ms": 22968,
+"end_ms": 23158
 },
 {
 "text": "numbers.",
-"start_ms": 29532,
-"end_ms": 30008
+"start_ms": 23158,
+"end_ms": 23634
 },
 {
 "text": "Time",
-"start_ms": 30357,
-"end_ms": 30738
+"start_ms": 23983,
+"end_ms": 24364
 },
 {
 "text": "didn't",
-"start_ms": 30738,
-"end_ms": 31024
+"start_ms": 24364,
+"end_ms": 24650
 },
 {
 "text": "slow",
-"start_ms": 31024,
-"end_ms": 31309
+"start_ms": 24650,
+"end_ms": 24935
 },
 {
 "text": "down.",
-"start_ms": 31309,
-"end_ms": 31595
+"start_ms": 24935,
+"end_ms": 25221
 },
 {
 "text": "Your",
-"start_ms": 32071,
-"end_ms": 32166
+"start_ms": 25697,
+"end_ms": 25792
 },
 {
 "text": "brain",
-"start_ms": 32166,
-"end_ms": 32547
+"start_ms": 25792,
+"end_ms": 26173
 },
 {
 "text": "just",
-"start_ms": 32547,
-"end_ms": 32833
+"start_ms": 26173,
+"end_ms": 26459
 },
 {
 "text": "records",
-"start_ms": 32833,
-"end_ms": 33309
+"start_ms": 26459,
+"end_ms": 26935
 },
 {
 "text": "the",
-"start_ms": 33309,
-"end_ms": 33404
+"start_ms": 26935,
+"end_ms": 27030
 },
 {
 "text": "moment",
-"start_ms": 33404,
-"end_ms": 33690
+"start_ms": 27030,
+"end_ms": 27316
 },
 {
 "text": "in",
-"start_ms": 33690,
-"end_ms": 33785
+"start_ms": 27316,
+"end_ms": 27411
 },
 {
 "text": "so",
-"start_ms": 33785,
-"end_ms": 34166
+"start_ms": 27411,
+"end_ms": 27792
 },
 {
 "text": "much",
-"start_ms": 34166,
-"end_ms": 34452
+"start_ms": 27792,
+"end_ms": 28078
 },
 {
 "text": "detail",
-"start_ms": 34452,
-"end_ms": 34928
+"start_ms": 28078,
+"end_ms": 28554
 },
 {
 "text": "that,",
-"start_ms": 35214,
-"end_ms": 35500
+"start_ms": 28840,
+"end_ms": 29126
 },
 {
 "text": "when",
-"start_ms": 35500,
-"end_ms": 35690
+"start_ms": 29126,
+"end_ms": 29316
 },
 {
 "text": "you",
-"start_ms": 35690,
-"end_ms": 35785
+"start_ms": 29316,
+"end_ms": 29411
 },
 {
 "text": "remember",
-"start_ms": 35785,
-"end_ms": 36262
+"start_ms": 29411,
+"end_ms": 29888
 },
 {
 "text": "it,",
-"start_ms": 36262,
-"end_ms": 36435
+"start_ms": 29888,
+"end_ms": 30061
 },
 {
 "text": "it",
-"start_ms": 36548,
-"end_ms": 36739
+"start_ms": 30174,
+"end_ms": 30365
 },
 {
 "text": "feels",
-"start_ms": 36739,
-"end_ms": 37215
+"start_ms": 30365,
+"end_ms": 30841
 },
 {
 "text": "longer.",
-"start_ms": 37215,
-"end_ms": 37596
+"start_ms": 30841,
+"end_ms": 31222
 },
 {
 "text": "The",
-"start_ms": 37996,
-"end_ms": 38092
+"start_ms": 31622,
+"end_ms": 31718
 },
 {
 "text": "slow",
-"start_ms": 38092,
-"end_ms": 38282
+"start_ms": 31718,
+"end_ms": 31908
 },
 {
 "text": "motion",
-"start_ms": 38282,
-"end_ms": 38663
+"start_ms": 31908,
+"end_ms": 32289
 },
 {
 "text": "doesn't",
-"start_ms": 38663,
-"end_ms": 38949
+"start_ms": 32289,
+"end_ms": 32575
 },
 {
 "text": "happen",
-"start_ms": 38949,
-"end_ms": 39234
+"start_ms": 32575,
+"end_ms": 32860
 },
 {
 "text": "during",
-"start_ms": 39234,
-"end_ms": 39520
+"start_ms": 32860,
+"end_ms": 33146
 },
 {
 "text": "the",
-"start_ms": 39520,
-"end_ms": 39615
+"start_ms": 33146,
+"end_ms": 33241
 },
 {
 "text": "fight.",
-"start_ms": 39615,
-"end_ms": 39996
+"start_ms": 33241,
+"end_ms": 33622
 },
 {
 "text": "It",
-"start_ms": 40387,
-"end_ms": 40482
+"start_ms": 34013,
+"end_ms": 34108
 },
 {
 "text": "happens",
-"start_ms": 40482,
-"end_ms": 40863
+"start_ms": 34108,
+"end_ms": 34489
 },
 {
 "text": "after",
-"start_ms": 40958,
-"end_ms": 41339
+"start_ms": 34584,
+"end_ms": 34965
 },
 {
 "text": "in",
-"start_ms": 41615,
-"end_ms": 41710
+"start_ms": 35241,
+"end_ms": 35336
 },
 {
 "text": "your",
-"start_ms": 41710,
-"end_ms": 41901
+"start_ms": 35336,
+"end_ms": 35527
 },
 {
 "text": "memory.",
-"start_ms": 41901,
-"end_ms": 42282
+"start_ms": 35527,
+"end_ms": 35908
 }
 ]
 }

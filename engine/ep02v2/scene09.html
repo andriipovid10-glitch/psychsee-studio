@@ -1,0 +1,129 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>#gl{width:1920px;height:1080px}
+#bring{position:absolute;border:4px solid #7fb2ff;border-radius:50%;box-shadow:0 0 40px rgba(127,178,255,.6),inset 0 0 40px rgba(127,178,255,.3);visibility:hidden}
+#breath{position:absolute;left:960px;top:150px;transform:translateX(-50%);font-family:'DejaVu Sans Mono',monospace;font-size:34px;letter-spacing:.3em;color:#cfe0ff;visibility:hidden}
+#tblur{position:absolute;inset:0;visibility:hidden;backdrop-filter:blur(14px)}#tdark{position:absolute;inset:0;visibility:hidden}
+.step{position:absolute;left:110px;top:120px;font-weight:900;font-size:64px;letter-spacing:-.03em;visibility:hidden}
+.step i{font-style:normal;color:#7fb2ff;margin-right:18px}</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_lungs" class="plate"><img src="img/flow_lungs.jpg"><i class="shade"></i></div>
+<div id="tblur"></div><div id="tdark"></div>
+<div id="bring"></div>
+<div id="breath">IN · IN · OUT</div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 09 — stay in control</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Harvard Business School · 2014</span><span>PsychSee notes</span></div>
+  <h1 style="font-size:84px">“I am excited.”</h1>
+  <div class="pron">A. W. Brooks — reappraising anxiety as excitement</div>
+  <div class="rule"></div>
+  <p>Before singing, giving a speech or doing hard math, people who said <span class="hl"><i></i>“I am excited”</span> did better than people who tried to calm down.</p>
+  <div class="fig"><b>80% vs 69%</b><span>singing accuracy<br>excited vs calm</span></div>
+  <p class="src">Source: Brooks (2014), Journal of Experimental Psychology: General</p>
+</div></div>
+<div id="st1" class="step"><i>1</i>NAME IT</div><div id="st2" class="step"><i>2</i>BREATHE</div><div id="st3" class="step"><i>3</i>WIDEN</div>
+<div id="k_ctrl" class="kw" style="left:960px;top:880px;font-size:150px"><span>STAY</span> <span>IN</span> <span class="b">CONTROL.</span></div>
+<div id="k_ready" class="kw" style="left:960px;top:900px;font-size:90px"><span>"THIS</span> <span>IS</span> <span>MY</span> <span>BODY</span> <span class="b">GETTING</span> <span class="b">READY."</span></div>
+<div id="k_brake" class="kw" style="left:960px;top:900px;font-size:120px"><span>LONG</span> <span>EXHALE</span> <span>=</span> <span class="b">BRAKE.</span></div>
+<div id="k_look" class="kw" style="left:960px;top:900px;font-size:100px"><span>WHO</span> <span>ELSE?</span> <span>WHERE'S</span> <span>THE</span> <span class="b">EXIT?</span></div>
+<div id="k_punch" class="kw" style="left:960px;top:820px;font-size:100px"><span>NOT</span> <span>A</span> <span>HARDER</span> <span>PUNCH.</span></div>
+<div id="k_head" class="kw" style="left:960px;top:940px;font-size:130px"><span>A</span> <span>CLEAR</span> <span class="b">HEAD.</span></div>
+<div id="k_walk" class="kw" style="left:960px;top:900px;font-size:92px"><span>THE</span> <span>SMARTEST</span> <span>MOVE:</span> <span class="b">WALK</span> <span class="b">AWAY.</span></div>
+<div id="blackout"></div>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, back, V3, vlerp, pose, shake, $, show, project, pulse} from '../ep02/lib/core.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet, makeVoid} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+const TM = await loadTiming('s09'), c = TM.cue, DUR = TM.duration; window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene), voidSet = makeVoid(scene);
+const A = man(scene), B = man(scene), G2 = man(scene);
+G2.mat.color.set(0xff5a63); G2.mat.emissive = new THREE.Color(0x5a0008);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const SHOTS = [['title', 0], ['name', c('one', -.12)], ['paper', c('harvard', -.15)], ['breathe', c('two', -.12)], ['widen', c('three', -.12)], ['edge', c('edge', -.12)], ['walk', c('clear2', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+function tunnel(r, amt, cx, cy) {
+  $('tblur').style.maskImage = `radial-gradient(circle at ${cx}px ${cy}px, transparent ${r}px, black ${r + 260}px)`; show($('tblur'), amt);
+  $('tdark').style.background = `radial-gradient(circle at ${cx}px ${cy}px, rgba(0,0,0,0) ${r}px, rgba(2,4,10,${.97 * amt}) ${r + 320}px)`; show($('tdark'), amt > 0 ? 1 : 0);
+}
+function ring(cx, cy, r, o) { const e = $('bring'); e.style.left = (cx - r) + 'px'; e.style.top = (cy - r) + 'px'; e.style.width = e.style.height = 2 * r + 'px'; show(e, o); }
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_lungs', 'paper', 'bring', 'breath', 'tblur', 'tdark', 'st1', 'st2', 'st3'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.2; key.color.set(0xdde8ff); hemi.intensity = .35; rim.intensity = 3.0; rim.color.set(0x8fc0ff);
+  street.g.visible = true; voidSet.g.visible = false; G2.g.visible = false;
+  place(A, -.9, 0, Math.PI / 2); place(B, .9, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  poseA(A, t, {}); poseB(B, t, {calm: .7, breath: .012, rate: 2.2, shake: 0});
+  poseCrowd(crowd, CROWD, t);
+  const stepOn = (id, a) => { const e = $(id); show(e, seg(t, a, a + .25)); e.style.transform = `translateX(${(1 - eo(seg(t, a, a + .3))) * -40}px)`; };
+  if (name === 'title') {
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; crowd.forEach(m => m.g.visible = false); place(B, 0, 0, 0);
+    poseB(B, t, {calm: 1, breath: .015, rate: 2});
+    pos = V3(lerp(-.6, -.3, k), 1.5, lerp(6.4, 5.6, k)); tgt = V3(0, 1.2, 0); desat = .5; black = 1 - seg(t, 0, .2);
+    cam.position.copy(pos); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const [x, y] = project(cam, W2(B, B.P.hip.clone().lerp(B.P.sh, .7))); ring(x, y, 130 + 20 * Math.sin(t * 2), seg(t, .3, .8));
+    slamWords($('k_ctrl'), t, [c('heres', -.05), c('heres', .4), c('control', -.05)], s1 - .02, {jolt: 6});
+  } else if (name === 'name') {
+    stepOn('st1', s0);
+    pos = vlerp(V3(3.4, 1.8, 5.4), V3(3.0, 1.7, 4.6), ease(k)); tgt = V3(.4, 1.3, 0);
+    red = .12 * pulse(t * 2.4) * (1 - seg(t, c('tell'), c('ready'))); desat = lerp(.5, .2, seg(t, c('tell'), c('ready')));
+    slamWords($('k_ready'), t, [c('tell', .4), c('tell', .6), c('tell', .8), c('tell', 1.0), c('ready', -.3), c('ready', -.05)], s1 - .02, {jolt: 6});
+  } else if (name === 'paper') {
+    stepOn('st1', s0 - 1); gb = .65; pos = V3(3.0, 1.7, 4.6); tgt = V3(.4, 1.3, 0);
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 40, tilt: 7, hl: [[c('excited', -.1), c('excited', .4)]]});
+  } else if (name === 'breathe') {
+    render3d = false; show($('pl_lungs'), 1); stepOn('st2', s0);
+    // two short ins, one long out (ring grows twice, then shrinks slowly)
+    const a = c('short', -.1), b = c('longout', -.1), u = t < a ? 0 : t < b ? (Math.min(1, (t - a) / ((b - a) / 2)) * .5 + (t - a > (b - a) / 2 ? Math.min(1, (t - a - (b - a) / 2) / ((b - a) / 2)) * .5 : 0)) : 1 - ease(seg(t, b, c('exhale', .4)));
+    plate($('pl_lungs'), ease(k), {zoom0: 1.0, zoom1: 1.1, y1: 20, bright: .85 + .25 * u});
+    ring(960, 520, 160 + 160 * u, seg(t, a - .2, a));
+    show($('breath'), seg(t, a - .2, a) * (1 - seg(t, c('brake', -.3), c('brake'))));
+    slamWords($('k_brake'), t, [c('exhale', -.3), c('exhale', -.05), c('brake', -.2), c('brake', -.05)], s1 - .02, {jolt: 8});
+  } else if (name === 'widen') {               // tunnel opens: who else is there, where's the exit
+    stepOn('st3', s0);
+    G2.g.visible = true; place(G2, 2.6, -1.6, -Math.PI * .72); poseA(G2, t + 1.3, {});
+    const bh = W2(B, B.P.head); B.g.visible = false;
+    const turn = ease(seg(t, c('look', -.1), c('exit', .3)));
+    pos = bh.clone().add(V3(1.3, .15, .9)); tgt = vlerp(W2(A, A.P.head), V3(2.0, 1.1, -1.8), turn); fov = lerp(50, 62, turn);
+    cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const [lx, ly] = project(cam, tgt);
+    const open = ease(seg(t, c('around', -.1), c('else', .3)));
+    tunnel(lerp(220, 1100, open), 1 - open * .95, lx, ly);
+    slamWords($('k_look'), t, [c('else', -.3), c('else', -.05), c('exit', -.5), c('exit', -.3), c('exit', -.05)], s1 - .02, {jolt: 6});
+  } else if (name === 'edge') {
+    poseB(B, t, {calm: 1, breath: .012, rate: 2});
+    pos = vlerp(V3(3.6, 1.7, 5.6), V3(3.0, 1.6, 4.8), ease(k)); tgt = V3(.6, 1.25, 0); desat = .25; flash = .2 * cut;
+    slamWords($('k_punch'), t, [c('harder', -.4), c('harder', -.25), c('harder', -.05), c('punch', -.05)], s1 - .02, {jolt: 6});
+    slamWords($('k_head'), t, [c('clear1', -.2), c('clear1', -.05), c('head1', -.05)], s1 - .02, {jolt: 8});
+  } else if (name === 'walk') {                 // the smartest move: walk away before it starts
+    const w = seg(t, c('walking', -.3), DUR);
+    place(B, lerp(.9, 3.6, w), lerp(0, .8, w), Math.PI / 2 - .3);
+    const sw = Math.sin(t * 6) * .3 * (w > 0 ? 1 : 0);
+    pose(B, {lean: .04, ua: {L: V3(.25, -.97, .1 - sw * .3), R: V3(-.25, -.97, .1 + sw * .3)}, la: {L: V3(.1, -.99, .1), R: V3(-.1, -.99, .1)}, th: {L: V3(.12, -.97, sw), R: V3(-.12, -.97, -sw)}}); fists(B, .95);
+    pos = vlerp(V3(.4, 2.4, 8.4), V3(1.4, 2.6, 9.4), ease(k)); tgt = V3(1.4, 1.1, 0); desat = .2; rim.intensity = 3.4;
+    slamWords($('k_walk'), t, [c('smartest', -.4), c('smartest', -.05), c('smartest', .3), c('walking', -.05), c('away', -.05)], DUR - .05, {jolt: 8});
+    black = seg(t, DUR - .3, DUR);
+  }
+  if (render3d) {
+    cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt);
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb; grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden'; $('rflash').style.opacity = clamp(red * 1.4);
+  $('blackout').style.background = '#000'; $('blackout').style.opacity = black;
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>

@@ -107,254 +107,189 @@
 "end_ms": 7733
 },
 {
-"text": "Your",
-"start_ms": 8027,
-"end_ms": 8217
-},
-{
-"text": "body",
-"start_ms": 8217,
-"end_ms": 8598
-},
-{
-"text": "made",
-"start_ms": 8598,
-"end_ms": 8884
-},
-{
-"text": "every",
-"start_ms": 8884,
-"end_ms": 9265
-},
-{
-"text": "one",
-"start_ms": 9265,
-"end_ms": 9360
-},
-{
-"text": "of",
-"start_ms": 9360,
-"end_ms": 9455
-},
-{
-"text": "those",
-"start_ms": 9455,
-"end_ms": 9646
-},
-{
-"text": "calls",
-"start_ms": 9646,
-"end_ms": 10027
-},
-{
-"text": "before",
-"start_ms": 10027,
-"end_ms": 10598
-},
-{
-"text": "you",
-"start_ms": 10598,
-"end_ms": 10789
-},
-{
-"text": "got",
-"start_ms": 10789,
-"end_ms": 10979
-},
-{
-"text": "a",
-"start_ms": 10979,
-"end_ms": 10979
-},
-{
-"text": "vote.",
-"start_ms": 10979,
-"end_ms": 11360
-},
-{
 "text": "Now",
-"start_ms": 11773,
-"end_ms": 11964
+"start_ms": 8027,
+"end_ms": 8218
 },
 {
 "text": "you",
-"start_ms": 11964,
-"end_ms": 12059
+"start_ms": 8218,
+"end_ms": 8313
 },
 {
 "text": "know",
-"start_ms": 12059,
-"end_ms": 12249
+"start_ms": 8313,
+"end_ms": 8503
 },
 {
 "text": "who's",
-"start_ms": 12249,
-"end_ms": 12440
+"start_ms": 8503,
+"end_ms": 8694
 },
 {
 "text": "driving",
-"start_ms": 12440,
-"end_ms": 12916
+"start_ms": 8694,
+"end_ms": 9170
 },
 {
 "text": "and",
-"start_ms": 13093,
-"end_ms": 13474
+"start_ms": 9347,
+"end_ms": 9728
 },
 {
 "text": "how",
-"start_ms": 13474,
-"end_ms": 13570
+"start_ms": 9728,
+"end_ms": 9824
 },
 {
 "text": "to",
-"start_ms": 13570,
-"end_ms": 13665
+"start_ms": 9824,
+"end_ms": 9919
 },
 {
 "text": "take",
-"start_ms": 13665,
-"end_ms": 13855
+"start_ms": 9919,
+"end_ms": 10109
 },
 {
 "text": "the",
-"start_ms": 13855,
-"end_ms": 13951
+"start_ms": 10109,
+"end_ms": 10205
 },
 {
 "text": "wheel",
-"start_ms": 13951,
-"end_ms": 14141
+"start_ms": 10205,
+"end_ms": 10395
 },
 {
 "text": "back.",
-"start_ms": 14141,
-"end_ms": 14522
+"start_ms": 10395,
+"end_ms": 10776
 },
 {
 "text": "Next",
-"start_ms": 14923,
-"end_ms": 15113
+"start_ms": 11177,
+"end_ms": 11367
 },
 {
 "text": "video:",
-"start_ms": 15113,
-"end_ms": 15494
+"start_ms": 11367,
+"end_ms": 11748
 },
 {
 "text": "what",
-"start_ms": 15603,
-"end_ms": 15793
+"start_ms": 11857,
+"end_ms": 12047
 },
 {
 "text": "happens",
-"start_ms": 15793,
-"end_ms": 16079
+"start_ms": 12047,
+"end_ms": 12333
 },
 {
 "text": "in",
-"start_ms": 16079,
-"end_ms": 16174
+"start_ms": 12333,
+"end_ms": 12428
 },
 {
 "text": "your",
-"start_ms": 16174,
-"end_ms": 16269
+"start_ms": 12428,
+"end_ms": 12523
 },
 {
 "text": "body",
-"start_ms": 16269,
-"end_ms": 16650
+"start_ms": 12523,
+"end_ms": 12904
 },
 {
 "text": "in",
-"start_ms": 16650,
-"end_ms": 16745
+"start_ms": 12904,
+"end_ms": 12999
 },
 {
 "text": "the",
-"start_ms": 16745,
-"end_ms": 16841
+"start_ms": 12999,
+"end_ms": 13095
 },
 {
 "text": "first",
-"start_ms": 16841,
-"end_ms": 17317
+"start_ms": 13095,
+"end_ms": 13571
 },
 {
 "text": "few",
-"start_ms": 17317,
-"end_ms": 17507
+"start_ms": 13571,
+"end_ms": 13761
 },
 {
 "text": "seconds",
-"start_ms": 17507,
-"end_ms": 17983
+"start_ms": 13761,
+"end_ms": 14237
 },
 {
 "text": "after",
-"start_ms": 17983,
-"end_ms": 18269
+"start_ms": 14237,
+"end_ms": 14523
 },
 {
 "text": "you",
-"start_ms": 18269,
-"end_ms": 18364
+"start_ms": 14523,
+"end_ms": 14618
 },
 {
 "text": "see",
-"start_ms": 18364,
-"end_ms": 18650
+"start_ms": 14618,
+"end_ms": 14904
 },
 {
 "text": "someone",
-"start_ms": 18650,
-"end_ms": 19031
+"start_ms": 14904,
+"end_ms": 15285
 },
 {
 "text": "you're",
-"start_ms": 19031,
-"end_ms": 19222
+"start_ms": 15285,
+"end_ms": 15476
 },
 {
 "text": "attracted",
-"start_ms": 19222,
-"end_ms": 19698
+"start_ms": 15476,
+"end_ms": 15952
 },
 {
 "text": "to.",
-"start_ms": 19698,
-"end_ms": 19888
+"start_ms": 15952,
+"end_ms": 16142
 },
 {
 "text": "Subscribe",
-"start_ms": 20237,
-"end_ms": 20713
+"start_ms": 16491,
+"end_ms": 16967
 },
 {
 "text": "so",
-"start_ms": 20713,
-"end_ms": 20808
+"start_ms": 16967,
+"end_ms": 17062
 },
 {
 "text": "you",
-"start_ms": 20808,
-"end_ms": 20808
+"start_ms": 17062,
+"end_ms": 17062
 },
 {
 "text": "don't",
-"start_ms": 20808,
-"end_ms": 20999
+"start_ms": 17062,
+"end_ms": 17253
 },
 {
 "text": "miss",
-"start_ms": 20999,
-"end_ms": 21094
+"start_ms": 17253,
+"end_ms": 17348
 },
 {
 "text": "it.",
-"start_ms": 21094,
-"end_ms": 21189
+"start_ms": 17348,
+"end_ms": 17443
 }
 ]
 }

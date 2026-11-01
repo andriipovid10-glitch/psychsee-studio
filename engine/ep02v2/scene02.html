@@ -150,14 +150,13 @@ function draw(t) {
     showBpm(1 - seg(t, s0, s0 + .3));
   } else if (name === 'heart') {                // real fight: heart rate more than doubles, every beat harder
     render3d = false; show($('pl_heart'), 1);
-    const el = $('pl_heart'), sq = 1 + .045 * beat * (1 + seg(t, c('every'), c('harder')));
+    const el = $('pl_heart'), sq = 1 + .045 * beat * (1 + seg(t, c('inseconds'), c('inseconds', .6)));
     plate(el, ease(k), {zoom0: 1.05 * sq, zoom1: 1.25 * sq, x0: 220, x1: 260, y1: 20, glowX: 880, glowY: 470, glow: .25 + .55 * beat, bright: .9 + .25 * beat});
     el.querySelector('img').style.transform += ` translate(${Math.sin(t * 40) * 2 * beat}px,0)`;
     red = .22 * beat; flash = .3 * cut; shk = 0;
     showBpm(1);
-    slamWords($('k_double'), t, [c('double', -.05)], c('every', -.15), {from: 1.8, jolt: 20});
-    slamWords($('k_secs'), t, [c('inseconds', -.05), c('inseconds', .15)], c('every', -.15), {jolt: 8});
-    slamWords($('k_harder'), t, [c('harder', -.05), c('faster', -.05)], s1 - .02, {jolt: 14});
+    slamWords($('k_double'), t, [c('double', -.05)], s1 - .02, {from: 1.8, jolt: 20});
+    slamWords($('k_secs'), t, [c('inseconds', -.05), c('inseconds', .15)], s1 - .02, {jolt: 8});
   } else if (name === 'lungs') {                // lungs open: B's chest heaves, x-ray accent (1 s)
     street.g.visible = false; voidSet.g.visible = true; place(B, 0, 0, 0);
     poseB(B, t, {shake: .02, rate: 9, breath: .035});

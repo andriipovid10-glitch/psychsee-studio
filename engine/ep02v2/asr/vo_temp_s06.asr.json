@@ -152,159 +152,79 @@
 "end_ms": 13552
 },
 {
-"text": "Why",
-"start_ms": 14029,
-"end_ms": 14219
-},
-{
-"text": "people",
-"start_ms": 14219,
-"end_ms": 14505
-},
-{
-"text": "walk",
-"start_ms": 14505,
-"end_ms": 14695
-},
-{
-"text": "away",
-"start_ms": 14695,
-"end_ms": 14886
-},
-{
-"text": "from",
-"start_ms": 14886,
-"end_ms": 15076
-},
-{
-"text": "car",
-"start_ms": 15076,
-"end_ms": 15362
-},
-{
-"text": "crashes",
-"start_ms": 15362,
-"end_ms": 15933
-},
-{
-"text": "and",
-"start_ms": 16219,
-"end_ms": 16314
-},
-{
-"text": "only",
-"start_ms": 16314,
-"end_ms": 16505
-},
-{
-"text": "feel",
-"start_ms": 16505,
-"end_ms": 16886
-},
-{
-"text": "the",
-"start_ms": 16886,
-"end_ms": 17076
-},
-{
-"text": "injury",
-"start_ms": 17076,
-"end_ms": 17362
-},
-{
-"text": "when",
-"start_ms": 17362,
-"end_ms": 17457
-},
-{
-"text": "they",
-"start_ms": 17457,
-"end_ms": 17552
-},
-{
-"text": "sit",
-"start_ms": 17552,
-"end_ms": 17838
-},
-{
-"text": "down.",
-"start_ms": 17838,
-"end_ms": 18219
-},
-{
 "text": "Your",
-"start_ms": 18733,
-"end_ms": 18828
+"start_ms": 14029,
+"end_ms": 14124
 },
 {
 "text": "body",
-"start_ms": 18828,
-"end_ms": 19209
+"start_ms": 14124,
+"end_ms": 14505
 },
 {
 "text": "isn't",
-"start_ms": 19209,
-"end_ms": 19590
+"start_ms": 14505,
+"end_ms": 14886
 },
 {
 "text": "protecting",
-"start_ms": 19590,
-"end_ms": 20066
+"start_ms": 14886,
+"end_ms": 15362
 },
 {
 "text": "you",
-"start_ms": 20066,
-"end_ms": 20161
+"start_ms": 15362,
+"end_ms": 15457
 },
 {
 "text": "from",
-"start_ms": 20161,
-"end_ms": 20352
+"start_ms": 15457,
+"end_ms": 15648
 },
 {
 "text": "the",
-"start_ms": 20352,
-"end_ms": 20447
+"start_ms": 15648,
+"end_ms": 15743
 },
 {
 "text": "damage.",
-"start_ms": 20447,
-"end_ms": 20923
+"start_ms": 15743,
+"end_ms": 16219
 },
 {
 "text": "It's",
-"start_ms": 21347,
-"end_ms": 21537
+"start_ms": 16643,
+"end_ms": 16833
 },
 {
 "text": "hiding",
-"start_ms": 21537,
-"end_ms": 22013
+"start_ms": 16833,
+"end_ms": 17309
 },
 {
 "text": "it",
-"start_ms": 22013,
-"end_ms": 22109
+"start_ms": 17309,
+"end_ms": 17405
 },
 {
 "text": "so",
-"start_ms": 22446,
-"end_ms": 22541
+"start_ms": 17742,
+"end_ms": 17837
 },
 {
 "text": "you",
-"start_ms": 22541,
-"end_ms": 22731
+"start_ms": 17837,
+"end_ms": 18027
 },
 {
 "text": "keep",
-"start_ms": 22731,
-"end_ms": 23017
+"start_ms": 18027,
+"end_ms": 18313
 },
 {
 "text": "going.",
-"start_ms": 23017,
-"end_ms": 23398
+"start_ms": 18313,
+"end_ms": 18694
 }
 ]
 }

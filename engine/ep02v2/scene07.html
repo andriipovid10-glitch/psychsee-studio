@@ -71,7 +71,7 @@ const HX = .9;
 const clk = makeTClock(document.body);
 const STORY = {from_cue: null, t0: 7.9, t1: 8.95};
 
-const SHOTS = [['title', 0], ['slowmo', c('almost', -.12)], ['paper', c('neuro', -.15)], ['tower', c('dropped', -.12)], ['wrist', c('wrist', -.12)],
+const SHOTS = [['title', 0], ['slowmo', c('lie', .9)], ['paper', c('neuro', -.15)], ['tower', c('dropped', -.12)], ['wrist', c('wrist', -.12)],
   ['result', c('afterwards', -.12)], ['reveal', c('but', -.1)], ['memory', c('brain', -.12)], ['after', c('slowmo', -.12)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 
@@ -100,14 +100,14 @@ function draw(t) {
       slamWords($('k_lie'), t, [c('lie', -.25), c('lie', -.05)], s1 - .02, {from: 1.6, jolt: 16});
       black = 1 - seg(t, 0, .2); red = .2 * seg(t, c('lie'), c('lie', .2));
     } else {
-      slamWords($('k_slowed'), t, [c('time1', -.05), c('slowed1', -.05), c('slowed1', .25)], c('survey', -.1), {from: 1.15, jolt: 0});
+      slamWords($('k_slowed'), t, [s0 + .05, s0 + .3, s0 + .55], c('survey', -.1), {from: 1.15, jolt: 0});
       slamWords($('k_62'), t, [c('n62', -.05), c('slow1', -.4), c('slow1', -.2)], s1 - .02, {jolt: 10});
     }
   } else if (name === 'paper') {                 // the experiment, on paper
     render3d = false; show($('pl_tower'), 1);
     plate($('pl_tower'), 1, {zoom0: 1.1, zoom1: 1.1, bright: .3, blur: 8});
     if (t > c('neuro', -.1)) { const e = $('k_tested'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('neuro', -.1), c('neuro', .3)) * (1 - seg(t, s1 - .2, s1))); }
-    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 120, tilt: 7, hl: [[c('eagleman', 0), c('tested', .3)], [c('tested', .4), c('tested', .9)]]});
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 30, tilt: 7, hl: [[c('eagleman', 0), c('tested', .3)], [c('tested', .4), c('tested', .9)]]});
   } else if (name === 'tower') {                 // 31 m, about ten floors, into a net
     render3d = false; show($('pl_tower'), 1);
     plate($('pl_tower'), ease(k), {zoom0: 1.35, zoom1: 1.05, x0: 0, y0: 330, x1: 0, y1: 0, bright: .95});
@@ -124,8 +124,7 @@ function draw(t) {
     dg.textContent = String(Math.floor(r() * 10)) + String(Math.floor(r() * 10)) + String(Math.floor(r() * 10)) + String(Math.floor(r() * 10));
     dg.style.filter = `blur(${1.5 + (fr % 2) * 1.5}px)`; dg.style.opacity = .55 + .45 * (fr % 2);
     show(dg, 1); flash = .3 * cut;
-    slamWords($('k_fast'), t, [c('numbers1', -.05), c('fast', -.15), c('fast', .05), c('fast', .2)], c('if', -.15), {jolt: 8});
-    slamWords($('k_if'), t, [c('if', -.05), c('if', .2), c('really', .1), c('able', -.4), c('read2', -.05)], s1 - .02, {jolt: 6});
+    slamWords($('k_fast'), t, [c('numbers1', -.05), c('fast', -.15), c('fast', .05), c('fast', .2)], s1 - .02, {jolt: 8});
   } else if (name === 'result') {                // +36% felt longer
     render3d = false; show($('pl_tower'), 1);
     plate($('pl_tower'), 1, {zoom0: 1.05, zoom1: 1.05, bright: .22, blur: 6});
