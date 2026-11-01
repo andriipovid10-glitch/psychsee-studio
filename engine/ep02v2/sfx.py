@@ -174,6 +174,23 @@ for w in ['ten', 'second', 'second2']: thump(c[w], .5, 60, .2)
 drone(bed, c['inside'], E0, .06, 41.2, .8)
 thump(E0 - .35, .6, 40, .5)
 
+# ================================================================== s01+ (generic, cue-driven): bed + hit on the scene start,
+# soft tick on every cue word, heartbeat that follows the story (fast in the middle, slow at the end)
+HB = {'s01': 95, 's02': 120, 's03': 140, 's04': 145, 's05': 120, 's06': 110, 's07': 80, 's08': 90, 's09': 64, 's10': 60}
+for sc in ORDER:
+    if sc == 's00': continue
+    S, cs = offs[sc], T[sc]['cues']; E = S + T[sc]['duration']
+    thump(S + .05, .8, 45, .45); whoosh(S + .02, .06, .3, 600, 7000)
+    drone(bed, S + .1, E - .05, .06 if sc not in ('s09', 's10') else .035, 41.2 if sc != 's09' else 55, .8)
+    for i, (name, tt) in enumerate(sorted(cs.items(), key=lambda kv: kv[1])):
+        if name == 'end': continue
+        click(S + tt, .09 if i % 2 else .12, 2200 + 260 * (i % 5), pan=-.3 + .15 * (i % 5))
+        if i % 4 == 0: whoosh(S + tt - .05, .05, .12, 800, 6000)
+    bpm = HB.get(sc, 90); t0 = S + .3
+    while t0 < E - .3: heartbeat(t0, .35, bpm); t0 += 60 / bpm
+    for kw in ('lie', 'n36', 'slowdown', 'double', 'pain', 'fuel', 'alarm', 'panic', 'guy', 'stop', 'hiding', 'clear1', 'away'):
+        if kw in cs: thump(S + cs[kw] - .02, .7, 42, .4); click(S + cs[kw], .2, 1400)
+
 # ================================================================== write
 def write(p, b):
     b = b / max(1e-9, np.abs(b).max()) * .89
