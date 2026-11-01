@@ -3,8 +3,8 @@
  "audio": "audio/ep02v2/vo_temp_s03.wav",
  "source": "asr-json:engine/ep02v2/asr/vo_temp_s03.asr.json (match 100%)",
  "vo_offset": 0.25,
- "audio_duration": 31.714,
- "duration": 32.664,
+ "audio_duration": 31.195,
+ "duration": 32.145,
  "cues": {
   "topay": 0.364,
   "shuts": 1.782,
@@ -36,14 +36,13 @@
   "precision": 22.896,
   "power": 23.847,
   "power_end": 24.323,
-  "studying": 24.771,
-  "physio": 25.343,
-  "wild": 26.962,
-  "two": 28.503,
-  "muscles2": 29.532,
-  "rewired": 30.199,
-  "onejob": 31.342,
-  "end": 31.723
+  "wild": 25.413,
+  "two": 26.687,
+  "muscles2": 28.116,
+  "rewired": 28.782,
+  "onejob": 30.687,
+  "end": 31.259,
+  "heres": 25.033
  },
  "words": [
   {
@@ -468,147 +467,99 @@
   },
   {
    "i": 70,
-   "w": "I'm",
-   "start": 24.676,
-   "end": 24.771
+   "w": "And",
+   "start": 24.937,
+   "end": 25.033
   },
   {
    "i": 71,
-   "w": "studying",
-   "start": 24.771,
-   "end": 25.152
+   "w": "here's",
+   "start": 25.033,
+   "end": 25.318
   },
   {
    "i": 72,
-   "w": "to",
-   "start": 25.152,
-   "end": 25.152
+   "w": "the",
+   "start": 25.318,
+   "end": 25.413
   },
   {
    "i": 73,
-   "w": "be",
-   "start": 25.152,
-   "end": 25.247
+   "w": "wild",
+   "start": 25.413,
+   "end": 25.699
   },
   {
    "i": 74,
-   "w": "a",
-   "start": 25.247,
-   "end": 25.343
+   "w": "part:",
+   "start": 25.699,
+   "end": 26.08
   },
   {
    "i": 75,
-   "w": "physiotherapist,",
-   "start": 25.343,
-   "end": 26.2
+   "w": "in",
+   "start": 26.306,
+   "end": 26.401
   },
   {
    "i": 76,
-   "w": "and",
-   "start": 26.2,
-   "end": 26.39
+   "w": "about",
+   "start": 26.401,
+   "end": 26.687
   },
   {
    "i": 77,
-   "w": "this",
-   "start": 26.39,
-   "end": 26.485
+   "w": "two",
+   "start": 26.687,
+   "end": 27.163
   },
   {
    "i": 78,
-   "w": "part",
-   "start": 26.485,
-   "end": 26.771
+   "w": "seconds,",
+   "start": 27.163,
+   "end": 27.925
   },
   {
    "i": 79,
-   "w": "is",
-   "start": 26.771,
-   "end": 26.962
+   "w": "your",
+   "start": 28.021,
+   "end": 28.116
   },
   {
    "i": 80,
-   "w": "wild",
-   "start": 26.962,
-   "end": 27.343
+   "w": "muscles",
+   "start": 28.116,
+   "end": 28.497
   },
   {
    "i": 81,
-   "w": "to",
-   "start": 27.343,
-   "end": 27.438
+   "w": "get",
+   "start": 28.497,
+   "end": 28.782
   },
   {
    "i": 82,
-   "w": "me:",
-   "start": 27.438,
-   "end": 27.724
+   "w": "rewired",
+   "start": 28.782,
+   "end": 29.64
   },
   {
    "i": 83,
-   "w": "in",
-   "start": 28.122,
-   "end": 28.217
+   "w": "for",
+   "start": 29.735,
+   "end": 29.925
   },
   {
    "i": 84,
-   "w": "about",
-   "start": 28.217,
-   "end": 28.503
+   "w": "one",
+   "start": 29.925,
+   "end": 30.592
   },
   {
    "i": 85,
-   "w": "two",
-   "start": 28.503,
-   "end": 28.693
-  },
-  {
-   "i": 86,
-   "w": "seconds,",
-   "start": 28.693,
-   "end": 29.17
-  },
-  {
-   "i": 87,
-   "w": "your",
-   "start": 29.342,
-   "end": 29.532
-  },
-  {
-   "i": 88,
-   "w": "muscles",
-   "start": 29.532,
-   "end": 30.009
-  },
-  {
-   "i": 89,
-   "w": "get",
-   "start": 30.009,
-   "end": 30.199
-  },
-  {
-   "i": 90,
-   "w": "rewired",
-   "start": 30.199,
-   "end": 30.866
-  },
-  {
-   "i": 91,
-   "w": "for",
-   "start": 30.866,
-   "end": 31.056
-  },
-  {
-   "i": 92,
-   "w": "one",
-   "start": 31.056,
-   "end": 31.342
-  },
-  {
-   "i": 93,
    "w": "job.",
-   "start": 31.342,
-   "end": 31.723
+   "start": 30.687,
+   "end": 31.259
   }
  ]
 }

@@ -46,7 +46,6 @@
 <div id="k_big" class="kw" style="left:520px;top:300px;font-size:110px"><span>BIG</span> <span>MOVES</span> <span class="b">↑</span></div>
 <div id="k_small" class="kw" style="left:520px;top:440px;font-size:110px"><span>SMALL</span> <span>MOVES</span> <span class="r">↓</span></div>
 <div id="k_trade" class="kw" style="left:960px;top:880px;font-size:130px"><span>PRECISION</span> <span>→</span> <span class="r">POWER.</span></div>
-<div id="k_physio" class="kw sm tag" style="left:960px;top:70px">// physio student's note</div>
 <div id="blackout"></div>
 
 <script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
@@ -81,7 +80,7 @@ const kb = new THREE.Mesh(new THREE.BoxGeometry(.012, .012, .12), keyM); kb.posi
 const kh = new THREE.Mesh(new THREE.TorusGeometry(.03, .01, 8, 18), keyM); kh.position.z = .02; keyG.add(kh);
 
 const SHOTS = [['title', 0], ['gut', c('digestion', -.12)], ['mouth', c('saliva', -.12)], ['muscles', c('blood', -.12)], ['pale', c('faces', -.1)],
-  ['fist', c('hands', -.12)], ['key', c('big', -.12)], ['trade', c('traded', -.12)], ['physio', c('studying', -.12)]];
+  ['fist', c('hands', -.12)], ['key', c('big', -.12)], ['trade', c('traded', -.12)], ['physio', c('heres', -.12)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 const W2 = (M, p) => M.g.localToWorld(p.clone());
 
@@ -163,8 +162,7 @@ function draw(t) {
     render3d = false; show($('pl_mus'), 1);
     plate($('pl_mus'), 1, {zoom0: 1.3, zoom1: 1.3, x1: -60, y1: 40, glowX: 960, glowY: 370, glow: .4, bright: .35, blur: 8});
     $('pl_mus').querySelectorAll('.glow')[1].style.opacity = 0;
-    if (t > c('studying', -.1)) { const e = $('k_physio'); e.style.transform = 'translate(-50%,0)'; show(e, seg(t, c('studying', -.1), c('studying', .3)) * (1 - seg(t, DUR - .3, DUR))); }
-    paper($('paper'), t, {span: [c('studying', .2), DUR + .05], scroll: 90, tilt: 7, hl: [[c('two', -.1), c('two', .5)], [c('rewired', -.1), c('onejob', .2)]]});
+    paper($('paper'), t, {span: [c('heres', .2), DUR + .05], scroll: 90, tilt: 7, hl: [[c('two', -.1), c('two', .5)], [c('rewired', -.1), c('onejob', .2)]]});
     black = seg(t, DUR - .25, DUR);
   }
 

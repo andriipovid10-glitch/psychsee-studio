@@ -352,124 +352,84 @@
 "end_ms": 24073
 },
 {
-"text": "I'm",
-"start_ms": 24426,
-"end_ms": 24521
+"text": "And",
+"start_ms": 24687,
+"end_ms": 24783
 },
 {
-"text": "studying",
-"start_ms": 24521,
-"end_ms": 24902
+"text": "here's",
+"start_ms": 24783,
+"end_ms": 25068
 },
 {
-"text": "to",
-"start_ms": 24902,
-"end_ms": 24902
-},
-{
-"text": "be",
-"start_ms": 24902,
-"end_ms": 24997
-},
-{
-"text": "a",
-"start_ms": 24997,
-"end_ms": 25093
-},
-{
-"text": "physiotherapist,",
-"start_ms": 25093,
-"end_ms": 25950
-},
-{
-"text": "and",
-"start_ms": 25950,
-"end_ms": 26140
-},
-{
-"text": "this",
-"start_ms": 26140,
-"end_ms": 26235
-},
-{
-"text": "part",
-"start_ms": 26235,
-"end_ms": 26521
-},
-{
-"text": "is",
-"start_ms": 26521,
-"end_ms": 26712
+"text": "the",
+"start_ms": 25068,
+"end_ms": 25163
 },
 {
 "text": "wild",
-"start_ms": 26712,
-"end_ms": 27093
+"start_ms": 25163,
+"end_ms": 25449
 },
 {
-"text": "to",
-"start_ms": 27093,
-"end_ms": 27188
-},
-{
-"text": "me:",
-"start_ms": 27188,
-"end_ms": 27474
+"text": "part:",
+"start_ms": 25449,
+"end_ms": 25830
 },
 {
 "text": "in",
-"start_ms": 27872,
-"end_ms": 27967
+"start_ms": 26056,
+"end_ms": 26151
 },
 {
 "text": "about",
-"start_ms": 27967,
-"end_ms": 28253
+"start_ms": 26151,
+"end_ms": 26437
 },
 {
 "text": "two",
-"start_ms": 28253,
-"end_ms": 28443
+"start_ms": 26437,
+"end_ms": 26913
 },
 {
 "text": "seconds,",
-"start_ms": 28443,
-"end_ms": 28920
+"start_ms": 26913,
+"end_ms": 27675
 },
 {
 "text": "your",
-"start_ms": 29092,
-"end_ms": 29282
+"start_ms": 27771,
+"end_ms": 27866
 },
 {
 "text": "muscles",
-"start_ms": 29282,
-"end_ms": 29759
+"start_ms": 27866,
+"end_ms": 28247
 },
 {
 "text": "get",
-"start_ms": 29759,
-"end_ms": 29949
+"start_ms": 28247,
+"end_ms": 28532
 },
 {
 "text": "rewired",
-"start_ms": 29949,
-"end_ms": 30616
+"start_ms": 28532,
+"end_ms": 29390
 },
 {
 "text": "for",
-"start_ms": 30616,
-"end_ms": 30806
+"start_ms": 29485,
+"end_ms": 29675
 },
 {
 "text": "one",
-"start_ms": 30806,
-"end_ms": 31092
+"start_ms": 29675,
+"end_ms": 30342
 },
 {
 "text": "job.",
-"start_ms": 31092,
-"end_ms": 31473
+"start_ms": 30437,
+"end_ms": 31009
 }
 ]
 }
