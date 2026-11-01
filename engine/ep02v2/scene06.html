@@ -1,0 +1,154 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#cover{position:absolute;inset:0;visibility:hidden;mix-blend-mode:color;background:linear-gradient(90deg,#2a4f9a 0%,#2a4f9a 100%)}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_arm" class="plate"><img src="img/flow_arm.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="pl_endo" class="plate"><img src="img/flow_endorphins.jpg"><i class="shade"></i></div>
+<div id="pl_fist" class="plate"><img src="img/flow_fist.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="cover"></div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 06 — pain: off</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Neuroscience · definition</span><span>PsychSee notes</span></div>
+  <h1>endorphin</h1>
+  <div class="pron">/ɛnˈdɔːr·fɪn/ &nbsp;·&nbsp; noun &nbsp;·&nbsp; short for “endogenous morphine”</div>
+  <div class="rule"></div>
+  <p>The body’s own painkillers. <span class="hl"><i></i>Opioid chemicals</span> the brain releases under stress and pain —</p>
+  <p><span class="hl"><i></i>the same family as morphine.</span> Scientists call the effect stress-induced analgesia.</p>
+  <p class="src">Sources: Cleveland Clinic — “Endorphins”; Bandura et al. (1988)</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:480px;font-size:230px"><span>SECOND</span> <span class="r">6</span></div>
+<div id="k_pain" class="kw" style="left:960px;top:880px;font-size:200px"><span>PAIN:</span> <span class="b">OFF.</span></div>
+<div id="k_broken" class="kw" style="left:960px;top:880px;font-size:120px"><span class="r">BROKEN</span> <span>HAND.</span></div>
+<div id="k_still" class="kw sm" style="left:960px;top:965px">// still fighting</div>
+<div id="k_walk" class="kw" style="left:960px;top:900px;font-size:130px"><span>WALKS</span> <span>AWAY.</span></div>
+<div id="k_hurt" class="kw" style="left:960px;top:900px;font-size:130px"><span>…THEN</span> <span>IT</span> <span class="r">HURTS.</span></div>
+<div id="k_hide" class="kw" style="left:960px;top:880px;font-size:140px"><span>NOT</span> <span>PROTECTING.</span> <span class="r">HIDING.</span></div>
+<div id="k_keep" class="kw sm" style="left:960px;top:975px">// so you keep going</div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, tremor, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const TM = await loadTiming('s06'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene), D = man(scene);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 5.95, t1: 7.9};
+
+const SHOTS = [['title', 0], ['pain', c('strangest', -.12)], ['endo', c('stress', -.12)], ['paper', c('family', -.6)], ['fighters', c('fighters', -.12)],
+  ['crash', c('people', -.12)], ['hide', c('body', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_arm', 'pl_endo', 'pl_fist', 'paper', 'cover'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true; D.g.visible = false;
+  street.car.position.set(-5.6, 0, 1.0); street.car.rotation.y = 0; street.beam.intensity = 0;
+  poseCrowd(crowd, CROWD, t);
+
+  if (name === 'title') {                        // a punch lands on B's guard: the hit
+    const pt = c('six', .1), p = Math.max(0, Math.sin(clamp((t - pt + .25) / .5) * Math.PI));
+    poseA(A, t, {punch: p}); poseB(B, t, {flinch: 0, hit: .5 * seg(t, pt, pt + .15) * (1 - seg(t, pt + .3, pt + .8)), shake: .03});
+    pos = vlerp(V3(.1, 1.8, 5.8), V3(.25, 1.65, 5.0), ease(k)); tgt = V3(0, 1.35, 0);
+    flash = .45 * Math.exp(-Math.max(0, t - pt) * 10) * (t > pt ? 1 : 0); shk = .04 * Math.exp(-Math.max(0, t - pt) * 6) * (t > pt ? 1 : 0);
+    slamWords($('k_sec'), t, [c('second', -.05), c('six', -.05)], s1 - .02, {from: 1.35, jolt: 10});
+    black = 1 - seg(t, 0, .2);
+  } else if (name === 'pain') {                  // the pain signal travels up the arm... and fades
+    render3d = false; show($('pl_arm'), 1);
+    const off = ease(seg(t, c('pain', .3), c('stress')));
+    plate($('pl_arm'), ease(k), {zoom0: 1.04, zoom1: 1.2, x1: 60, y1: 10, glowX: 640, glowY: 560, glow: (1 - off) * (.6 + .4 * pulse(t * 2)), bright: lerp(1, .8, off), sat: lerp(1, .35, off)});
+    show($('cover'), off * .65);
+    flash = .35 * cut; red = .2 * (1 - off) * seg(t, c('pain', -.1), c('pain', .2));
+    slamWords($('k_pain'), t, [c('pain', -.05), c('pain', .6)], s1 - .02, {jolt: 16});
+  } else if (name === 'endo') {                  // the brain releases its own painkillers
+    render3d = false; show($('pl_endo'), 1);
+    plate($('pl_endo'), ease(k), {zoom0: 1.0, zoom1: 1.18, x1: -90, y1: 10, bright: .95 + .2 * seg(t, c('releases'), c('painkillers'))});
+    flash = .3 * cut;
+  } else if (name === 'paper') {                 // definition: endorphin
+    render3d = false; show($('pl_endo'), 1);
+    plate($('pl_endo'), 1, {zoom0: 1.18, zoom1: 1.18, x1: -90, y1: 10, bright: .4, blur: 8});
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 40, tilt: 7, hl: [[s0 + .5, s0 + 1.0], [c('family', -.1), c('morphine', .3)]]});
+  } else if (name === 'fighters') {              // fighters finish rounds with broken hands
+    render3d = false; show($('pl_fist'), 1);
+    const tr = tremor(t, 3);
+    plate($('pl_fist'), ease(k), {zoom0: 1.1, zoom1: 1.28, x0: tr.x, y0: tr.y, x1: tr.x + 40, y1: tr.y - 20, glowX: 520, glowY: 640, glow: .5 + .35 * pulse(t * 2.4), bright: .9});
+    flash = .3 * cut;
+    slamWords($('k_broken'), t, [c('broken', -.05), c('hands', -.05)], s1 - .02, {jolt: 12});
+    if (t > c('hands', .2)) { const e = $('k_still'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('hands', .2), c('hands', .5)) * (1 - seg(t, s1 - .1, s1))); }
+  } else if (name === 'crash') {                 // walks away from a crash... sits down... then it hurts
+    A.g.visible = B.g.visible = false; crowd.forEach(m => m.g.visible = false); D.g.visible = true;
+    street.car.position.set(1.6, 0, -.6); street.car.rotation.y = .35;       // nose into the lamp post
+    key.intensity = 1.0;
+    const walkK = seg(t, c('walk', -.3), c('sit', -.2)), sitK = ease(seg(t, c('sit', -.2), c('sit', .5))), grab = ease(seg(t, c('sit', .3), c('sit', .9)));
+    const x = lerp(.0, -3.2, walkK), stepPh = t * 7 * (1 - sitK);
+    place(D, x, .2 - .9 * sitK, -Math.PI / 2 + .25 * sitK);
+    if (sitK < .02) {
+      const sw = Math.sin(stepPh) * .35 * (walkK > 0 && walkK < 1 ? 1 : 0);
+      pose(D, {bob: Math.abs(Math.sin(stepPh)) * .03, lean: .06,
+        ua: {L: V3(.25, -.97, .1 - sw * .3), R: V3(-.25, -.97, .1 + sw * .3)}, la: {L: V3(.1, -.99, .1), R: V3(-.1, -.99, .1)},
+        th: {L: V3(.12, -.97, sw), R: V3(-.12, -.97, -sw)}, sh: {L: V3(.02, -1, sw * .2), R: V3(-.02, -1, -sw * .2)}});
+    } else {                                   // sits on the curb, grabs his arm
+      pose(D, {root: [0, -.42 * sitK, 0], lean: .25 * sitK + .15 * grab, headLean: .3 * grab,
+        ua: {L: vlerp(V3(.25, -.97, .1), V3(.1, -.6, .8), grab), R: vlerp(V3(-.25, -.97, .1), V3(-.35, -.85, .3), grab)},
+        la: {L: vlerp(V3(.1, -.99, .1), V3(-.7, -.1, .5), grab), R: V3(-.1, -.95, .3)},
+        th: {L: vlerp(V3(.12, -.97, 0), V3(.15, 0, 1), sitK), R: vlerp(V3(-.12, -.97, 0), V3(-.15, 0, 1), sitK)},
+        sh: {L: vlerp(V3(.02, -1, 0), V3(.02, -1, .1), sitK), R: vlerp(V3(-.02, -1, 0), V3(-.02, -1, .1), sitK)}});
+    }
+    fists(D, .9);
+    const arm = W2(D, D.P.eR);
+    pos = V3(-1.4, 1.5, 5.4); tgt = V3(-1.2, .9, -.4); fov = 40;
+    red = .25 * grab * (.6 + .4 * pulse(t * 2.2)); desat = .45; flash = .25 * cut;
+    slamWords($('k_walk'), t, [c('walk', -.05), c('crashes', -.3)], c('feel', -.15), {jolt: 8});
+    slamWords($('k_hurt'), t, [c('sit', -.05), c('sit', .25), c('sit', .5)], s1 - .02, {jolt: 14});
+  } else if (name === 'hide') {                  // the body hides the damage so you keep going
+    render3d = false; show($('pl_arm'), 1);
+    const hk = seg(t, c('hiding', -.2), c('hiding', .3));
+    plate($('pl_arm'), ease(k), {zoom0: 1.2, zoom1: 1.32, x0: 60, y0: 10, x1: 100, y1: 10, glowX: 640, glowY: 560, glow: .35 + .4 * hk * pulse(t * 2), bright: .9, sat: lerp(.35, 1, hk)});
+    show($('cover'), .65 * (1 - hk));
+    flash = .3 * cut;
+    slamWords($('k_hide'), t, [c('body', -.05), c('protecting', -.05), c('hiding', -.05)], DUR - .05, {jolt: 10});
+    if (t > c('keep', -.2)) { const e = $('k_keep'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('keep', -.2), c('keep', .1))); }
+    black = seg(t, DUR - .25, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = '#fff'; $('blackout').style.opacity = Math.max(black, flash); }
+  else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>

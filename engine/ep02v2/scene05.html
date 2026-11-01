@@ -1,0 +1,153 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#wave{position:absolute;left:0;top:0;visibility:hidden}
+#stopw{position:absolute;font-weight:900;font-size:120px;letter-spacing:-.03em;color:#ff3340;transform:translate(-50%,-100%);visibility:hidden;text-shadow:0 0 40px rgba(255,40,60,.5)}
+#stopw small{display:block;font-family:'DejaVu Sans Mono',monospace;font-weight:400;font-size:20px;letter-spacing:.1em;color:#8a97b3;text-transform:uppercase;margin-bottom:6px;text-align:center}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_ear" class="plate"><img src="img/flow_ear.jpg"><i class="shade"></i></div>
+<div id="pl_brain" class="plate"><img src="img/flow_brain1.jpg"><i class="glow"></i><i class="shade"></i></div>
+<svg id="wave" width="1920" height="1080"><path id="wp" d="" fill="none" stroke="#eef2fa" stroke-width="5" stroke-linejoin="round"/><path id="wp2" d="" fill="none" stroke="#7fb2ff" stroke-width="2" opacity=".5"/></svg>
+<div id="stopw"><small>// yelling</small>STOP!</div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 05 — the silence</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Police psychology · survey</span><span>PsychSee notes</span></div>
+  <h1 style="font-size:70px">What officers heard</h1>
+  <div class="pron">same survey · 157 officers</div>
+  <div class="rule"></div>
+  <div class="fig"><b>84%</b><span>said sounds<br>were diminished</span></div>
+  <p>Gunshots <span class="hl"><i></i>sounded like pops.</span> Shouting nearby was muffled or not heard at all.</p>
+  <p>Researchers call it <span class="hl"><i></i>auditory exclusion.</span></p>
+  <p class="src">Source: A. Artwohl (2002), FBI Law Enforcement Bulletin</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:480px;font-size:230px"><span>SECOND</span> <span class="r">5</span></div>
+<div id="k_goes" class="kw" style="left:960px;top:900px;font-size:150px"><span>THE</span> <span>SOUND</span> <span class="r">GOES.</span></div>
+<div id="k_pops" class="kw" style="left:960px;top:880px;font-size:130px"><span>GUNSHOTS</span> <span>→</span> <span>pops.</span></div>
+<div id="k_barely" class="kw" style="left:960px;top:900px;font-size:140px;filter:blur(2px)"><span>BARELY</span> <span>THERE.</span></div>
+<div id="k_cut" class="kw" style="left:960px;top:900px;font-size:140px"><span>CHANNEL</span> <span class="r">CUT.</span></div>
+<div id="k_stop" class="kw" style="left:960px;top:930px;font-size:90px"><span>THE</span> <span>ONE</span> <span>YOU</span> <span>DON'T</span> <span>HEAR:</span> <span class="r">"STOP."</span></div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const TM = await loadTiming('s05'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene);
+const crowd = makeCrowd(scene, 5);
+const CROWD = [[-2.4, -1.6, 2.3, 0], [2.6, -1.9, -2.4, 2], [-3.6, -.4, 2.0, 1], [3.7, -.2, -1.9, 0], [.3, -2.6, 3.1, 1]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 5.0, t1: 5.95};
+
+const SHOTS = [['title', 0], ['ear', c('sound', -.15)], ['paper', c('survey', -.15)], ['pops', c('gunshots', -.12)], ['yell', c('people', -.12)],
+  ['brain', c('brain', -.12)], ['stop', c('fight', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+function wave(t, amp, y = 540, x0 = 160, x1 = 1760) {   // a loud waveform that can be flattened (amp 0..1)
+  let d = '', d2 = '';
+  for (let x = x0; x <= x1; x += 8) {
+    const u = (x - x0) / (x1 - x0), env = Math.sin(u * Math.PI);
+    const v = (Math.sin(x * .07 + t * 30) * .55 + Math.sin(x * .023 - t * 17) * .45) * Math.abs(Math.sin(x * .011 + t * 6));
+    d += (x === x0 ? 'M' : 'L') + x + ' ' + (y - v * 230 * amp * env).toFixed(1);
+    d2 += (x === x0 ? 'M' : 'L') + x + ' ' + (y + v * 120 * amp * env).toFixed(1);
+  }
+  $('wp').setAttribute('d', d); $('wp2').setAttribute('d', d2); show($('wave'), 1);
+}
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_ear', 'pl_brain', 'paper', 'wave', 'stopw'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  poseA(A, t, {}); poseB(B, t, {hit: .05, shake: .04, rate: 9, breath: .03});
+  poseCrowd(crowd, CROWD, t, {yell: true});
+  $('gl').style.filter = 'none';
+
+  if (name === 'title') {                       // crowd yelling around them, loud
+    pos = vlerp(V3(-.5, 2.2, 7.2), V3(-.3, 1.9, 6.0), ease(k)); tgt = V3(.1, 1.2, -.6); gb = .25;
+    slamWords($('k_sec'), t, [c('second', -.05), c('five', -.05)], s1 - .02, {from: 1.35, jolt: 10});
+    black = 1 - seg(t, 0, .2); shk = .01;
+  } else if (name === 'ear') {                  // the inner ear goes dark
+    render3d = false; show($('pl_ear'), 1);
+    const fade = seg(t, c('goes', -.1), s1);
+    plate($('pl_ear'), ease(k), {zoom0: 1.05, zoom1: 1.3, x1: 80, y1: 20, bright: lerp(1.05, .25, fade), sat: lerp(1, .2, fade)});
+    flash = .3 * cut;
+    wave(t, lerp(1, .04, ease(fade)), 300);
+    slamWords($('k_goes'), t, [c('sound', -.15), c('sound', -.02), c('goes', -.05)], s1 - .02, {jolt: 10});
+  } else if (name === 'paper') {
+    render3d = false; show($('pl_ear'), 1);
+    plate($('pl_ear'), 1, {zoom0: 1.3, zoom1: 1.3, x1: 80, y1: 20, bright: .25, sat: .2, blur: 8});
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 40, tilt: 7, hl: [[c('n84', -.1), c('quieter', .4)], [c('quieter', .5), c('quieter', 1.0)]]});
+  } else if (name === 'pops') {                 // gunshots -> pops: the waveform collapses
+    street.g.visible = true; gb = .75; desat = .8;
+    pos = V3(-.3, 1.9, 6.0); tgt = V3(.1, 1.2, -.6);
+    const fl = ease(seg(t, c('gunshots', .2), c('pops', .2)));
+    wave(t, lerp(1, .12, fl));
+    flash = .2 * cut;
+    slamWords($('k_pops'), t, [c('gunshots', -.05), c('pops', -.45), c('pops', -.05)], s1 - .02, {jolt: 8});
+  } else if (name === 'yell') {                 // people yelling right next to them — muffled, like under water
+    const ck = ease(k);
+    pos = vlerp(V3(2.6, 1.6, 2.8), V3(2.0, 1.5, 2.2), ck); tgt = V3(-1.6, 1.4, -1.2); fov = 40;
+    desat = .75; vign = .6;
+    $('gl').style.filter = `blur(${lerp(1, 4, ck)}px)`;
+    slamWords($('k_barely'), t, [c('barely', -.05), c('barely', .25)], s1 - .02, {jolt: 3, from: 1.1});
+  } else if (name === 'brain') {                // the brain cuts the channel it needs least
+    render3d = false; show($('pl_brain'), 1);
+    plate($('pl_brain'), ease(k), {zoom0: 1.04, zoom1: 1.25, x1: -60, y1: 30, glowX: 910, glowY: 666, glow: .55 + .3 * pulse(t * 2.5), bright: .9});
+    const cutk = ease(seg(t, c('cuts', -.05), c('channel', .2)));
+    wave(t, lerp(.5, 0, cutk), 930);
+    flash = .3 * cut;
+    slamWords($('k_cut'), t, [c('cuts', -.05), c('channel', -.05)], s1 - .02, {jolt: 12});
+    $('k_cut').style.top = '160px';
+  } else if (name === 'stop') {                 // the person yelling "stop" — and you can't hear them
+    const friend = crowd[0];
+    place(friend, -1.6, -.9, 2.2);
+    pose(friend, {lean: .15, headLean: .1, ua: {L: V3(.6, .6, .5), R: V3(-.6, .6, .5)}, la: {L: V3(.2, .95, .3), R: V3(-.2, .95, .3)}});
+    fists(friend, .9);
+    pos = vlerp(V3(1.0, 1.9, 6.6), V3(.4, 1.7, 5.2), ease(k)); tgt = V3(-.6, 1.65, -.5); fov = 40;
+    desat = .7; vign = .55;
+    cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const [hx, hy] = project(cam, W2(friend, friend.P.head).add(V3(0, .45, 0)));
+    const sw = $('stopw'), sk = seg(t, c('yelling2', -.1), c('stop', .05)), fade = seg(t, c('stop', .2), c('stop', 1.0));
+    sw.style.left = hx + 'px'; sw.style.top = hy + 'px'; sw.style.filter = `blur(${fade * 14}px)`; sw.style.transform = `translate(-50%,-100%) scale(${lerp(1.3, 1, back(sk)) * (1 - .3 * fade)})`;
+    show(sw, sk * (1 - fade * .85));
+    slamWords($('k_stop'), t, [c('usually', -.05), c('usually', .15), c('person', -.1), c('person', .1), c('yelling2', -.05), c('stop', -.05)], DUR - .05, {jolt: 6});
+    black = seg(t, DUR - .25, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = '#fff'; $('blackout').style.opacity = Math.max(black, flash); }
+  else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>
