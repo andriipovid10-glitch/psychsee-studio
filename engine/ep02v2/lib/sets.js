@@ -275,7 +275,9 @@ export function makeStreet(scene) {
   box(car, 2.25, .06, 1.62, paint, -.2, 1.42, 0);
   for (const [x, z] of [[-1.35, .9], [1.35, .9], [-1.35, -.9], [1.35, -.9]]) { const w = cyl(car, .34, .34, .24, std({color: 0x0b0d12, roughness: .8}), x, .34, z, 16); w.rotation.x = Math.PI / 2; }
   box(car, .05, .14, .4, glow(0x5a1018, .9), -2.12, .78, .6); box(car, .05, .14, .4, glow(0x5a1018, .9), -2.12, .78, -.6);   // dim tail lights
+  const heads = [box(car, .05, .14, .42, glow(0xf2f6ff, 1.5), 2.12, .74, .6), box(car, .05, .14, .42, glow(0xf2f6ff, 1.5), 2.12, .74, -.6)];
+  const beam = new THREE.SpotLight(0xe8f0ff, 0, 18, .45, .5, 1.2); beam.position.set(2.2, .8, 0); beam.target.position.set(9, 0, 0); car.add(beam); car.add(beam.target);
   // far skyline
   for (let i = 0; i < 12; i++) { const h = 10 + R() * 14; box(g, 4 + R() * 3, h, 3, std({color: 0x0f1626, roughness: 1}), -24 + i * 4.4, h / 2, -18 - R() * 4); }
-  return {g, sp};
+  return {g, sp, car, beam, heads};
 }

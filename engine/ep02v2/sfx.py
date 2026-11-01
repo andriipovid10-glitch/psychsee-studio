@@ -10,7 +10,7 @@ import json, os, sys, wave
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ORDER = ['s00']
+ORDER = os.environ.get('SCENES', 's00').split()
 sr = 48000
 T = {s: json.load(open(os.path.join(HERE, f'timing_{s}.json'))) for s in ORDER}
 offs, o = {}, 0.0

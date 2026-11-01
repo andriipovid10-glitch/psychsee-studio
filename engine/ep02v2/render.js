@@ -6,7 +6,7 @@ const {chromium} = require('playwright');
 const {spawn, execFileSync} = require('child_process');
 const fs = require('fs'), path = require('path');
 const FPS = 30, PORT = process.env.PORT || 8765;
-const PAGES = {s00: 'scene00.html'};
+const PAGES = new Proxy({}, {get: (_, k) => `scene${String(k).slice(1)}.html`});
 const SCALE = +(process.env.SCALE || 0.5);   // 0.5 -> 960x540 draft, 1 -> 1920x1080 final
 
 async function open(scene) {
@@ -14,7 +14,7 @@ async function open(scene) {
   const page = await browser.newPage({viewport: {width: 1920, height: 1080}, deviceScaleFactor: SCALE});
   page.on('console', m => { if (m.type() === 'error') console.error('PAGE:', m.text()); });
   page.on('pageerror', e => console.error('PAGEERR:', e.message));
-  await page.goto(`http://localhost:${PORT}/engine/ep02v2/${PAGES[scene]}?s=${SCALE}`);
+  await page.goto(`http://localhost:${PORT}/engine/ep02v2/${PAGES[scene]}?s=${SCALE}${process.env.QS ? '&' + process.env.QS : ''}`);
   await page.waitForFunction(() => window.ready === true, null, {timeout: 120000});
   return {browser, page};
 }

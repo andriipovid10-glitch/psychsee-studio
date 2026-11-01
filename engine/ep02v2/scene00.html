@@ -7,6 +7,8 @@
   text-shadow:0 6px 40px rgba(0,0,0,.55)}
 .kw.r,.kw .r{color:#ff3340;text-shadow:0 0 40px rgba(255,40,60,.45),0 6px 40px rgba(0,0,0,.55)}
 .kw span{display:inline-block;will-change:transform}
+.kw .b{color:#7fb2ff;text-shadow:0 0 40px rgba(127,178,255,.5),0 6px 40px rgba(0,0,0,.55)}
+#bring{border:3px solid #7fb2ff;border-radius:50%;box-shadow:0 0 30px rgba(127,178,255,.55),inset 0 0 30px rgba(127,178,255,.25)}
 #rflash{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,30,45,0) 35%,rgba(255,30,45,.55) 100%);opacity:0}
 .ic{position:absolute;width:136px;height:136px;margin:-68px 0 0 -68px;border-radius:50%;background:rgba(20,30,52,.82);border:2px solid rgba(160,185,235,.35);
   box-shadow:0 14px 50px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#eef2fa;visibility:hidden}
@@ -42,6 +44,9 @@
 <div id="k_slow" class="kw" style="left:960px;top:850px;font-size:190px"><span>SLOW</span> <span>MOTION.</span></div>
 <div id="k_choose" class="kw" style="left:960px;top:975px;font-size:96px"><span>YOU</span> <span>DIDN'T</span> <span>CHOOSE.</span></div>
 <div id="k_lie" class="kw" style="left:960px;top:975px;font-size:96px"><span>ONE</span> <span>OF</span> <span>THEM</span> <span>IS</span> <span>A</span> <span class="r">LIE.</span></div>
+<div id="k_control" class="kw" style="left:960px;top:880px;font-size:120px"><span>STAY</span> <span>IN</span> <span class="b">CONTROL.</span></div>
+<div id="k_edge" class="kw mono" style="left:960px;top:965px;font-size:26px;letter-spacing:.3em;font-weight:400;color:#8a97b3;text-shadow:none">// at the end &nbsp;·&nbsp; the edge most people never get</div>
+<div id="bring" style="position:absolute;left:0;top:0;width:10px;height:10px;visibility:hidden"></div>
 <div id="k_title" class="kw" style="left:960px;top:900px;font-size:120px"><span>THE</span> <span>FIRST</span> <span class="r">10</span> <span>SECONDS</span></div>
 <div id="k_sbs" class="kw mono" style="left:960px;top:990px;font-size:26px;letter-spacing:.3em;font-weight:400;color:#8a97b3;text-shadow:none">SECOND BY SECOND</div>
 
@@ -127,10 +132,10 @@ function poseB(M, t, o = {}) {           // "you": guard up, breathing hard, sha
 const SHOTS = [
   ['void', 0], ['school', c('school', -.04)], ['bar', c('bar', -.04)], ['street', c('street', -.04)],
   ['panic', c('panic', -.08)], ['chest', c('heart', -.1)], ['hand', c('hands', -.08)], ['head', c('mouth', -.08)],
-  ['silence', c('everything', -.05)], ['slowmo', c('felt2', -.05)], ['twist', c('heres', -.12)], ['inside', c('this', -.05)], ['dial', c('inside', .05)]];
+  ['silence', c('everything', -.05)], ['slowmo', c('felt2', -.05)], ['twist', c('heres', -.12)], ['control', c('bait', -.1)], ['inside', c('this', -.05)], ['dial', c('inside', .05)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
 // 3D sets only for the void shots; real locations are photo plates (see PLATE_OF)
-const SET_OF = {void: 'void', school: 'school', bar: 'bar', street: 'street', panic: 'street', chest: 'street', hand: 'street', head: 'street',
+const SET_OF = {control: 'void', void: 'void', school: 'school', bar: 'bar', street: 'street', panic: 'street', chest: 'street', hand: 'street', head: 'street',
   silence: 'street', slowmo: 'street', twist: 'void', inside: 'void', dial: 'void'};
 const PLATE_OF = {};
 
@@ -357,6 +362,26 @@ function draw(t) {
     slamWords(K('k_choose'), t, [c('didnt', -.25), c('didnt'), c('choose')], c('and2', -.05), {jolt: 8});
     slamWords(K('k_lie'), t, [c('and2'), c('and2', .12), c('them'), c('lie', -.18), c('lie', -.1), c('lie')], s1 - .02, {jolt: 8});
     if (name === 'inside') hideAll();
+  } else if (name === 'control') {          // bait: "at the end — how to stay in control"
+    A.g.visible = false; key.intensity = .9; hemi.intensity = .4; rim.intensity = 3.4; rim.color.set(0x8fc0ff);
+    const kc = ease(seg(t, c('bait'), c('control', .4)));          // guard lowers, posture straightens
+    const br = Math.sin((t - c('bait')) * 1.6);
+    pose(B, {bob: br * .012, lean: lerp(-.03, .02, kc), headLean: lerp(.14, 0, kc),
+      ua: {L: vlerp(V3(.32, -.8, .45), V3(.22, -.97, .05), kc), R: vlerp(V3(-.32, -.8, .45), V3(-.22, -.97, .05), kc)},
+      la: {L: vlerp(V3(.08, .8, .55), V3(.06, -.99, .1), kc), R: vlerp(V3(-.08, .8, .55), V3(-.06, -.99, .1), kc)},
+      th: {L: V3(.13, -.99, .03), R: V3(-.13, -.99, -.03)}});
+    fists(B, 1);
+    const c0 = V3(HX, 1.15, 0);
+    pos = orbitPos(c0, lerp(6.4, 5.4, ease(k)), -Math.PI / 2 + lerp(-.35, -.1, k), lerp(.05, .1, k)); tgt = c0.clone().add(V3(0, .1, 0));
+    desat = lerp(.92, .55, kc); vign = .5;
+    flash = .25 * Math.exp(-lt * 8);
+    cam.position.copy(pos); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const P = B.P, [bx, by] = project(cam, W2(B, P.hip.clone().lerp(P.sh, .7)));
+    const rk = seg(t, c('control', -.1), c('control', .5)), r = (150 + 40 * br) * eo(rk);
+    const ring = $('bring'); ring.style.left = (bx - r) + 'px'; ring.style.top = (by - r) + 'px'; ring.style.width = ring.style.height = 2 * r + 'px';
+    show(ring, rk * (1 - seg(t, s1 - .2, s1)) * .9);
+    slamWords(K('k_control'), t, [c('control', -.45), c('control', -.3), c('control')], s1 - .02, {jolt: 6, from: 1.3});
+    if (t > c('edge', -.1)) { const e = K('k_edge'), kk = seg(t, c('edge', -.1), c('edge', .3)); e.style.transform = 'translate(-50%,-50%)'; show(e, kk * (1 - seg(t, s1 - .1, s1))); }
   } else if (name === 'dial') {               // full-screen 0.00 clock, ticking
     A.g.visible = false; B.g.visible = false;
     pos = V3(0, 1.4, 6); tgt = V3(0, 1.2, 0);
@@ -380,6 +405,7 @@ function draw(t) {
   // HUD
   const sec = ['// 00 — your first fight', '// 01 — the feeling', '// 02 — the twist', '// 03 — second by second'];
   $('tl').textContent = sec[si < 4 ? 0 : si < 10 ? 1 : si < 12 ? 2 : 3];
+  if (name !== 'control') show($('bring'), 0);
   timecode($('tc'), t);
   // grade
   grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.ca.value = ca; grade.black.value = gb;

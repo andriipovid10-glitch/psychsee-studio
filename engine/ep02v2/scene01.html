@@ -1,0 +1,168 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#dot{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#ff3340;box-shadow:0 0 30px 10px rgba(255,40,60,.7),0 0 90px 30px rgba(255,40,60,.35);visibility:hidden}
+#dotring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid #ff3340;visibility:hidden}
+#sec{position:absolute;left:960px;top:150px}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_brain" class="plate"><img id="brainimg" src="img/flow_brain2.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="pl_neuro" class="plate"><img src="img/neurons_photo.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="dotring"></div><div id="dot"></div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 01 — second zero</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Neuroscience · definition</span><span>PsychSee notes</span></div>
+  <h1>amygdala</h1>
+  <div class="pron">/əˈmɪɡ·də·lə/ &nbsp;·&nbsp; noun &nbsp;·&nbsp; from Greek <i>amygdalē</i>, “almond”</div>
+  <div class="rule"></div>
+  <p>Two almond-sized clusters of neurons, one deep in each side of the brain. <span class="hl"><i></i>It detects threats</span> and sets off the body’s fear response —</p>
+  <p><span class="hl"><i></i>often before you are aware</span> of what you just saw.</p>
+  <div class="fig"><b>2</b><span>almonds<br>one on each side<br>of your brain</span></div>
+  <p class="src">Source: Harvard Health Publishing — “Understanding the stress response”</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:540px;font-size:230px"><span>SECOND</span> <span class="r">0</span></div>
+<div id="k_alarm" class="kw" style="left:960px;top:900px;font-size:200px"><span class="r">ALARM.</span></div>
+<div id="k_panic" class="kw" style="left:960px;top:880px;font-size:170px"><span class="r">PANIC</span> <span>BUTTON.</span></div>
+<div id="k_jump" class="kw" style="left:960px;top:860px;font-size:150px"><span>JUMP</span> <span>FIRST.</span></div>
+<div id="k_think" class="kw" style="left:960px;top:990px;font-size:80px"><span>THINK</span> <span>LATER.</span></div>
+<div id="k_driving" class="kw" style="left:960px;top:880px;font-size:130px"><span>YOU'RE</span> <span>NOT</span> <span>DRIVING.</span></div>
+<div id="k_pass" class="kw" style="left:960px;top:880px;font-size:130px"><span>YOU'RE</span> <span>THE</span> <span class="r">PASSENGER.</span></div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const BR = new URLSearchParams(location.search).get('brain') || 'flow_brain2';
+const BRAIN_GLOW = {flow_brain1: [910, 666], flow_brain2: [901, 523], brain_photo: [838, 624]}[BR];
+$('brainimg').src = `img/${BR}.jpg`;
+const TM = await loadTiming('s01'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene), C = man(scene);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: 'shove', t0: 0, t1: .95};
+const FZ = c('shove_end', .12);                       // freeze point: B mid-stagger
+
+const SHOTS = [['title', 0], ['shove', c('someone', -.25)], ['eyes', c('eyes', -.08)], ['brain', c('alarm', -.2)], ['paper', c('called', -.12)],
+  ['panic', c('just', -.12)], ['car', c('thats', -.1)], ['pass', c('right', -.1)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_brain', 'pl_neuro', 'paper', 'dot', 'dotring'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  street.car.position.set(-5.6, 0, 1.0); street.beam.intensity = 0; C.g.visible = false;
+  // standoff + shove, character time freezes mid-stagger
+  const tf = Math.min(t, FZ);
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  const push = clamp((tf - c('shove', -.3)) / .35), hit = ease(clamp((tf - c('shove', -.05)) / .4));
+  poseA(A, tf, {push: push > 0 ? Math.sin(Math.min(1, push) * Math.PI * .5) : 0});
+  poseB(B, tf, {hit, shake: .015});
+  poseCrowd(crowd, CROWD, t);
+  const frozen = t > FZ;
+
+  if (name === 'title') {                         // "Second zero." — big title over the standoff
+    const kk = ease(k);
+    pos = vlerp(V3(-.5, 2.6, 9.5), V3(-.3, 2.0, 7.4), kk); tgt = V3(0, 1.3, 0);
+    gb = .35 * (1 - seg(t, c('zero', .3), s1));
+    slamWords($('k_sec'), t, [c('second', -.05), c('zero', -.05)], s1 - .02, {from: 1.35, jolt: 10});
+    black = 1 - seg(t, 0, .25);
+  } else if (name === 'shove') {                  // side medium, the shove, freeze
+    const kk = ease(k);
+    pos = vlerp(V3(.1, 1.8, 5.8), V3(.25, 1.65, 5.0), kk); tgt = V3(0, 1.3, 0);
+    flash = .55 * Math.exp(-Math.max(0, t - c('shove', .02)) * 10) * (t > c('shove', .02) ? 1 : 0);
+    shk = .05 * Math.exp(-Math.max(0, t - c('shove')) * 6) * (t > c('shove') ? 1 : 0);
+    if (frozen) { desat = .85; flash += .25 * Math.exp(-(t - FZ) * 8); }
+  } else if (name === 'eyes') {                   // close on B's head, one red dot = the alarm (1 s accent)
+    desat = .9; A.g.visible = false;
+    const hd = W2(B, B.P.head);
+    pos = hd.clone().add(V3(lerp(-2.3, -1.9, k), lerp(.1, .05, k), lerp(1.9, 1.5, k))); tgt = hd.clone().add(V3(0, -.25, 0)); fov = 34;
+    cam.position.copy(pos); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const [x, y] = project(cam, hd.clone().add(V3(0, -.02, 0)));
+    const dk = seg(t, c('tiny', -.1), c('tiny', .2));
+    const pul = .5 + .5 * Math.sin((t - c('tiny')) * 14);
+    $('dot').style.left = x + 'px'; $('dot').style.top = y + 'px'; $('dot').style.transform = `scale(${back(dk) * (.8 + .3 * pul)})`; show($('dot'), dk);
+    const rk = ((t - c('tiny')) * 1.6) % 1;
+    $('dotring').style.left = x + 'px'; $('dotring').style.top = y + 'px'; $('dotring').style.transform = `scale(${1 + rk * 5})`; show($('dotring'), dk * (1 - rk));
+    red = .2 * dk * pul;
+  } else if (name === 'brain') {                  // realistic brain plate: push in, amygdala pulses
+    render3d = false; show($('pl_brain'), 1);
+    const pul = Math.max(0, Math.sin((t - c('alarm')) * 11));
+    plate($('pl_brain'), ease(k), {zoom0: 1.02, zoom1: 1.35, x0: 0, y0: 0, x1: 70, y1: -90, glowX: BRAIN_GLOW[0], glowY: BRAIN_GLOW[1],
+      glow: seg(t, c('alarm', -.1), c('alarm', .15)) * (.55 + .45 * pul), bright: .95});
+    flash = .3 * cut; red = .25 * pul * seg(t, c('alarm'), c('alarm', .2));
+    slam($('k_alarm'), t, c('alarm'), s1 - .02, {from: 1.6, jolt: 18});
+  } else if (name === 'paper') {                  // "It's called the amygdala." — definition card, scrolls
+    render3d = false; show($('pl_brain'), 1);
+    plate($('pl_brain'), 1, {zoom0: 1.35, zoom1: 1.35, x1: 70, y1: -90, glowX: BRAIN_GLOW[0], glowY: BRAIN_GLOW[1], glow: .5, bright: .35, blur: 8});
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 330, tilt: 8, hl: [[c('amyg', .25), c('amyg', .75)], [c('wait'), c('understand', .4)]]});
+  } else if (name === 'panic') {                  // "hits the panic button" — neurons fire
+    render3d = false; show($('pl_neuro'), 1);
+    const burst = seg(t, c('panic', -.1), c('panic', .15)), pul = Math.max(0, Math.sin((t - c('panic')) * 12));
+    plate($('pl_neuro'), ease(k), {zoom0: 1.05, zoom1: 1.3, x1: 120, y1: 60, glowX: 778, glowY: 426, glow: burst * (.6 + .4 * pul), bright: .9 + .5 * burst});
+    flash = .35 * cut + .3 * burst * Math.exp(-Math.max(0, t - c('panic')) * 6); red = .3 * burst * pul; shk = 0;
+    slamWords($('k_panic'), t, [c('panic', -.02), c('button', -.02)], s1 - .02, {from: 1.7, jolt: 20});
+  } else if (name === 'car') {                    // jump away from a car before you know it's there
+    A.g.visible = B.g.visible = false; C.g.visible = true;
+    const cx = 6.2, jt = c('jump', -.05);
+    const j = ease(clamp((t - jt) / .35)), air = Math.sin(clamp((t - jt) / .45) * Math.PI);
+    place(C, cx, lerp(1.6, -.2, j), Math.PI * .5 * (1 - j) + Math.PI);
+    poseB(C, t, {hit: .8 * air + .25 * j, shake: 0, breath: .01});
+    C.g.position.y = .35 * air;
+    // car arrives from the left, headlights on, passes where C stood just after he jumped
+    const passT = c('car2', .1), carX = cx + (t - passT) * 13;
+    street.car.position.set(carX, 0, 1.7); street.beam.intensity = 22; key.intensity = .8;
+    pos = V3(cx + 4.4, 1.3, -3.4); tgt = V3(cx - 2.2, 1.0, 1.2); fov = 40;
+    shk = .03 * Math.exp(-Math.abs(t - passT) * 3);
+    flash = .25 * cut;
+    slamWords($('k_jump'), t, [c('jump', -.05), c('jump', .12)], s1 - .02, {jolt: 14});
+    slamWords($('k_think'), t, [c('know', -.05), c('know', .1)], s1 - .02, {jolt: 6});
+  } else if (name === 'pass') {                   // back to the frozen moment: you're the passenger
+    desat = .85; vign = .55;
+    const c0 = V3(0, 1.2, 0);
+    pos = orbitPos(c0, lerp(5.5, 8.5, ease(k)), lerp(-.25, .35, k), lerp(.12, .32, ease(k))); tgt = c0;
+    flash = .25 * cut;
+    slamWords($('k_driving'), t, [c('right', -.05), c('right', .3), c('driving', -.05)], c('passenger', -.35), {jolt: 8});
+    slamWords($('k_pass'), t, [c('passenger', -.35), c('passenger', -.2), c('passenger')], DUR - .05, {jolt: 10});
+    black = seg(t, DUR - .3, DUR);
+  }
+
+  // story clock: SECOND 0 → T+0.95 at the end of the scene
+  clk.update(t, STORY, DUR, c, {opacity: seg(t, c('shove', -.2), c('shove', .1)) * (1 - black)});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4) + (render3d ? 0 : flash * .0);
+  $('blackout').style.opacity = black + (render3d ? 0 : 0);
+  $('blackout').style.background = !render3d && flash > .02 ? `rgba(255,255,255,${flash})` : '#000';
+  if (!render3d) $('blackout').style.opacity = Math.max(black, flash);
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>
