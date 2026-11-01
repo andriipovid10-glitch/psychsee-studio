@@ -1,0 +1,249 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#ececea;font-family:Inter,sans-serif;color:#111}
+#gl{position:absolute;inset:0}
+.mono{font-family:'DejaVu Sans Mono',monospace;font-size:20px;letter-spacing:.06em;color:#6b6b6b;text-transform:uppercase}
+#tl{position:absolute;left:56px;top:40px}
+#tr{position:absolute;right:56px;top:40px}
+#bl{position:absolute;left:56px;bottom:40px}
+#hook{position:absolute;left:120px;top:300px;font-weight:800;font-size:200px;letter-spacing:-.045em;line-height:.95}
+#hook span{display:inline-block;will-change:transform}
+#hookcap{position:absolute;left:126px;top:250px}
+.say{position:absolute;font-weight:800;letter-spacing:-.03em;white-space:nowrap;transform:translate(-50%,-100%)}
+.say span{display:inline-block}
+.say .tag{display:block;font-family:'DejaVu Sans Mono',monospace;font-weight:400;font-size:18px;letter-spacing:.08em;color:#777;margin-bottom:8px;text-transform:uppercase}
+#cards{position:absolute;right:70px;top:150px;width:470px}
+.card{background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:24px 28px;margin-bottom:18px;box-shadow:0 18px 50px rgba(0,0,0,.10)}
+.card .k{font-family:'DejaVu Sans Mono',monospace;font-size:17px;letter-spacing:.08em;color:#777;text-transform:uppercase}
+.card .v{font-weight:800;font-size:64px;letter-spacing:-.03em;margin-top:6px}
+.card .v small{font-size:26px;font-weight:600;color:#777;margin-left:8px}
+.bar{height:8px;border-radius:4px;background:#eee;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;background:#e3262d}
+#ecg{position:absolute;left:0;bottom:70px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0}
+#title .l{font-weight:900;font-size:170px;letter-spacing:-.05em;line-height:.92;text-align:center}
+#title .l span{display:inline-block}
+#title .r{color:#e3262d}
+#title .sub{margin-top:36px}
+body.dark{background:#0b1222;color:#eef2fa}
+body.dark #flash{background:#0b1222}
+body.dark .card{background:rgba(20,30,52,.82);border-color:rgba(140,170,230,.18);box-shadow:0 18px 60px rgba(0,0,0,.45)}
+body.dark .card .k,body.dark .say .tag,body.dark .card .v small{color:#8a97b3}
+body.dark .bar{background:rgba(255,255,255,.08)}
+body.dark #title .r{color:#ff3340;text-shadow:0 0 40px rgba(255,40,60,.55)}
+</style></head><body>
+<canvas id="gl" width="1920" height="1080"></canvas>
+<canvas id="ecg" width="1920" height="200"></canvas>
+<div id="tl" class="mono">// 01 — hook</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">your body can't lie — ep.01</div>
+<div id="hookcap" class="mono">// the truth about lying</div>
+<div id="hook"><span>Everyone</span><br><span>lies.</span></div>
+<div id="sayA" class="say" style="font-size:54px"><span class="tag">// question</span></div>
+<div id="sayB" class="say" style="font-size:64px"><span class="tag">// answer</span></div>
+<div id="cards">
+  <div class="card" id="c1"><div class="k">● heart rate</div><div class="v"><span id="bpm">72</span><small>bpm</small></div><div class="bar"><i id="b1"></i></div></div>
+  <div class="card" id="c2"><div class="k">● sweat glands</div><div class="v" style="font-size:44px">Activated</div></div>
+  <div class="card" id="c3"><div class="k">● cortisol</div><div class="v" style="font-size:44px">Rising <span style="color:#e3262d">▲</span></div></div>
+</div>
+<div id="flash"></div>
+<div id="title"><div class="l"><span>Your body</span><br><span class="r">can't</span> <span>lie.</span></div><div class="sub mono">// psychsee — full video on the channel</div></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const VARIANT=new URLSearchParams(location.search).get('v')||'clean';const DARK=VARIANT==='dark';if(DARK)document.body.classList.add('dark');
+const W=1920,H=1080;
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const eo=t=>1-Math.pow(1-t,4);
+const back=t=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const bpm=t=>lerp(72,128,ease(seg(t,6.2,8.4)));
+function phase(t){let p=0;for(let x=0;x<t;x+=1/240)p+=bpm(x)/60/240;return p;}
+const pulse=ph=>{const f=ph-Math.floor(ph);return Math.exp(-Math.pow((f-.02)/.05,2))+.6*Math.exp(-Math.pow((f-.22)/.05,2));};
+
+// ---------- renderer
+const canvas=document.getElementById('gl');
+const R=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});
+R.setSize(W,H,false);R.setPixelRatio(1);
+R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
+const scene=new THREE.Scene();
+const BG=new THREE.Color(DARK?0x0b1222:0xececea);scene.background=BG;
+scene.fog=new THREE.Fog(DARK?0x0b1222:0xececea,12,26);
+const cam=new THREE.PerspectiveCamera(32,W/H,0.05,100);
+
+scene.add(new THREE.HemisphereLight(DARK?0x8fa6d6:0xffffff,DARK?0x0b1222:0xbdbdb8,DARK?.55:1.1));
+const key=new THREE.DirectionalLight(0xffffff,DARK?1.5:2.2);key.position.set(-4,8,6);key.castShadow=true;
+key.shadow.mapSize.set(2048,2048);key.shadow.radius=6;key.shadow.camera.left=-6;key.shadow.camera.right=6;key.shadow.camera.top=6;key.shadow.camera.bottom=-6;key.shadow.bias=-0.0005;
+scene.add(key);
+const rim=new THREE.DirectionalLight(DARK?0x7fb2ff:0xffffff,DARK?3.2:1.2);rim.position.set(5,4,-6);scene.add(rim);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.ShadowMaterial({opacity:DARK?.55:.18}));
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+
+// ---------- stickman
+const cyl=new THREE.CylinderGeometry(1,1,1,24);const sph=new THREE.SphereGeometry(1,48,32);
+function makeMan(color){
+  const mat=new THREE.MeshStandardMaterial({color,roughness:.42,metalness:0,transparent:true});
+  const g=new THREE.Group();scene.add(g);
+  const head=new THREE.Mesh(sph,mat);head.scale.setScalar(.34);head.castShadow=true;g.add(head);
+  const limbs=[];for(let i=0;i<9;i++){const m=new THREE.Mesh(cyl,mat);m.castShadow=true;g.add(m);limbs.push(m);}
+  const joints=[];for(let i=0;i<10;i++){const m=new THREE.Mesh(sph,mat);m.castShadow=true;g.add(m);joints.push(m);}
+  return {g,mat,head,limbs,joints};
+}
+const up=new THREE.Vector3(0,1,0);
+function bone(m,a,b,r){const d=new THREE.Vector3().subVectors(b,a);const L=d.length();
+  m.position.copy(a).addScaledVector(d,.5);m.scale.set(r,L,r);m.quaternion.setFromUnitVectors(up,d.normalize());}
+// pose: local coords, man faces +z of its group
+function pose(M,o){
+  const b=o.bob||0, V=(x,y,z)=>new THREE.Vector3(x,y,z);
+  const hip=V(0,1.05+b,0), neck=V(0,2.0+b,0), sh=V(0,1.85+b,0), head=V(0,2.38+b,0);
+  const fl=V(-.28,0.04,0), fr=V(.28,0.04,0);
+  const nv=(a,b,k)=>a.clone().lerp(b,k).normalize();
+  const RL1=V(-.25,-.97,0),RL2=V(-.1,-.99,.05),RR1=V(.25,-.97,0),RR2=V(.1,-.99,.05);
+  const e1=nv(RL1,o.L1||RL1,o.lk||0),e2=nv(RL2,o.L2||RL2,o.lk||0),f1=nv(RR1,o.R1||RR1,o.rk||0),f2=nv(RR2,o.R2||RR2,o.rk||0);
+  const le=sh.clone().addScaledVector(e1,.62),lh=le.clone().addScaledVector(e2,.58);
+  const re=sh.clone().addScaledVector(f1,.62),rh=re.clone().addScaledVector(f2,.58);
+  const r=.075;
+  M.head.position.copy(head);
+  bone(M.limbs[0],hip,neck,r);bone(M.limbs[1],hip,fl,r);bone(M.limbs[2],hip,fr,r);
+  bone(M.limbs[3],sh,le,r);bone(M.limbs[4],le,lh,r);bone(M.limbs[5],sh,re,r);bone(M.limbs[6],re,rh,r);
+  bone(M.limbs[7],neck,head,r*.9);M.limbs[8].visible=false;
+  [hip,neck,fl,fr,le,lh,re,rh,sh].forEach((p,i)=>{M.joints[i].position.copy(p);M.joints[i].scale.setScalar(r*1.05);});
+  M.joints[9].visible=false;
+}
+const A=makeMan(DARK?0xe6ebf5:0xf4f4f2), B=makeMan(DARK?0xe6ebf5:0xf4f4f2);
+A.g.position.set(-1.35,0,0);A.g.rotation.y=Math.PI/2-.55;
+B.g.position.set(1.35,0,0);B.g.rotation.y=-Math.PI/2;
+
+// ---------- inside: heart, ribs, red light
+const inside=new THREE.Group();B.g.add(inside);inside.position.set(0,1.55,0.0);
+const hs=new THREE.Shape();const s=.11;
+hs.moveTo(0,-s*.9);hs.bezierCurveTo(-s*1.4,-s*.1,-s*1.0,s*.95,0,s*.38);hs.bezierCurveTo(s*1.0,s*.95,s*1.4,-s*.1,0,-s*.9);
+const hgeo=new THREE.ExtrudeGeometry(hs,{depth:.08,bevelEnabled:true,bevelThickness:.05,bevelSize:.04,bevelSegments:8,curveSegments:32});hgeo.center();
+const heartMat=new THREE.MeshStandardMaterial({color:0xc8101a,emissive:0xff0d18,emissiveIntensity:.0,roughness:.3});
+const heart=new THREE.Mesh(hgeo,heartMat);heart.position.set(-.05,.08,.02);heart.rotation.y=Math.PI;inside.add(heart);
+const ribMat=new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:.25,transparent:true,opacity:0,roughness:.5});
+const ribs=[];for(let i=0;i<5;i++){const tg=new THREE.TorusGeometry(.26-i*.012,.016,10,48,Math.PI*1.55);
+  const m=new THREE.Mesh(tg,ribMat);m.rotation.x=Math.PI/2;m.rotation.z=Math.PI*0.5+Math.PI*.225;m.position.y=.28-i*.12;m.scale.set(1,.8,1);inside.add(m);ribs.push(m);}
+const veinMat=new THREE.MeshBasicMaterial({color:0xff2a30,transparent:true,opacity:0});
+const veins=[];[[.0,.7,0],[-.35,.55,0],[.35,.6,0],[-.5,-.25,.0],[.45,-.3,0],[0,-.7,0]].forEach(([x,y,z])=>{
+  const c=new THREE.CatmullRomCurve3([new THREE.Vector3(-.05,.08,.02),new THREE.Vector3(x*.45,y*.5+.05,.03),new THREE.Vector3(x,y,0)]);
+  const m=new THREE.Mesh(new THREE.TubeGeometry(c,24,.009,6),veinMat);inside.add(m);veins.push(m);});
+const redL=new THREE.PointLight(0xff2a2a,0,4,1.6);redL.position.set(0,1.55,.0);B.g.add(redL);
+
+// ---------- post (halftone variant)
+const composer=new EffectComposer(R);composer.addPass(new RenderPass(scene,cam));
+const HT={uniforms:{tDiffuse:{value:null},res:{value:new THREE.Vector2(W,H)},cell:{value:7.0},red:{value:new THREE.Color(0xe3262d)}},
+vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+fragmentShader:`uniform sampler2D tDiffuse;uniform vec2 res;uniform float cell;varying vec2 vUv;
+void main(){vec2 p=vUv*res;vec2 c=(floor(p/cell)+.5)*cell;vec4 col=texture2D(tDiffuse,c/res);
+ float l=dot(col.rgb,vec3(.299,.587,.114));float redness=clamp(col.r-max(col.g,col.b)*1.1,0.,1.);
+ float rad=sqrt(clamp(1.-l,0.,1.))*cell*.62;float d=length(p-c);float dotm=1.-smoothstep(rad-.8,rad+.8,d);
+ vec3 bg=vec3(.925,.925,.918);vec3 ink=mix(vec3(.07),vec3(.89,.15,.18),step(.18,redness));
+ if(redness>.18){rad=cell*.55*clamp(redness*1.6+.3,0.,1.);dotm=1.-smoothstep(rad-.8,rad+.8,d);}
+ gl_FragColor=vec4(mix(bg,ink,dotm),1.);}`};
+const htPass=new ShaderPass(HT);
+if(DARK)composer.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.55,.5,.92));composer.addPass(new OutputPass());
+
+// ---------- ecg canvas
+const ecg=document.getElementById('ecg').getContext('2d');
+function drawECG(t,k){ecg.clearRect(0,0,W,200);if(k<=0)return;ecg.globalAlpha=k;ecg.strokeStyle='#e3262d';ecg.lineWidth=4;ecg.lineJoin='round';ecg.beginPath();
+  const span=3;let st=false;let ph=phase(Math.max(0,t-span));
+  for(let i=0;i<=W;i+=4){const tt=t-span*(1-i/W);ph+=bpm(tt)/60*(span*4/W);if(tt<6.1)continue;const f=ph%1;
+    let y=110-90*Math.exp(-Math.pow((f-.05)/.012,2))+30*Math.exp(-Math.pow((f-.08)/.012,2))-18*Math.exp(-Math.pow((f-.3)/.05,2));
+    if(!st){ecg.moveTo(i,y);st=true}else ecg.lineTo(i,y);}ecg.stroke();}
+
+// ---------- dom
+const $=id=>document.getElementById(id);
+const hookSpans=[...document.querySelectorAll('#hook span')];
+function wordsInto(el,text){text.split(' ').forEach(w=>{const s=document.createElement('span');s.textContent=w+' ';el.appendChild(s);});return [...el.querySelectorAll('span:not(.tag)')];}
+const wA=wordsInto($('sayA'),'Where were you last night?');
+const wB=wordsInto($('sayB'),'At home.');
+const titleSpans=[...document.querySelectorAll('#title .l span')];
+function proj(obj,local){const v=local.clone();obj.localToWorld(v);v.project(cam);return [(v.x*.5+.5)*W,(-v.y*.5+.5)*H];}
+
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+function camAt(t){
+  // shot 1: hook — low dramatic orbit
+  let pos,tgt;
+  if(t<4.0){const a=lerp(-1.05,-.15,eo(seg(t,0,4.0)));const r=lerp(6.2,8.8,ease(seg(t,0,1.6)));
+    pos=V3(Math.sin(a)*r,lerp(.6,1.9,ease(seg(t,0,1.8))),Math.cos(a)*r);tgt=V3(lerp(1.0,0,ease(seg(t,0,1.8))),lerp(1.3,1.6,ease(seg(t,.8,2))),0);}
+  else{const k=ease(seg(t,4.0,6.2));
+    const p0=V3(Math.sin(-.15)*8.8,1.9,Math.cos(-.15)*8.8),t0=V3(0,1.6,0);
+    const orb=Math.sin((t-6.2)*.45)*.25*seg(t,6.2,7);
+    const D=2.9;const p1=V3(1.35-D*Math.cos(orb+.5),1.85,D*Math.sin(orb+.5)),t1=V3(1.35,1.68,0);
+    pos=p0.lerp(p1,k);tgt=t0.lerp(t1,k);
+    // arc the path so the camera swoops rather than slides
+    pos.y+=Math.sin(k*Math.PI)*.8;pos.z+=Math.sin(k*Math.PI)*1.2;}
+  const sh=seg(t,7.0,8.6)*(1-seg(t,8.8,9.0));
+  pos.x+=Math.sin(t*61)*.012*sh;pos.y+=Math.cos(t*47)*.012*sh;
+  return [pos,tgt];
+}
+
+function draw(t){
+  // poses
+  const gest=ease(seg(t,1.7,2.1))*(1-ease(seg(t,3.6,4.1)));
+  pose(A,{bob:Math.sin(t*2.1)*.015,R1:V3(.25,.05,.97),R2:V3(.1,.15,.98),rk:gest});
+  const nerv=ease(seg(t,3.1,3.6));
+  pose(B,{bob:Math.sin(t*2.1+1)*.015,R1:V3(.75,.6,-.25),R2:V3(-.79,.25,-.55),rk:nerv});
+  // hook: liar spins in
+  B.g.rotation.y=-Math.PI/2+.55+ (1-back(seg(t,0.0,1.1)))*Math.PI*1.2;
+  A.g.position.y=(1-back(seg(t,.9,1.6)))*-3;
+  // x-ray
+  const xr=ease(seg(t,4.6,5.9));
+  B.mat.opacity=1-.84*xr;B.mat.depthWrite=xr<.2;
+  ribMat.opacity=xr*.85;inside.visible=xr>.002;
+  const ph=phase(t),p=pulse(ph),stress=seg(t,6.2,8.4);
+  heart.scale.setScalar(.78*xr*(1+.18*p*(.5+.5*stress)));heart.rotation.z=Math.sin(t*1.3)*.1;
+  heartMat.emissiveIntensity=xr*(.6+1.8*p*(.4+.6*stress));
+  veinMat.opacity=xr*(.15+.75*stress*p);
+  redL.intensity=xr*(1.5+9*p*(.3+.7*stress))*(DARK?.45:1);ribMat.emissiveIntensity=DARK?.06:.25;
+  // camera
+  const [pos,tgt]=camAt(t);cam.position.copy(pos);cam.lookAt(tgt);cam.fov=lerp(32,40,ease(seg(t,4.0,6.2)));cam.updateProjectionMatrix();
+
+  if(DARK)composer.render();else R.render(scene,cam);
+
+  // ---- DOM
+  const fr=Math.floor(t*30);$('tc').textContent='00:00:'+String(Math.floor(t)).padStart(2,'0')+':'+String(fr%30).padStart(2,'0');
+  $('tl').textContent=t<1.6?'// 01 — hook':t<4.3?'// 02 — the lie':t<9?'// 03 — inside the body':'// 04 — truth';
+  // hook words
+  const hOut=ease(seg(t,1.35,1.7));
+  hookSpans.forEach((s,i)=>{const k=back(seg(t,.12+i*.22,.55+i*.22));s.style.transform=`translateY(${(1-k)*140-hOut*40}px)`;s.style.opacity=clamp(seg(t,.12+i*.22,.35+i*.22))*(1-hOut);
+    s.style.filter=`blur(${(1-clamp(seg(t,.12+i*.22,.4+i*.22)))*14+hOut*14}px)`;});
+  $('hookcap').style.opacity=clamp(seg(t,.3,.6))*(1-hOut);
+  // speech, anchored over heads
+  const fadeS=1-seg(t,4.0,4.4);
+  let [ax,ay]=proj(A.g,V3(0,2.85,0));let [bx,by]=proj(B.g,V3(0,2.85,0));
+  $('sayA').style.left=ax+'px';$('sayA').style.top=ay+'px';$('sayB').style.left=bx+'px';$('sayB').style.top=by+'px';
+  $('sayA').style.opacity=fadeS*clamp(seg(t,1.75,1.9));$('sayB').style.opacity=fadeS*clamp(seg(t,2.75,2.9));
+  wA.forEach((s,i)=>{const k=back(seg(t,1.8+i*.09,2.1+i*.09));s.style.transform=`translateY(${(1-k)*40}px) scale(${.7+.3*k})`;s.style.opacity=clamp(k*1.5);});
+  wB.forEach((s,i)=>{const k=back(seg(t,2.8+i*.16,3.1+i*.16));s.style.transform=`translateY(${(1-k)*40}px) scale(${.7+.3*k})`;s.style.opacity=clamp(k*1.5);});
+  // cards
+  ['c1','c2','c3'].forEach((id,i)=>{const k=eo(seg(t,6.0+i*.35,6.6+i*.35));const out=ease(seg(t,8.85,9.1));
+    $(id).style.transform=`translateX(${(1-k)*560+out*560}px)`;$(id).style.opacity=k;});
+  $('bpm').textContent=Math.round(bpm(t));$('bpm').style.color=stress>.5?'#e3262d':(DARK?'#eef2fa':'#111');
+  $('b1').style.width=(30+60*stress)+'%';
+  drawECG(t,ease(seg(t,6.1,6.5))*(1-seg(t,8.85,9.0)));
+  // flash + title
+  $('flash').style.opacity=seg(t,8.85,9.0)*(1-seg(t,9.0,9.05))+ (t>=9.0?1:0)*0+0;
+  const tk=seg(t,9.0,9.05);$('flash').style.opacity=t<9.0?seg(t,8.9,9.0):1;
+  $('title').style.opacity=t>=9.0?1:0;
+  titleSpans.forEach((s,i)=>{const k=back(seg(t,9.0+i*.18,9.45+i*.18));s.style.transform=`translateX(${(1-k)*-220}px) skewX(${(1-k)*-14}deg)`;s.style.opacity=clamp(k*2);
+    s.style.filter=`blur(${(1-clamp(seg(t,9+i*.18,9.3+i*.18)))*18}px)`;});
+  document.querySelector('#title .sub').style.opacity=clamp(seg(t,9.8,10.2));
+  [$('tl'),$('tr'),$('bl')].forEach(e=>e.style.color=DARK?'#8a97b3':(t>=9?'#999':'#6b6b6b'));
+}
+window.draw=draw;await document.fonts.ready;draw(0);window.ready=true;
+</script></body></html>

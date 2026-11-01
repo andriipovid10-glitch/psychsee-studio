@@ -1,0 +1,6 @@
+{
+  "name": "psychsee-engine",
+  "private": true,
+  "description": "3D stickman motion-graphics engine for the PsychSee YouTube channel (Three.js + Playwright + ffmpeg)",
+  "dependencies": { "three": "0.160.0" }
+}
