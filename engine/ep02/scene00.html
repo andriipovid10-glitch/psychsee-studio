@@ -1,0 +1,206 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="lib/hud.css">
+<style>
+#h7{left:110px;top:300px;font-size:150px}
+#slots{position:absolute;left:116px;top:630px;display:flex;gap:12px;align-items:center}
+#slots i{display:block;width:46px;height:14px;border-radius:7px;background:rgba(255,255,255,.12)}
+#slots span{margin-left:14px}
+#cards{position:absolute;right:70px;top:150px;width:440px}
+#cards .card{position:relative;margin-bottom:18px;width:440px}
+#ruler{position:absolute;left:210px;right:210px;bottom:150px;height:120px}
+#ruler .line{position:absolute;left:0;right:0;top:40px;height:2px;background:rgba(160,180,220,.35)}
+#ruler .tk{position:absolute;top:28px;width:2px;height:26px;background:#8a97b3;transform:translateX(-1px)}
+#ruler .tl{position:absolute;top:66px;transform:translateX(-50%);font-size:17px;white-space:nowrap;text-align:center}
+#ruler .tl b{display:block;font-family:Inter;font-weight:800;font-size:30px;color:#eef2fa;letter-spacing:-.02em;margin-bottom:2px}
+#ruler .fill{position:absolute;left:0;top:39px;height:4px;background:#eef2fa;border-radius:2px}
+#ruler .cur{position:absolute;top:22px;width:14px;height:38px;border-radius:7px;background:#eef2fa;transform:translateX(-50%);box-shadow:0 0 24px rgba(200,220,255,.8)}
+#redact{left:0;top:0;width:520px;transform:translate(-50%,-100%)}
+#redact .bars{display:flex;gap:12px;margin-top:14px}
+#redact .bars i{display:block;height:44px;border-radius:6px;background:#eef2fa}
+#stamp{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%) rotate(-8deg);font-weight:900;font-size:92px;letter-spacing:-.02em;color:#ff3340;border:8px solid #ff3340;border-radius:14px;padding:0 26px;line-height:1.15}
+#scan{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#bfe0ff 20%,#fff 50%,#bfe0ff 80%,transparent);box-shadow:0 0 30px 6px rgba(140,200,255,.6)}
+#freeze{position:absolute;left:50%;top:40px;transform:translateX(-50%)}
+.ring{position:absolute;border:3px solid #dfeaff;border-radius:50%;transform:translate(-50%,-50%)}
+#blackout{position:absolute;inset:0;background:#000}
+#ev{position:absolute;text-align:center;transform:translate(-50%,0)}
+</style></head><body>
+<canvas id="gl" width="1920" height="1080"></canvas>
+<div id="scan" class="hide"></div>
+<div id="rings"></div>
+<div id="tl" class="mono">// 00 — cold open</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+<div id="freeze" class="mono hide">◼ &nbsp;frame held</div>
+<div id="h7" class="head hide"><span>7</span> <span>DECISIONS.</span><br><span class="r">0</span> <span class="r">PERMISSION.</span></div>
+<div id="slots" class="hide"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="mono" id="slotn">decisions made 00/07</span></div>
+<div id="cards">
+  <div class="card hide" id="cH"><div class="k"><i></i>hearing</div><div class="v">Shutting off</div></div>
+  <div class="card hide" id="cV"><div class="k"><i></i>vision</div><div class="v">Shrinking</div></div>
+  <div class="card hide" id="cP"><div class="k"><i></i>pain</div><div class="v">Switched off</div></div>
+</div>
+<div id="ruler" class="hide"><div class="line"></div><div class="fill"></div></div>
+<div id="redact" class="card hide"><div class="k"><i style="background:#ff3340"></i>t+8s · the thing everyone says</div><div class="bars"><i style="width:150px"></i><i style="width:96px"></i><i style="width:200px"></i></div></div>
+<div id="ev" class="mono hide">// happens in every fight. supposedly.</div>
+<div id="stamp" class="hide">MYTH</div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, W, H, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, setupStage, setXray, pulse, orbitPos, shake,
+  $, kin, show, project, timecode, loadTiming} from './lib/core.js';
+import {makeSet, poseSet, placeNodes} from './lib/set.js';
+import {setPath} from './lib/brain.js';
+import {makeTClock} from './lib/tclock.js';
+
+const TM = await loadTiming('s00');
+const c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl'));
+const {scene, cam, composer, grade} = st;
+const S = makeSet(st);
+const {A, B, chest, brain} = S;
+const clk = makeTClock(document.body);
+const FZ = c('shove', .32);                       // freeze point (mid-stagger)
+
+// ruler 0..10 s
+const RL = [['0', 'alarm'], ['1', 'adrenaline'], ['2', 'shutdown'], ['3', ''], ['4', 'tunnel'], ['5', 'silence'], ['6', 'pain off'], ['7', ''], ['8', '???'], ['9', 'crash'], ['10', '']];
+const rw = 1920 - 420;
+RL.forEach(([n, l], i) => {
+  const x = i / 10 * rw; const tk = document.createElement('div'); tk.className = 'tk'; tk.style.left = x + 'px'; $('ruler').appendChild(tk);
+  const tl = document.createElement('div'); tl.className = 'tl mono'; tl.style.left = x + 'px'; tl.innerHTML = `<b>${n}</b>${l}`; tl.id = 'tl' + i; $('ruler').appendChild(tl);
+});
+const cur = document.createElement('div'); cur.className = 'cur'; $('ruler').appendChild(cur);
+const rings = [0, 1, 2].map(() => { const d = document.createElement('div'); d.className = 'ring'; $('rings').appendChild(d); return d; });
+
+const h7 = [...document.querySelectorAll('#h7 span')];
+const slots = [...document.querySelectorAll('#slots i')];
+
+// ---------------------------------------------------------------- camera
+function frameShift(pos, tgt, dx) {      // move subject on screen: shift target along camera-right
+  const f = tgt.clone().sub(pos).normalize(); const r = f.clone().cross(V3(0, 1, 0)).normalize();
+  return tgt.clone().addScaledVector(r, dx);
+}
+function camAt(t, K) {
+  const {Hw, Cw, hand, eyeW} = K;
+  let pos, tgt, fov = 34, k;
+  const shots = [
+    [0, c('shove', -.4), (k) => { pos = vlerp(V3(.15, 1.45, 6.0), V3(.0, 1.52, 5.2), ease(k)); tgt = vlerp(V3(0, 1.35, 0), V3(.05, 1.42, 0), k); }],
+    [c('shove', -.4), FZ + .3, (k) => { pos = vlerp(V3(.45, 1.7, 4.7), V3(.7, 1.8, 4.0), eo(k)); tgt = V3(.5, 1.6, 0);
+      pos.add(shake(t, .045 * Math.exp(-Math.max(0, t - c('shove')) * 5) * (t > c('shove') ? 1 : 0))); fov = 36; }],
+    [FZ + .3, c('before', -.1), (k) => { const e = ease(k); pos = orbitPos(V3(.5, 1.5, 0), lerp(4.8, 4.2, e), lerp(.6, .12, e), lerp(.14, .06, e)); tgt = V3(.55, 1.55, 0); }],
+    [c('before', -.1), c('seven', -.35), (k) => { const e = ease(k); pos = orbitPos(Hw, lerp(2.3, 1.6, e), lerp(-.2, -.45, e), lerp(.32, .14, e)); tgt = Hw.clone().add(V3(0, -.25 * (1 - e), 0)); fov = 36; }],
+    [c('seven', -.35), c('hearing', -.35), (k) => { const e = ease(k); const ctr = Cw.clone().add(V3(0, .15, 0)); pos = orbitPos(ctr, lerp(4.0, 3.5, e), lerp(-2.0, -2.3, e), lerp(.12, .06, e)); tgt = frameShift(pos, ctr, -1.15); }],
+    [c('hearing', -.35), c('vision', -.3), (k) => { const e = ease(k); pos = orbitPos(Hw, lerp(1.35, 1.1, e), lerp(-.15, .1, e), .06); tgt = frameShift(pos, Hw, .18); }],
+    [c('vision', -.3), c('pain', -.3), (k) => { const e = ease(k); pos = orbitPos(Hw, lerp(1.1, .85, e), lerp(-.85, -1.1, e), .06); tgt = frameShift(pos, Hw.clone().add(V3(0, -.05, 0)), .32); }],
+    [c('pain', -.3), c('people', -.25), (k) => { const e = ease(k); pos = orbitPos(hand, lerp(1.7, 1.3, e), lerp(-.75, -.35, e), lerp(.25, .15, e)); tgt = frameShift(pos, hand, .3); }],
+    [c('people', -.25), c('slow', -.35), (k) => { const e = ease(k); pos = orbitPos(V3(.2, 1.35, 0), lerp(5.4, 5.0, e), lerp(-.95, .05, e), lerp(.28, .15, e)); tgt = frameShift(pos, V3(.4, 1.45, 0), .55); }],
+    [c('slow', -.35), c('stay', -.35), (k) => { const e = ease(k); pos = vlerp(V3(-1.2, .75, 4.9), V3(1.3, .85, 4.7), e); tgt = vlerp(V3(.1, 1.75, 0), V3(.5, 1.75, 0), e); }],
+    [c('stay', -.35), c('isnt', -.55), (k) => { const e = ease(k); pos = orbitPos(V3(.3, 1.2, 0), lerp(5.6, 5.1, e), lerp(.3, .62, e), lerp(.62, .55, e)); tgt = V3(.3, 1.9, 0); }],
+    [c('isnt', -.55), 1e9, (k) => { const kk = clamp((t - c('isnt', -.55)) / (DUR - c('isnt', -.55))); const e = Math.pow(kk, 1.6) * .5 + ease(kk) * .5;
+      const r = lerp(2.4, .012, e); pos = orbitPos(eyeW, r, lerp(-.55, -1.5, ease(kk)), lerp(.1, 0, kk)); tgt = eyeW.clone(); fov = lerp(36, 52, ei(kk)); }],
+  ];
+  for (const [a, b, f] of shots) if (t >= a && t < b) { f(seg(t, a, b)); break; }
+  return {pos, tgt, fov};
+}
+
+// ---------------------------------------------------------------- draw
+function draw(t) {
+  const tf = Math.min(t, FZ);
+  poseSet(S, tf, {shove: c('shove')});
+  placeNodes(S);
+  const P = B.P;
+  chest.inside.position.copy(P.hip.clone().lerp(P.sh, .62)); chest.inside.scale.setScalar(.85); chest.inside.rotation.x = -.36 * clamp((tf - c('shove')) / .42);
+  scene.updateMatrixWorld(true);
+  const Hw = B.g.localToWorld(P.head.clone()), Cw = B.g.localToWorld(P.hip.clone().lerp(P.sh, .6)), hand = B.g.localToWorld(P.hL.clone());
+  const eyeW = brain.toWorld(V3(32, -32, 70));    // B's eye on the camera side
+
+  // x-ray + brain glow
+  const xr = ease(seg(t, FZ + .2, FZ + .85));
+  setXray(B, xr, 0);
+  const aDim = ease(seg(t, FZ + .2, FZ + 1.2));
+  A.mat.color.setRGB(lerp(.9, .32, aDim), lerp(.92, .36, aDim), lerp(.96, .46, aDim));
+  const beat = Math.exp(-Math.pow((t - (FZ + .85)) / .09, 2));              // the one deep heartbeat
+  const ph = t > FZ + 1.5 ? (t - FZ - 1.5) * 1.15 : 0, p = t > FZ + 1.5 ? pulse(ph) * .5 : 0;
+  const glow = xr * (.65 + 1.2 * beat + .25 * p);
+  const M = brain.mats;
+  M.cortex.uniforms.hot.value = ease(seg(t, FZ + .5, FZ + 1.0)); M.cortex.uniforms.inten.value = glow * 1.35;
+  M.cereb.uniforms.inten.value = xr * .55; M.stem.uniforms.inten.value = xr * .6; M.thal.uniforms.inten.value = xr * .4;
+  M.eye.uniforms.inten.value = xr * (.6 + .6 * Math.exp(-Math.pow((t - c('vision', .2)) / .5, 2)));
+  M.retina.opacity = xr * .2; M.amy.emissiveIntensity = xr * (.6 + 2 * beat); M.hyp.emissiveIntensity = xr * .3;
+  setPath(brain.paths.nerve, {a0: xr * .25}); setPath(brain.paths.tract, {a0: xr * .2}); setPath(brain.paths.radiation, {a0: xr * .15});
+  chest.heart.scale.setScalar(.78 * xr * (1 + .3 * beat + .12 * p)); chest.heartMat.emissiveIntensity = xr * (.5 + 2.5 * beat + .8 * p);
+  chest.ribMat.opacity = xr * .7; chest.redL.intensity = xr * (.4 + 4 * beat + 1.5 * p);
+  // 7 decision nodes
+  S.nodes.forEach((n, i) => { const a = c('seven', -.1 + i * .11); const on = ease(seg(t, a, a + .12)) * (1 - ease(seg(t, c('hearing', -.5), c('hearing', -.1))));
+    n.material.opacity = on * .95; n.scale.setScalar(.22 * (1 + .6 * Math.exp(-Math.pow((t - a - .06) / .08, 2)))); });
+  // pain: red signal up the arm, then switched off
+  const painOn = seg(t, c('pain', -.25), c('pain', .05)), painOff = ease(seg(t, c('pain', .35), c('pain', 1.0)));
+  B.nerveMat.opacity = .9 * painOn * (1 - painOff); B.nerves.forEach((n, i) => n.visible = (i === 1 || i === 2) && painOn * (1 - painOff) > .01);
+
+  // camera
+  const K = camAt(t, {Hw, Cw, hand, eyeW});
+  cam.position.copy(K.pos); cam.lookAt(K.tgt); cam.fov = K.fov; cam.near = t > c('isnt', -.6) ? .004 : .05; cam.updateProjectionMatrix();
+
+  // grade
+  grade.desat.value = t > FZ ? .5 : 0;
+  grade.flash.value = .85 * (1 - seg(t, FZ, FZ + .18)) * (t >= FZ ? 1 : 0) + ei(seg(t, DUR - .3, DUR)) * .95;
+  grade.ca.value = 6 * Math.exp(-Math.max(0, t - c('shove')) * 7) * (t > c('shove') ? 1 : 0) + 7 * Math.exp(-Math.pow((t - c('isnt', .05)) / .06, 2));
+  grade.tunnel.value = .85 * ease(seg(t, c('vision', -.05), c('vision', .6))) * (1 - ease(seg(t, c('pain', -.35), c('pain', -.05))));
+  grade.vign.value = .35; grade.seed.value = (Math.floor(t * 30) % 97) * .137;
+  composer.render();
+
+  // ---------------- DOM
+  timecode($('tc'), TM.offset + t);
+  $('blackout').style.opacity = t < .45 ? 1 : 0;
+  show($('freeze'), clamp(seg(t, FZ, FZ + .1)) * (1 - seg(t, FZ + 2.2, FZ + 2.6)));
+  // scan line sweeping down the body as the x-ray turns on
+  { const [, ytop] = project(cam, Hw.clone().add(V3(0, .5, 0))), [, ybot] = project(cam, B.g.localToWorld(V3(0, 0, -.42)));
+    const k = seg(t, FZ + .15, FZ + .9); $('scan').style.top = lerp(ytop, ybot, ease(k)) + 'px'; show($('scan'), k > 0 && k < 1 ? 1 : 0); }
+  // T+ clock
+  const big = ease(seg(t, c('slow', -.1), c('slow', .45))) * (1 - ease(seg(t, c('stay', -.5), c('stay', -.05))));
+  clk.update(t, TM.story, DUR, c, {opacity: clamp(seg(t, FZ + 1.0, FZ + 1.25)), big});
+  // headline
+  const hOut = ease(seg(t, c('hearing', -.6), c('hearing', -.3)));
+  [[0, c('decisions', -.18)], [1, c('decisions', -.05)], [2, c('permission', -.12)], [3, c('permission', .0)]].forEach(([i, a]) => { kin(h7[i], t, a, .42, 120); h7[i].style.opacity = parseFloat(h7[i].style.opacity) * (1 - hOut); });
+  show($('h7'), t > c('decisions', -.2) && hOut < 1 ? 1 : 0);
+  // misregistration on the red slam
+  const mr = Math.exp(-Math.pow((t - c('permission', .06)) / .05, 2));
+  h7[2].style.textShadow = h7[3].style.textShadow = `${-4 * mr}px 0 rgba(80,200,255,${.8 * mr}), ${4 * mr}px 0 rgba(255,0,60,${.8 * mr}), 0 0 40px rgba(255,40,60,.5)`;
+  show($('slots'), clamp(seg(t, c('seven', -.3), c('seven', -.1))) * (1 - hOut));
+  let nOn = 0; slots.forEach((s, i) => { const on = t > c('seven', -.1 + i * .11); if (on) nOn++; s.style.background = on ? (i === 0 || i === 3 ? '#ff3340' : '#eef2fa') : 'rgba(255,255,255,.12)'; });
+  $('slotn').textContent = `decisions made ${String(nOn).padStart(2, '0')}/07`;
+  // cards
+  const cOut = ease(seg(t, c('slow', -.55), c('slow', -.2)));
+  [['cH', 'hearing'], ['cV', 'vision'], ['cP', 'pain']].forEach(([id, cu]) => {
+    const k = eo(seg(t, c(cu, -.15), c(cu, .35))); $(id).style.transform = `translateX(${(1 - k) * 520 + cOut * 520}px)`; show($(id), k * (1 - cOut));
+    $(id).querySelector('i').style.background = t > c(cu) + .1 ? '#eef2fa' : '#8a97b3';
+  });
+  // hearing: sound rings around the ear collapse
+  { const ear = brain.toWorld(V3(62, -12, 0)); const [ex, ey] = project(cam, ear); const a = c('hearing', -.3), b = c('vision', -.35);
+    rings.forEach((r, i) => { const ph = ((t - a) * .9 + i / 3) % 1; const k = seg(t, a, b); const fade = 1 - ease(seg(t, c('hearing', .3), c('hearing', 1.1)));
+      const R = (60 + 220 * ph) * lerp(1, .25, ease(seg(t, c('hearing', .1), c('hearing', 1.0))));
+      r.style.left = ex + 'px'; r.style.top = ey + 'px'; r.style.width = r.style.height = 2 * R + 'px'; r.style.opacity = (t > a && t < b) ? (1 - ph) * .75 * (.25 + .75 * fade) : 0; }); }
+  // ruler
+  const rIn = eo(seg(t, c('slow', .25), c('slow', .75))), rOut = ease(seg(t, DUR - .9, DUR - .5));
+  show($('ruler'), rIn * (1 - rOut)); $('ruler').style.transform = `translateY(${(1 - rIn) * 60}px)`;
+  let pos = 0; if (t > c('secbysec')) pos = back(seg(t, c('secbysec'), c('secbysec', .3))); if (t > c('secbysec2')) pos = 1 + back(seg(t, c('secbysec2'), c('secbysec2', .3)));
+  if (t > c('stay', -.05)) pos = 2 + 6 * ease(seg(t, c('stay', -.05), c('eight', .05)));
+  cur.style.left = pos / 10 * rw + 'px'; document.querySelector('#ruler .fill').style.width = pos / 10 * rw + 'px';
+  const at8 = seg(t, c('eight', -.05), c('eight', .2));
+  cur.style.background = at8 > .5 ? '#ff3340' : '#eef2fa'; cur.style.boxShadow = at8 > .5 ? '0 0 30px rgba(255,50,64,.9)' : '0 0 24px rgba(200,220,255,.8)';
+  $('tl8').style.color = at8 > .5 ? '#ff3340' : ''; $('tl8').querySelector('b').style.color = at8 > .5 ? '#ff3340' : '';
+  // redacted card above tick 8
+  { const k = back(seg(t, c('eight', .05), c('eight', .5))); const x = 210 + .8 * rw, y = 1080 - 150 - 30;
+    $('redact').style.left = x + 'px'; $('redact').style.top = (y - 20 * (1 - k)) + 'px'; $('redact').style.transform = `translate(-50%,-100%) scale(${.85 + .15 * k})`;
+    show($('redact'), clamp(k * 2) * (1 - rOut));
+    show($('ev'), clamp(seg(t, c('everyone', -.1), c('everyone', .2))) * (1 - rOut)); $('ev').style.left = x + 'px'; $('ev').style.top = (y - 250) + 'px';
+    const sk = back(seg(t, c('isnt', -.02), c('isnt', .22))); show($('stamp'), clamp(seg(t, c('isnt', -.02), c('isnt', .06))) * (1 - rOut));
+    $('stamp').style.left = x + 'px'; $('stamp').style.top = (y - 120) + 'px';
+    $('stamp').style.transform = `translate(-50%,-50%) rotate(-8deg) scale(${lerp(2.2, 1, sk)})`;
+    const m2 = Math.exp(-Math.pow((t - c('isnt', .08)) / .05, 2));
+    $('stamp').style.textShadow = `${-5 * m2}px 0 rgba(80,200,255,.8), ${5 * m2}px 0 rgba(255,0,60,.8)`; }
+  $('tl').textContent = t < FZ ? '// 00 — cold open' : '// 00 — cold open · slowed down';
+}
+window.draw = draw; await document.fonts.ready; draw(0); window.ready = true;
+</script></body></html>

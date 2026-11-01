@@ -1,0 +1,561 @@
+{
+"source": "Speko audio.transcribe (gemini-3.5-transcribe) on the raw TTS take; the saved vo_temp file was sped up by atempo 1.08",
+"time_scale": 0.9259259259259258,
+"words": [
+{
+"text": "Here's",
+"start_ms": 300,
+"end_ms": 800
+},
+{
+"text": "the",
+"start_ms": 800,
+"end_ms": 900
+},
+{
+"text": "strange",
+"start_ms": 900,
+"end_ms": 1400
+},
+{
+"text": "part.",
+"start_ms": 1400,
+"end_ms": 1800
+},
+{
+"text": "The",
+"start_ms": 2500,
+"end_ms": 2600
+},
+{
+"text": "fight",
+"start_ms": 2600,
+"end_ms": 3300
+},
+{
+"text": "starts",
+"start_ms": 3300,
+"end_ms": 3900
+},
+{
+"text": "before",
+"start_ms": 3900,
+"end_ms": 4600
+},
+{
+"text": "you",
+"start_ms": 4600,
+"end_ms": 4800
+},
+{
+"text": "see",
+"start_ms": 4800,
+"end_ms": 5100
+},
+{
+"text": "it.",
+"start_ms": 5100,
+"end_ms": 5300
+},
+{
+"text": "Light",
+"start_ms": 6300,
+"end_ms": 6700
+},
+{
+"text": "hits",
+"start_ms": 6700,
+"end_ms": 7000
+},
+{
+"text": "your",
+"start_ms": 7000,
+"end_ms": 7200
+},
+{
+"text": "eyes,",
+"start_ms": 7200,
+"end_ms": 7700
+},
+{
+"text": "and",
+"start_ms": 8100,
+"end_ms": 8300
+},
+{
+"text": "that",
+"start_ms": 8300,
+"end_ms": 8500
+},
+{
+"text": "signal",
+"start_ms": 8500,
+"end_ms": 9100
+},
+{
+"text": "races",
+"start_ms": 9100,
+"end_ms": 9600
+},
+{
+"text": "to",
+"start_ms": 9600,
+"end_ms": 9700
+},
+{
+"text": "the",
+"start_ms": 9700,
+"end_ms": 9900
+},
+{
+"text": "amygdala,",
+"start_ms": 9900,
+"end_ms": 10500
+},
+{
+"text": "an",
+"start_ms": 10900,
+"end_ms": 11000
+},
+{
+"text": "almond-sized",
+"start_ms": 11200,
+"end_ms": 12100
+},
+{
+"text": "alarm",
+"start_ms": 12100,
+"end_ms": 12700
+},
+{
+"text": "deep",
+"start_ms": 12800,
+"end_ms": 13100
+},
+{
+"text": "in",
+"start_ms": 13100,
+"end_ms": 13200
+},
+{
+"text": "your",
+"start_ms": 13200,
+"end_ms": 13300
+},
+{
+"text": "brain.",
+"start_ms": 13300,
+"end_ms": 13800
+},
+{
+"text": "The",
+"start_ms": 14800,
+"end_ms": 14900
+},
+{
+"text": "amygdala",
+"start_ms": 14900,
+"end_ms": 15400
+},
+{
+"text": "doesn't",
+"start_ms": 15400,
+"end_ms": 15800
+},
+{
+"text": "wait",
+"start_ms": 15800,
+"end_ms": 16100
+},
+{
+"text": "for",
+"start_ms": 16100,
+"end_ms": 16200
+},
+{
+"text": "the",
+"start_ms": 16200,
+"end_ms": 16300
+},
+{
+"text": "full",
+"start_ms": 16300,
+"end_ms": 16600
+},
+{
+"text": "picture.",
+"start_ms": 16600,
+"end_ms": 17100
+},
+{
+"text": "It",
+"start_ms": 17600,
+"end_ms": 17700
+},
+{
+"text": "fires",
+"start_ms": 17700,
+"end_ms": 18200
+},
+{
+"text": "a",
+"start_ms": 18200,
+"end_ms": 18300
+},
+{
+"text": "distress",
+"start_ms": 18300,
+"end_ms": 18800
+},
+{
+"text": "signal",
+"start_ms": 18800,
+"end_ms": 19200
+},
+{
+"text": "to",
+"start_ms": 19200,
+"end_ms": 19300
+},
+{
+"text": "the",
+"start_ms": 19300,
+"end_ms": 19400
+},
+{
+"text": "hypothalamus,",
+"start_ms": 19400,
+"end_ms": 20600
+},
+{
+"text": "your",
+"start_ms": 20700,
+"end_ms": 20800
+},
+{
+"text": "command",
+"start_ms": 20800,
+"end_ms": 21300
+},
+{
+"text": "center.",
+"start_ms": 21300,
+"end_ms": 21700
+},
+{
+"text": "And",
+"start_ms": 22900,
+"end_ms": 23000
+},
+{
+"text": "the",
+"start_ms": 23000,
+"end_ms": 23000
+},
+{
+"text": "wiring",
+"start_ms": 23000,
+"end_ms": 23600
+},
+{
+"text": "is",
+"start_ms": 23600,
+"end_ms": 23800
+},
+{
+"text": "so",
+"start_ms": 23800,
+"end_ms": 24000
+},
+{
+"text": "fast",
+"start_ms": 24000,
+"end_ms": 24900
+},
+{
+"text": "that",
+"start_ms": 24900,
+"end_ms": 25100
+},
+{
+"text": "this",
+"start_ms": 25100,
+"end_ms": 25300
+},
+{
+"text": "whole",
+"start_ms": 25300,
+"end_ms": 25600
+},
+{
+"text": "cascade",
+"start_ms": 25600,
+"end_ms": 26400
+},
+{
+"text": "starts",
+"start_ms": 26400,
+"end_ms": 27000
+},
+{
+"text": "before",
+"start_ms": 27000,
+"end_ms": 27600
+},
+{
+"text": "the",
+"start_ms": 27600,
+"end_ms": 27700
+},
+{
+"text": "visual",
+"start_ms": 27700,
+"end_ms": 28200
+},
+{
+"text": "part",
+"start_ms": 28200,
+"end_ms": 28400
+},
+{
+"text": "of",
+"start_ms": 28400,
+"end_ms": 28500
+},
+{
+"text": "your",
+"start_ms": 28500,
+"end_ms": 28700
+},
+{
+"text": "brain",
+"start_ms": 28700,
+"end_ms": 29100
+},
+{
+"text": "has",
+"start_ms": 29100,
+"end_ms": 29300
+},
+{
+"text": "finished",
+"start_ms": 29300,
+"end_ms": 29800
+},
+{
+"text": "processing",
+"start_ms": 29800,
+"end_ms": 30500
+},
+{
+"text": "what",
+"start_ms": 30500,
+"end_ms": 30700
+},
+{
+"text": "you're",
+"start_ms": 30700,
+"end_ms": 30800
+},
+{
+"text": "looking",
+"start_ms": 30800,
+"end_ms": 31200
+},
+{
+"text": "at.",
+"start_ms": 31200,
+"end_ms": 31400
+},
+{
+"text": "That's",
+"start_ms": 32500,
+"end_ms": 32600
+},
+{
+"text": "why",
+"start_ms": 32600,
+"end_ms": 32800
+},
+{
+"text": "people",
+"start_ms": 32800,
+"end_ms": 33100
+},
+{
+"text": "jump",
+"start_ms": 33100,
+"end_ms": 33400
+},
+{
+"text": "out",
+"start_ms": 33400,
+"end_ms": 33500
+},
+{
+"text": "of",
+"start_ms": 33500,
+"end_ms": 33600
+},
+{
+"text": "the",
+"start_ms": 33600,
+"end_ms": 33700
+},
+{
+"text": "way",
+"start_ms": 33700,
+"end_ms": 33900
+},
+{
+"text": "of",
+"start_ms": 33900,
+"end_ms": 34000
+},
+{
+"text": "a",
+"start_ms": 34000,
+"end_ms": 34000
+},
+{
+"text": "car",
+"start_ms": 34000,
+"end_ms": 34600
+},
+{
+"text": "before",
+"start_ms": 34600,
+"end_ms": 35100
+},
+{
+"text": "they",
+"start_ms": 35100,
+"end_ms": 35200
+},
+{
+"text": "know",
+"start_ms": 35200,
+"end_ms": 35600
+},
+{
+"text": "there's",
+"start_ms": 35600,
+"end_ms": 35800
+},
+{
+"text": "a",
+"start_ms": 35800,
+"end_ms": 35900
+},
+{
+"text": "car.",
+"start_ms": 35900,
+"end_ms": 36300
+},
+{
+"text": "Your",
+"start_ms": 37500,
+"end_ms": 37600
+},
+{
+"text": "body",
+"start_ms": 37600,
+"end_ms": 37900
+},
+{
+"text": "is",
+"start_ms": 37900,
+"end_ms": 38000
+},
+{
+"text": "reacting",
+"start_ms": 38000,
+"end_ms": 38500
+},
+{
+"text": "to",
+"start_ms": 38500,
+"end_ms": 38600
+},
+{
+"text": "a",
+"start_ms": 38600,
+"end_ms": 38700
+},
+{
+"text": "threat",
+"start_ms": 38700,
+"end_ms": 39200
+},
+{
+"text": "your",
+"start_ms": 39200,
+"end_ms": 39400
+},
+{
+"text": "conscious",
+"start_ms": 39400,
+"end_ms": 40000
+},
+{
+"text": "mind",
+"start_ms": 40000,
+"end_ms": 40400
+},
+{
+"text": "hasn't",
+"start_ms": 40400,
+"end_ms": 40800
+},
+{
+"text": "seen",
+"start_ms": 40800,
+"end_ms": 41200
+},
+{
+"text": "yet.",
+"start_ms": 41200,
+"end_ms": 41400
+},
+{
+"text": "You're",
+"start_ms": 42600,
+"end_ms": 42700
+},
+{
+"text": "not",
+"start_ms": 42700,
+"end_ms": 43000
+},
+{
+"text": "driving",
+"start_ms": 43000,
+"end_ms": 43600
+},
+{
+"text": "right",
+"start_ms": 43600,
+"end_ms": 43800
+},
+{
+"text": "now.",
+"start_ms": 43800,
+"end_ms": 44200
+},
+{
+"text": "You're",
+"start_ms": 45100,
+"end_ms": 45200
+},
+{
+"text": "a",
+"start_ms": 45200,
+"end_ms": 45300
+},
+{
+"text": "passenger.",
+"start_ms": 45300,
+"end_ms": 46000
+}
+]
+}

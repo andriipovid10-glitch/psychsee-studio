@@ -1,0 +1,224 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="lib/hud.css">
+<style>
+.tag3{position:absolute;transform:translate(-50%,-100%);white-space:nowrap;text-align:center}
+.tag3 .t{font-family:'DejaVu Sans Mono',monospace;font-size:22px;letter-spacing:.1em;color:#dfe8fa;text-transform:uppercase}
+.tag3 .stem{width:2px;height:46px;background:rgba(223,232,250,.7);margin:8px auto 0}
+#race{position:absolute;left:70px;bottom:120px;width:640px}
+#race .row{margin-bottom:20px}
+#race .bar{height:14px;border-radius:7px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}
+#race .bar i{display:block;height:100%;border-radius:7px}
+#race .k{display:flex;justify-content:space-between}
+#race .k b{font-family:Inter;font-weight:800;font-size:30px;letter-spacing:-.02em;color:#eef2fa;text-transform:none}
+#vload{width:420px}
+#vload .bar{height:10px;border-radius:5px;background:rgba(255,255,255,.08);margin-top:12px;overflow:hidden}
+#vload .bar i{display:block;height:100%;background:#8a97b3}
+#hp{left:110px;top:330px;font-size:150px}
+#hp .cap{font-size:20px;letter-spacing:.06em;font-weight:400}
+#whiteout{position:absolute;inset:0;background:#fff}
+</style></head><body>
+<canvas id="gl" width="1920" height="1080"></canvas>
+<div id="tags"></div>
+<div id="retA" class="ret red hide"><b></b><b></b><b></b><b></b></div>
+<div id="retH" class="ret hide"><b></b><b></b><b></b><b></b></div>
+<div id="lA" class="lbl hide"><div class="n r">AMYGDALA</div><div class="s">// almond-sized alarm · temporal lobe</div></div>
+<div id="lH" class="lbl hide"><div class="n">HYPOTHALAMUS</div><div class="s">// command center · base of the brain</div></div>
+<div id="vload" class="card hide"><div class="k"><i></i>visual cortex</div><div class="v" style="font-size:44px">Still loading…</div><div class="bar"><i id="vbar"></i></div><div class="k" style="margin-top:10px" id="vpct">processing 0%</div></div>
+<div id="race" class="hide">
+  <div class="row"><div class="k mono"><span>● alarm path · amygdala → body</span><b id="ra" class="r">running</b></div><div class="bar"><i id="rab" style="background:#ff3340"></i></div></div>
+  <div class="row"><div class="k mono"><span>○ seeing path · eye → visual cortex</span><b id="rv">0%</b></div><div class="bar"><i id="rvb" style="background:#8a97b3"></i></div></div>
+</div>
+<div id="sayM" class="say hide"><span class="tag">// body</span><span class="r">MOVE.</span></div>
+<div id="sayC" class="say hide" style="font-size:54px"><span class="tag">// conscious mind</span>…wait, a car?</div>
+<div id="hp" class="head hide"><span class="cap mono">// right now</span><span>YOU'RE</span> <span>A</span><br><span class="r">PASSENGER.</span></div>
+<div id="tl" class="mono">// 01 — t+0.0s · the alarm</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+<div id="whiteout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, W, H, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, rng, setupStage, setXray, pulse, orbitPos, shake,
+  $, kin, show, project, timecode, loadTiming, makeMan, pose} from './lib/core.js';
+import {makeSet, poseSet} from './lib/set.js';
+import {setPath, MM} from './lib/brain.js';
+import {makeTClock} from './lib/tclock.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const TM = await loadTiming('s01');
+const c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl'));
+const {scene, cam, composer, grade} = st;
+const S = makeSet(st);
+const {A, B, chest, brain} = S;
+const clk = makeTClock(document.body);
+const bw = (x, y, z) => brain.toWorld(V3(x, y, z));
+const GREYB = new THREE.Color(0x5a6a8c), REDC = new THREE.Color(0xff1a26), AMB = new THREE.Color(0xffa04a);
+const M = brain.mats;
+
+// dust inside the head (depth / parallax)
+{ const r = rng(11), n = 700, p = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { let x, y, z; do { x = r() * 2 - 1; y = r() * 2 - 1; z = r() * 2 - 1; } while (x * x + y * y + z * z > 1); p.set([x * 120, y * 100 - 5, z * 150 - 10], i * 3); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+  const dust = new THREE.Points(g, new THREE.PointsMaterial({color: 0x9cc4ff, size: .0035, map: S.tex, transparent: true, opacity: .5, depthWrite: false, blending: THREE.AdditiveBlending}));
+  brain.G.add(dust); S.dust = dust; }
+
+// ---------------------------------------------------------------- street set (car example), far from the fight set
+const SX = 40;
+const C = makeMan(scene); C.g.position.set(SX, 0, 1.25); C.g.rotation.y = Math.PI;
+const car = new THREE.Group(); scene.add(car); car.scale.setScalar(1.25);
+{ const body = new THREE.MeshStandardMaterial({color: 0x6a7898, roughness: .3, metalness: .2});
+  const b1 = new THREE.Mesh(new RoundedBoxGeometry(2.6, .55, 1.25, 4, .14), body); b1.position.y = .55; b1.castShadow = true; car.add(b1);
+  const b2 = new THREE.Mesh(new RoundedBoxGeometry(1.4, .45, 1.1, 4, .16), new THREE.MeshStandardMaterial({color: 0x1a2236, roughness: .2, metalness: .4})); b2.position.set(-.15, 1.0, 0); b2.castShadow = true; car.add(b2);
+  const wm = new THREE.MeshStandardMaterial({color: 0x0c0f18, roughness: .6});
+  for (const [x, z] of [[.85, .6], [-.85, .6], [.85, -.6], [-.85, -.6]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(.27, .27, .2, 24), wm); w.rotation.x = Math.PI / 2; w.position.set(x, .27, z); car.add(w); }
+  const hm = new THREE.MeshBasicMaterial({color: 0xfff4dd});
+  for (const z of [.4, -.4]) { const h = new THREE.Mesh(new THREE.SphereGeometry(.13, 16, 12), hm); h.scale.set(.5, 1, 1.4); h.position.set(1.3, .6, z); car.add(h); }
+  const spot = new THREE.SpotLight(0xfff0d0, 0, 14, .5, .6, 1.2); spot.position.set(1.4, .65, 0); spot.target.position.set(6, 0, 0); car.add(spot); car.add(spot.target); car.userData.spot = spot; }
+const laneMat = new THREE.MeshBasicMaterial({color: 0x3a4a6e});
+for (let i = -8; i < 8; i++) { const d = new THREE.Mesh(new THREE.BoxGeometry(1.1, .01, .08), laneMat); d.position.set(SX + i * 2, .005, -.95); scene.add(d); }
+{ const curb = new THREE.Mesh(new THREE.BoxGeometry(40, .08, .08), new THREE.MeshBasicMaterial({color: 0x4a5a80})); curb.position.set(SX, .04, .8); scene.add(curb); }
+
+// ---------------------------------------------------------------- camera
+function frameShift(pos, tgt, dx) { const f = tgt.clone().sub(pos).normalize(); const r = f.clone().cross(V3(0, 1, 0)).normalize(); return tgt.clone().addScaledVector(r, dx); }
+const dive = new THREE.CatmullRomCurve3([[33, -30, 92], [32, -31, 66], [36, -24, 48], [32, -19, 35], [22, -14, 23], [13, -11, 17]].map(p => V3(...p)));
+const Lo = (c0, r, az, el) => orbitPos(c0, r, az, el);  // local mm orbit
+function camAt(t) {
+  let pos, tgt, fov = 40, local = true, up = null;
+  const Vc = V3;
+  const shots = [
+    [0, c('see', -.5), k => { const e = lerp(ease(k), k, .35); pos = dive.getPointAt(clamp(e * .97)); tgt = dive.getPointAt(clamp(e * .97 + .1)).add(V3(0, -2.5, 0)); if (e * .97 + .1 > 1) tgt = dive.getPointAt(1).add(dive.getTangentAt(1).multiplyScalar(30 * (e * .97 + .1 - 1))); fov = lerp(52, 60, k); }],
+    [c('see', -.5), c('light', -.1), k => { const e = ease(k); const p0 = dive.getPointAt(.97), t0 = dive.getPointAt(1);
+      const p1 = Lo(Vc(0, -8, -12), 205, 1.25, .14); pos = vlerp(p0, p1, e); pos.y += Math.sin(e * Math.PI) * 40; pos.x += Math.sin(e * Math.PI) * 40; tgt = vlerp(Vc(0, -18, 8), Vc(0, -8, -14), ease(clamp(k * 1.3))); fov = lerp(60, 40, e); }],
+    [c('light', -.1), c('amyg1', -.9), k => { const e = ease(k); pos = Lo(Vc(0, -8, -12), lerp(205, 185, e), lerp(1.25, 1.0, e), lerp(.14, .1, e)); tgt = Vc(0, -8, -14); }],
+    [c('amyg1', -.9), c('deep', -.1), k => { const e = ease(k); pos = Lo(Vc(23, -20, -4), lerp(150, 72, e), lerp(1.0, 1.28, e), lerp(-.12, -.04, e)); tgt = vlerp(Vc(10, -14, -10), Vc(23, -20, -4), e); }],
+    [c('deep', -.1), c('amyg2', -.35), k => { const e = ease(k); pos = Lo(vlerp(Vc(23, -20, -4), Vc(5, -5, -15), e), lerp(72, 215, e), lerp(1.28, 1.55, e), lerp(-.04, .12, e)); tgt = vlerp(Vc(23, -20, -4), Vc(8, -8, -15), e); }],
+    [c('amyg2', -.35), c('fires', -.35), k => { const e = ease(k); pos = Lo(Vc(5, -5, -50), lerp(235, 205, e), lerp(2.45, 2.72, e), lerp(.26, .2, e)); tgt = Vc(8, -6, -45); }],
+    [c('fires', -.35), c('wiring', -.35), k => { const e = ease(k); pos = Lo(Vc(12, -15, -3), lerp(125, 100, e), lerp(1.5, 1.3, e), lerp(-.42, -.32, e)); tgt = Vc(10, -15, -3); }],
+    [c('wiring', -.35), c('cascade', -.25), k => { const e = ease(k); pos = Lo(Vc(0, -10, -15), lerp(265, 240, e), lerp(1.25, .95, e), lerp(.36, .3, e)); tgt = Vc(0, -12, -18); }],
+    [c('cascade', -.25), c('visual', -.35), k => { const e = ease(k); const d = brain.paths.desc[0].curve; const q = d.getPointAt(clamp(.05 + .6 * e)); pos = q.clone().add(Vc(150, 30, 70)); tgt = q; }],
+    [c('visual', -.35), c('thatswhy', -.35), k => { const e = ease(k); pos = Lo(Vc(0, 0, -88), lerp(185, 150, e), lerp(2.55, 2.95, e), lerp(.22, .16, e)); tgt = Vc(0, 0, -86); }],
+    [c('thatswhy', -.35), c('yourbody', -.35), k => { local = false; const e = ease(k); pos = vlerp(Vc(SX + 2.0, 1.2, 9.6), Vc(SX + 1.0, 1.3, 8.6), e); tgt = vlerp(Vc(SX - 1.6, 1.55, 0), Vc(SX - .6, 1.65, 0), e); fov = 40;
+      pos.add(shake(t, .03 * Math.exp(-Math.pow((t - c('jump', .35)) / .3, 2)))); }],
+    [c('yourbody', -.35), c('driving', -.4), k => { local = false; const e = ease(k); const ctr = BC.clone().add(Vc(0, .15, 0)); pos = orbitPos(ctr, lerp(4.0, 3.4, e), lerp(-1.95, -2.4, e), lerp(.1, .05, e)); tgt = frameShift(pos, ctr, .05); fov = 34; }],
+    [c('driving', -.4), 1e9, k => { local = false; const kk = seg(t, c('driving', -.4), DUR); const e = ease(kk); const ctr = BC.clone().add(Vc(0, .15, 0)); pos = orbitPos(ctr, lerp(3.4, 6.2, e), lerp(-2.4, -2.75, e), lerp(.05, .32, e)); tgt = frameShift(pos, ctr, lerp(.05, -1.4, e)); fov = 34; }],
+  ];
+  for (const [a, b, f] of shots) if (t >= a && t < b) { f(seg(t, a, b)); break; }
+  if (local) { pos = brain.toWorld(pos); tgt = brain.toWorld(tgt); up = V3(0, 1, 0).applyQuaternion(brain.G.getWorldQuaternion(new THREE.Quaternion())); }
+  return {pos, tgt, fov, local, up};
+}
+let BC = V3(0, 0, 0);
+
+// ---------------------------------------------------------------- tags
+const TAGS = [['eye', V3(32, -32, 62), 'eye'], ['nerve', V3(20, -24, 27), 'optic nerve'], ['v1', V3(10, 3, -96), 'visual cortex'], ['thal', V3(11, 10, -18), 'thalamus']];
+const tagEl = {}; TAGS.forEach(([id, , txt]) => { const d = document.createElement('div'); d.className = 'tag3 hide'; d.innerHTML = `<div class="t">${txt}</div><div class="stem"></div>`; $('tags').appendChild(d); tagEl[id] = d; });
+
+function draw(t) {
+  poseSet(S, 999, {shove: 0});                       // the fight stays frozen
+  const P = B.P;
+  chest.inside.position.copy(P.hip.clone().lerp(P.sh, .62)); chest.inside.scale.setScalar(.85); chest.inside.rotation.x = -.36;
+  setXray(B, 1, 0); A.mat.color.setRGB(.32, .36, .46);
+  // street
+  const J = c('jump'), jump = seg(t, J - .05, J + .55);
+  const carX = lerp(-16, 16, seg(t, c('thatswhy', -.35), c('yourbody', -.35)) ** 1) ;
+  const cx = SX - 14 + 28 * seg(t, c('thatswhy', -.6), c('know', .9));
+  car.position.set(cx, 0, -.1); car.userData.spot.intensity = 30;
+  pose(C, {root: [0, Math.sin(Math.PI * jump) * .35, -1.05 * ease(jump)], lean: -.15 * Math.sin(Math.PI * jump) + .05, bob: Math.sin(t * 2.2) * .01 * (1 - jump),
+    ua: {L: V3(.25 + .3 * jump, -.95 + 1.4 * jump, .05 + .6 * jump), R: V3(-.25 - .3 * jump, -.95 + 1.4 * jump, .05 + .6 * jump)}, la: {L: V3(.1, -.95 + 1.6 * jump, .1 + .5 * jump), R: V3(-.1, -.95 + 1.6 * jump, .1 + .5 * jump)},
+    th: {L: V3(.13, -.9, .3 * Math.sin(Math.PI * jump)), R: V3(-.13, -.95, -.2 * Math.sin(Math.PI * jump))}, sh: {L: V3(.02, -1, -.4 * Math.sin(Math.PI * jump)), R: V3(-.02, -1, -.1)}});
+  scene.updateMatrixWorld(true);
+  BC = B.g.localToWorld(P.hip.clone().lerp(P.sh, .55));
+
+  // ---- signal flow (all cue-driven)
+  const L = c('light'), E = c('eyes'), Rc = c('races'), A1 = c('amyg1');
+  const flashE = Math.exp(-Math.pow((t - L - .12) / .18, 2)), diving = 1 - ease(seg(t, c('see', -.6), c('light', -.2)));
+  M.eye.uniforms.inten.value = (.4 + 1.2 * flashE) * (1 - .8 * diving); M.retina.opacity = .15 + .9 * flashE + .4 * diving;
+  setPath(brain.paths.nerve, {a0: .3 + .5 * diving, pk: 1.6, w: .09, p: t < c('see', -.6) ? lerp(-.1, 1.1, ease(seg(t, .2, c('see', -.6)))) : lerp(-.15, 1.15, seg(t, L + .1, E + .35))});
+  setPath(brain.paths.tract, {a0: .22, pk: 1.6, w: .09, p: lerp(-.15, 1.15, seg(t, E + .3, c('signal', .5)))});
+  brain.parts.chiasm.material.uniforms.a0.value = .45 + 1.5 * Math.exp(-Math.pow((t - E - .33) / .2, 2));
+  // fast red low road -> amygdala
+  setPath(brain.paths.lowroad, {a0: .05, pk: 3, w: .12, p: lerp(-.5, 1.15, seg(t, Rc - .15, A1 + .05)), fill: seg(t, Rc - .15, A1 + .05), fk: .6 * (t > Rc ? 1 : 0)});
+  // slow grey crawl -> visual cortex (never finishes in this section)
+  const vis = clamp(.03 + .62 * seg(t, Rc, c('seen', .6)) + .1 * seg(t, c('seen', .6), DUR));
+  setPath(brain.paths.radiation, {a0: .12, fill: vis, fk: t > Rc ? .55 : 0, dash: 1.4, time: t});
+  for (const p of brain.paths.radiation) p.mat.uniforms.cf.value.set(0x9aa6c0);
+  M.cortex.uniforms.visGrey.value = ease(seg(t, Rc, Rc + .8)); M.cortex.uniforms.time.value = t;
+  M.cortex.uniforms.hot.value = .6 * (1 - ease(seg(t, .3, 2.5))); M.cortex.uniforms.inten.value = lerp(.12, .55, ease(seg(t, c('see', -.6), c('light', -.2))));
+  M.cereb.uniforms.inten.value = .42 * (1 - .7 * diving); M.stem.uniforms.inten.value = .5 * (1 - .7 * diving); M.thal.uniforms.inten.value = .45 * (1 - .6 * diving) + .8 * Math.exp(-Math.pow((t - c('signal', .5)) / .3, 2));
+  // amygdala alarm
+  const aOn = seg(t, A1 - .05, A1 + .1), aBeat = .5 + .5 * Math.cos((t - A1) * Math.PI * 2 * 1.6);
+  M.amy.emissive.copy(GREYB).lerp(REDC, aOn); M.amy.opacity = lerp(.3, .95, aOn);
+  M.amy.emissiveIntensity = .35 + aOn * (1.2 + .9 * aBeat + .6 * Math.exp(-Math.pow((t - c('alarm')) / .25, 2)));
+  brain.parts.amy.forEach(m => m.scale.set(6, 5.5, 9).multiplyScalar(1 + .12 * aOn * aBeat));
+  // distress signal -> hypothalamus
+  const F = c('fires'), HY = c('hypo');
+  setPath(brain.paths.alarm, {a0: .03, pk: 3.5, w: .14, p: lerp(-.5, 1.15, seg(t, F, HY + .05)), fill: seg(t, F, HY + .05), fk: .7 * (t > F ? 1 : 0)});
+  const hOn = seg(t, HY - .05, HY + .15);
+  M.hyp.emissive.copy(GREYB).lerp(AMB, hOn); M.hyp.opacity = lerp(.3, .95, hOn); M.hyp.depthWrite = M.amy.depthWrite = false;
+  M.hyp.emissiveIntensity = .3 + hOn * (1.3 + .5 * Math.cos((t - HY) * 9) * Math.exp(-(t - HY) * 1.5)) + 1.2 * Math.exp(-Math.pow((t - HY - .05) / .12, 2)) * (t > HY - .2 ? 1 : 0);
+  // cascade down the brainstem / spinal cord
+  const CS = c('cascade');
+  setPath(brain.paths.desc, {a0: 0, pk: 3, w: .1, p: lerp(-.5, 1.2, seg(t, CS, c("starts2", 1.2))), fill: seg(t, CS, c('starts2', 1.2)), fk: .7 * (t > CS ? 1 : 0)});
+  // body reacting: nerves + heart
+  const bodyOn = Math.max(seg(t, c('yourbody', -.3), c('reacting', .2)), 0);
+  B.nerveMat.opacity = .85 * bodyOn * (.75 + .25 * Math.sin(t * 9)); B.nerves.forEach(n => n.visible = bodyOn > .01);
+  const ph = t * 1.9, p = pulse(ph);
+  chest.heart.scale.setScalar(.78 * (1 + .25 * p)); chest.heartMat.emissiveIntensity = .6 + 2.2 * p;
+  chest.ribMat.opacity = .7; chest.redL.intensity = .5 + 3 * p;
+  S.dust.material.opacity = .45 * (1 - diving); S.dust.rotation.y = t * .02;
+
+  // ---- camera
+  const K = camAt(t);
+  cam.position.copy(K.pos); cam.up.copy(K.up || V3(0, 1, 0)); cam.lookAt(K.tgt); cam.fov = K.fov; cam.near = K.local ? .0015 : .05; cam.updateProjectionMatrix();
+  grade.desat.value = .5; grade.vign.value = .38; grade.seed.value = (Math.floor(t * 30) % 97) * .137;
+  grade.ca.value = 5 * Math.exp(-Math.pow((t - HY) / .08, 2)) + 4 * Math.exp(-Math.pow((t - c('passenger', .05)) / .06, 2)) + 3 * Math.exp(-Math.pow((t - A1) / .08, 2));
+  grade.flash.value = 0; grade.tunnel.value = 0;
+  B.mat.opacity = K.local ? .05 : .16; A.g.visible = !K.local;
+  composer.render();
+
+  // ---- DOM
+  timecode($('tc'), TM.offset + t);
+  $('whiteout').style.opacity = .95 * (1 - ease(seg(t, 0, .45)));
+  clk.update(t, TM.story, DUR, c, {opacity: 1});
+  const inBrain = K.local;
+  // establishing tags
+  const tagOn = {eye: [c('see', -.1), A1 - .9], nerve: [c('see', 0), A1 - .9], v1: [c('see', .1), A1 - .9], thal: [c('signal', .2), A1 - .9]};
+  TAGS.forEach(([id, p]) => { const [a, b] = tagOn[id]; const k = clamp(seg(t, a, a + .3)) * (1 - seg(t, b - .3, b)); const [x, y, vis_] = project(cam, brain.toWorld(p));
+    const el = tagEl[id]; el.style.left = x + 'px'; el.style.top = (y - 10) + 'px'; show(el, inBrain && vis_ ? k : 0); });
+  // amygdala label + reticle
+  { const [x, y] = project(cam, bw(23, -20, -4)); const k = back(seg(t, A1, A1 + .35)); const out = 1 - seg(t, c('wiring', -.6), c('wiring', -.3));
+    const s = lerp(1.6, 1, k); $('retA').style.left = x + 'px'; $('retA').style.top = y + 'px'; $('retA').style.transform = `translate(-50%,-50%) scale(${s})`;
+    show($('retA'), inBrain ? clamp(k * 2) * out : 0);
+    $('lA').style.left = (x + 40) + 'px'; $('lA').style.top = (y - 95) + 'px'; $('lA').style.transform = `translate(0,-100%) translateY(${(1 - k) * 30}px)`;
+    show($('lA'), inBrain ? clamp(k * 2) * out * (1 - seg(t, c('amyg2', -.4), c('amyg2', -.2)) * (t < c('fires', -.35) ? 1 : 0)) : 0); }
+  { const [x, y] = project(cam, bw(0, -12, -3)); const k = back(seg(t, HY, HY + .35)); const out = 1 - seg(t, c('wiring', -.6), c('wiring', -.3));
+    $('retH').style.left = x + 'px'; $('retH').style.top = y + 'px'; $('retH').style.transform = `translate(-50%,-50%) scale(${lerp(1.6, .85, k)})`; show($('retH'), inBrain ? clamp(k * 2) * out : 0);
+    $('lH').style.left = (x - 70) + 'px'; $('lH').style.top = (y + 120) + 'px'; $('lH').style.transform = `translate(-100%,0) translateY(${(1 - k) * 30}px)`; show($('lH'), inBrain ? clamp(k * 2) * out : 0); }
+  // visual cortex loading card
+  { const on = (t > c('amyg2', -.3) && t < c('fires', -.35)) || (t > c('visual', -.3) && t < c('thatswhy', -.4));
+    const a = t < c('fires') ? c('amyg2', -.3) : c('visual', -.3); const k = eo(seg(t, a, a + .4));
+    const [x, y] = project(cam, bw(10, 3, -100));
+    $('vload').style.left = clamp(x - 520, 60, 1300) + 'px'; $('vload').style.top = clamp(y - 120, 140, 700) + 'px';
+    show($('vload'), on ? k : 0); $('vbar').style.width = (vis * 100) + '%'; $('vpct').textContent = `processing ${Math.round(vis * 100)}%`;
+    $('vload').querySelector('i').style.background = Math.floor(t * 3) % 2 ? '#8a97b3' : '#eef2fa'; }
+  // race HUD
+  { const on1 = t > c('wiring', -.1) && t < c('thatswhy', -.4), on2 = t > c('reacting', -.4) && t < c('passenger', -.6);
+    const a = on1 ? c('wiring', -.1) : c('reacting', -.4); const k = eo(seg(t, a, a + .4));
+    show($('race'), (on1 || on2) ? k : 0); $('race').style.transform = `translateX(${(1 - k) * -80}px)`;
+    const fast = clamp(.55 + .45 * seg(t, c('wiring'), c('cascade', .6))); $('rab').style.width = fast * 100 + '%'; $('ra').textContent = fast >= 1 ? 'body: go' : 'running';
+    $('rvb').style.width = vis * 100 + '%'; $('rv').textContent = Math.round(vis * 100) + '%'; }
+  // car example: speech over C's head
+  { const [x, y] = project(cam, C.g.localToWorld(C.P.head.clone().add(V3(0, .45, 0)))); const street = !K.local && t < c('yourbody', -.35);
+    const k1 = back(seg(t, J, J + .25)), k2 = back(seg(t, c('car2', -.05), c('car2', .25)));
+    $('sayM').style.left = x + 'px'; $('sayM').style.top = y + 'px'; show($('sayM'), street ? clamp(k1 * 2) * (1 - seg(t, c('car2', -.25), c('car2', -.05))) : 0);
+    $('sayM').style.transform = `translate(-50%,-100%) scale(${.7 + .3 * k1})`;
+    $('sayC').style.left = (x + 30) + 'px'; $('sayC').style.top = y + 'px'; show($('sayC'), street ? clamp(k2 * 2) : 0); $('sayC').style.transform = `translate(-50%,-100%) scale(${.7 + .3 * k2})`; }
+  // headline
+  { const hs = [...document.querySelectorAll('#hp span')]; const P0 = c('passenger');
+    [[0, P0 - .5], [1, P0 - .4], [2, P0 - .28], [3, P0 - .02]].forEach(([i, a]) => kin(hs[i], t, a, .42, 120)); show($('hp'), t > P0 - .55 ? 1 : 0); }
+  $('tl').textContent = t < c('thatswhy', -.35) ? '// 01 — t+0.0s · the alarm' : (t < c('yourbody', -.35) ? '// 01 — example · the car' : '// 01 — t+0.0s · the alarm');
+}
+window.draw = draw; await document.fonts.ready; draw(0); window.ready = true;
+</script></body></html>

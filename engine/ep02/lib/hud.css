@@ -1,0 +1,29 @@
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#0b1222;font-family:Inter,sans-serif;color:#eef2fa}
+#gl{position:absolute;inset:0}
+.mono{font-family:'DejaVu Sans Mono',monospace;font-size:20px;letter-spacing:.06em;color:#8a97b3;text-transform:uppercase}
+#tl{position:absolute;left:56px;top:40px}
+#tr{position:absolute;right:56px;top:40px}
+#bl{position:absolute;left:56px;bottom:40px}
+.head{position:absolute;font-weight:900;letter-spacing:-.045em;line-height:.93;white-space:nowrap}
+.head span{display:inline-block;will-change:transform}
+.head .r,.r{color:#ff3340;text-shadow:0 0 40px rgba(255,40,60,.5)}
+.cap{display:block;margin-bottom:18px}
+.card{position:absolute;background:rgba(20,30,52,.82);border:1px solid rgba(140,170,230,.18);border-radius:22px;padding:22px 30px;box-shadow:0 18px 60px rgba(0,0,0,.45);white-space:nowrap}
+.card .k{font-family:'DejaVu Sans Mono',monospace;font-size:19px;letter-spacing:.08em;color:#8a97b3;text-transform:uppercase}
+.card .k i{display:inline-block;width:11px;height:11px;border-radius:50%;background:#8a97b3;margin-right:10px;vertical-align:1px}
+.card .v{font-weight:800;font-size:54px;letter-spacing:-.03em;margin-top:4px}
+.lbl{position:absolute;transform:translate(-50%,-100%);text-align:left;white-space:nowrap}
+.lbl .n{font-weight:900;font-size:58px;letter-spacing:-.035em;line-height:1}
+.lbl .s{font-family:'DejaVu Sans Mono',monospace;font-size:20px;letter-spacing:.08em;color:#8a97b3;text-transform:uppercase;margin-top:8px}
+.ret{position:absolute;width:150px;height:150px;transform:translate(-50%,-50%)}
+.ret b{position:absolute;width:30px;height:30px;border-color:#eef2fa;border-style:solid;border-width:0}
+.ret b:nth-child(1){left:0;top:0;border-left-width:3px;border-top-width:3px}
+.ret b:nth-child(2){right:0;top:0;border-right-width:3px;border-top-width:3px}
+.ret b:nth-child(3){left:0;bottom:0;border-left-width:3px;border-bottom-width:3px}
+.ret b:nth-child(4){right:0;bottom:0;border-right-width:3px;border-bottom-width:3px}
+.ret.red b{border-color:#ff3340}
+.say{position:absolute;font-weight:800;letter-spacing:-.03em;white-space:nowrap;transform:translate(-50%,-100%);font-size:64px}
+.say .tag{display:block;font-family:'DejaVu Sans Mono',monospace;font-weight:400;font-size:20px;letter-spacing:.08em;color:#8a97b3;margin-bottom:8px;text-transform:uppercase}
+.hide{opacity:0;visibility:hidden}
+svg.ov{position:absolute;inset:0;pointer-events:none}

@@ -1,0 +1,381 @@
+{
+"source": "Speko audio.transcribe (gemini-3.5-transcribe) on the raw TTS take; the saved vo_temp file was sped up by atempo 1.08",
+"time_scale": 0.9259259259259258,
+"words": [
+{
+"text": "Second",
+"start_ms": 200,
+"end_ms": 800
+},
+{
+"text": "zero.",
+"start_ms": 800,
+"end_ms": 1300
+},
+{
+"text": "Someone",
+"start_ms": 1800,
+"end_ms": 2300
+},
+{
+"text": "shoves",
+"start_ms": 2300,
+"end_ms": 2700
+},
+{
+"text": "you.",
+"start_ms": 2700,
+"end_ms": 2900
+},
+{
+"text": "Before",
+"start_ms": 4000,
+"end_ms": 4400
+},
+{
+"text": "you've",
+"start_ms": 4400,
+"end_ms": 4700
+},
+{
+"text": "even",
+"start_ms": 4700,
+"end_ms": 4800
+},
+{
+"text": "decided",
+"start_ms": 4800,
+"end_ms": 5400
+},
+{
+"text": "what",
+"start_ms": 5400,
+"end_ms": 5600
+},
+{
+"text": "to",
+"start_ms": 5600,
+"end_ms": 5700
+},
+{
+"text": "do,",
+"start_ms": 5700,
+"end_ms": 6100
+},
+{
+"text": "your",
+"start_ms": 6500,
+"end_ms": 6700
+},
+{
+"text": "body",
+"start_ms": 6700,
+"end_ms": 7100
+},
+{
+"text": "has",
+"start_ms": 7100,
+"end_ms": 7200
+},
+{
+"text": "already",
+"start_ms": 7200,
+"end_ms": 7600
+},
+{
+"text": "made",
+"start_ms": 7600,
+"end_ms": 7900
+},
+{
+"text": "seven",
+"start_ms": 7900,
+"end_ms": 8400
+},
+{
+"text": "decisions",
+"start_ms": 8400,
+"end_ms": 8900
+},
+{
+"text": "for",
+"start_ms": 8900,
+"end_ms": 9100
+},
+{
+"text": "you.",
+"start_ms": 9100,
+"end_ms": 9300
+},
+{
+"text": "In",
+"start_ms": 10000,
+"end_ms": 10000
+},
+{
+"text": "the",
+"start_ms": 10000,
+"end_ms": 10100
+},
+{
+"text": "next",
+"start_ms": 10100,
+"end_ms": 10500
+},
+{
+"text": "10",
+"start_ms": 10500,
+"end_ms": 10700
+},
+{
+"text": "seconds,",
+"start_ms": 10700,
+"end_ms": 11400
+},
+{
+"text": "it",
+"start_ms": 11400,
+"end_ms": 11600
+},
+{
+"text": "will",
+"start_ms": 11600,
+"end_ms": 11700
+},
+{
+"text": "shut",
+"start_ms": 11700,
+"end_ms": 11900
+},
+{
+"text": "off",
+"start_ms": 11900,
+"end_ms": 12100
+},
+{
+"text": "your",
+"start_ms": 12100,
+"end_ms": 12300
+},
+{
+"text": "hearing,",
+"start_ms": 12300,
+"end_ms": 12800
+},
+{
+"text": "shrink",
+"start_ms": 13200,
+"end_ms": 13600
+},
+{
+"text": "your",
+"start_ms": 13600,
+"end_ms": 13700
+},
+{
+"text": "vision,",
+"start_ms": 13700,
+"end_ms": 14200
+},
+{
+"text": "and",
+"start_ms": 14600,
+"end_ms": 14700
+},
+{
+"text": "switch",
+"start_ms": 14700,
+"end_ms": 15000
+},
+{
+"text": "off",
+"start_ms": 15000,
+"end_ms": 15300
+},
+{
+"text": "pain",
+"start_ms": 15300,
+"end_ms": 15700
+},
+{
+"text": "so",
+"start_ms": 15700,
+"end_ms": 16100
+},
+{
+"text": "well",
+"start_ms": 16100,
+"end_ms": 16600
+},
+{
+"text": "that",
+"start_ms": 16800,
+"end_ms": 17000
+},
+{
+"text": "some",
+"start_ms": 17000,
+"end_ms": 17200
+},
+{
+"text": "people",
+"start_ms": 17200,
+"end_ms": 17700
+},
+{
+"text": "don't",
+"start_ms": 17800,
+"end_ms": 18000
+},
+{
+"text": "notice",
+"start_ms": 18000,
+"end_ms": 18300
+},
+{
+"text": "they're",
+"start_ms": 18300,
+"end_ms": 18500
+},
+{
+"text": "hurt",
+"start_ms": 18500,
+"end_ms": 19000
+},
+{
+"text": "until",
+"start_ms": 19000,
+"end_ms": 19300
+},
+{
+"text": "it's",
+"start_ms": 19300,
+"end_ms": 19500
+},
+{
+"text": "over.",
+"start_ms": 19500,
+"end_ms": 19800
+},
+{
+"text": "Let's",
+"start_ms": 20600,
+"end_ms": 20900
+},
+{
+"text": "slow",
+"start_ms": 20900,
+"end_ms": 21100
+},
+{
+"text": "it",
+"start_ms": 21100,
+"end_ms": 21200
+},
+{
+"text": "down",
+"start_ms": 21200,
+"end_ms": 21700
+},
+{
+"text": "second",
+"start_ms": 22100,
+"end_ms": 22800
+},
+{
+"text": "by",
+"start_ms": 22900,
+"end_ms": 23000
+},
+{
+"text": "second",
+"start_ms": 23000,
+"end_ms": 23600
+},
+{
+"text": "and",
+"start_ms": 24100,
+"end_ms": 24200
+},
+{
+"text": "stay",
+"start_ms": 24200,
+"end_ms": 24500
+},
+{
+"text": "until",
+"start_ms": 24500,
+"end_ms": 24800
+},
+{
+"text": "second",
+"start_ms": 24800,
+"end_ms": 25300
+},
+{
+"text": "eight",
+"start_ms": 25300,
+"end_ms": 25700
+},
+{
+"text": "because",
+"start_ms": 26100,
+"end_ms": 26400
+},
+{
+"text": "the",
+"start_ms": 26400,
+"end_ms": 26500
+},
+{
+"text": "thing",
+"start_ms": 26500,
+"end_ms": 26900
+},
+{
+"text": "everyone",
+"start_ms": 26900,
+"end_ms": 27400
+},
+{
+"text": "says",
+"start_ms": 27400,
+"end_ms": 27700
+},
+{
+"text": "happens",
+"start_ms": 27700,
+"end_ms": 28300
+},
+{
+"text": "in",
+"start_ms": 28300,
+"end_ms": 28400
+},
+{
+"text": "a",
+"start_ms": 28400,
+"end_ms": 28400
+},
+{
+"text": "fight",
+"start_ms": 28400,
+"end_ms": 28900
+},
+{
+"text": "isn't",
+"start_ms": 29400,
+"end_ms": 29900
+},
+{
+"text": "actually",
+"start_ms": 30000,
+"end_ms": 30500
+},
+{
+"text": "happening.",
+"start_ms": 30500,
+"end_ms": 31000
+}
+]
+}
