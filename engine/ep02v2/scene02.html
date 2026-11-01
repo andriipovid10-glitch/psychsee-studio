@@ -1,0 +1,211 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#bpm{position:absolute;right:90px;top:170px;width:470px;visibility:hidden}
+#bpm .v{font-size:150px;font-weight:900;letter-spacing:-.05em;line-height:.9}
+#bpm .v small{font-size:40px;color:#8a97b3;margin-left:10px;letter-spacing:0}
+#bpm svg{display:block;margin-top:14px}
+#pupil{position:absolute;border-radius:50%;background:radial-gradient(circle,#000 0%,#000 62%,rgba(0,0,0,.6) 78%,rgba(0,0,0,0) 100%);visibility:hidden}
+#hand{position:absolute;visibility:hidden}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_adrenal" class="plate"><img src="img/flow_adrenal.jpg"><i class="glow"></i><i class="glow g2"></i><i class="shade"></i></div>
+<div id="pl_heart" class="plate"><img src="img/flow_heart.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="pl_eye" class="plate"><img src="img/flow_eye.jpg"><i class="shade"></i></div>
+<div id="pl_blood" class="plate"><img src="img/flow_blood.jpg"><i class="shade"></i></div>
+<div id="pupil"></div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 02 — adrenaline</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="bpm" class="card"><div class="k"><i style="background:#ff3340"></i>heart rate</div><div class="v"><span id="bpmv">72</span><small>BPM</small></div>
+  <svg width="410" height="110" viewBox="0 0 410 110"><path id="ecg" d="" fill="none" stroke="#ff3340" stroke-width="4" stroke-linejoin="round"/></svg></div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Cardiology · reference</span><span>PsychSee notes</span></div>
+  <h1>resting heart rate</h1>
+  <div class="pron">adults &nbsp;·&nbsp; sitting still, calm</div>
+  <div class="rule"></div>
+  <div class="fig"><b>60–100</b><span>beats<br>per minute</span></div>
+  <p>For most adults, <span class="hl"><i></i>a normal resting heart rate is 60 to 100</span> beats a minute. Fitter people often sit lower.</p>
+  <p>Under acute stress, adrenaline makes each beat <span class="hl"><i></i>faster and more forceful.</span></p>
+  <p class="src">Sources: American Heart Association · Harvard Health Publishing</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:470px;font-size:230px"><span>SECOND</span> <span class="r">1</span></div>
+<div id="k_adren" class="kw" style="left:960px;top:900px;font-size:170px"><span class="r">ADRENALINE.</span></div>
+<div id="k_check" class="kw" style="left:700px;top:880px;font-size:110px"><span>CHECK</span> <span>YOUR</span> <span class="r">PULSE.</span></div>
+<div id="k_check2" class="kw sm" style="left:700px;top:960px">// two fingers · side of your neck</div>
+<div id="k_double" class="kw" style="left:700px;top:520px;font-size:380px"><span class="r">2×</span></div>
+<div id="k_secs" class="kw" style="left:700px;top:800px;font-size:90px"><span>IN</span> <span>SECONDS.</span></div>
+<div id="k_harder" class="kw" style="left:960px;top:900px;font-size:150px"><span>HARDER.</span> <span>FASTER.</span></div>
+<div id="k_lungs" class="kw" style="left:960px;top:900px;font-size:140px"><span>LUNGS:</span> <span class="r">OPEN.</span></div>
+<div id="k_pupils" class="kw" style="left:960px;top:930px;font-size:140px"><span>PUPILS:</span> <span class="r">WIDE.</span></div>
+<div id="k_sugar" class="kw" style="left:960px;top:880px;font-size:120px"><span>SUGAR</span> <span>→</span> <span>BLOOD.</span></div>
+<div id="k_fuel" class="kw" style="left:960px;top:540px;font-size:300px;text-shadow:0 0 60px rgba(0,0,0,.8),0 10px 60px rgba(0,0,0,.7)"><span>FUEL.</span></div>
+<div id="k_allin" class="kw" style="left:960px;top:880px;font-size:180px"><span>ALL-</span><span class="r">IN.</span></div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, setXray, makeChest, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet, makeVoid} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS + '.plate .g2{}';
+
+const TM = await loadTiming('s02'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene), voidSet = makeVoid(scene);
+const A = man(scene), B = man(scene);
+const chest = makeChest(B);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: .95, t1: 2.0};
+
+const SHOTS = [['title', 0], ['adrenal', c('adren', -.12)], ['pulse', c('try', -.1)], ['paper', c('resting', -.15)], ['heart', c('real', -.1)],
+  ['lungs', c('lungs', -.1)], ['eye', c('pupils', -.1)], ['blood', c('liver', -.1)], ['allin', c('whole', -.1)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+
+// heart rate story: 72 at rest -> climbs after "real fight" -> ~158
+const bpmAt = t => t < c('real') ? 72 : lerp(72, 158, ease(seg(t, c('real'), c('inseconds', .6))));
+function ecg(t, rate) {      // scrolling ECG trace, pure function of t
+  let d = ''; const N = 82;
+  for (let i = 0; i <= N; i++) {
+    const x = i * 5, ph = (t * rate / 60 - (N - i) * .012), f = ph - Math.floor(ph);
+    const y = 60 - 46 * Math.exp(-Math.pow((f - .12) / .012, 2)) + 22 * Math.exp(-Math.pow((f - .15) / .012, 2)) - 10 * Math.exp(-Math.pow((f - .38) / .05, 2));
+    d += (i ? 'L' : 'M') + x + ' ' + y.toFixed(1);
+  }
+  return d;
+}
+// heartbeat phase used for plates / ui
+const beatPh = t => { // integrate bpm roughly (piecewise) so the beat speeds up smoothly
+  const r0 = 72 / 60; let ph = Math.min(t, c('real')) * r0;
+  if (t > c('real')) { const n = 40, a = c('real'); for (let i = 0; i < n; i++) { const tt = a + (t - a) * (i + .5) / n; ph += bpmAt(tt) / 60 * (t - a) / n; } }
+  return ph;
+};
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_adrenal', 'pl_heart', 'pl_eye', 'pl_blood', 'paper', 'pupil', 'bpm'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  street.g.visible = true; voidSet.g.visible = false; crowd.forEach(m => m.g.visible = false);
+  setXray(B, 0); chest.heart.scale.setScalar(0); chest.ribMat.opacity = 0; chest.redL.intensity = 0;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  // still frozen in the stagger from second zero, then slowly "comes alive" (the clock keeps running)
+  poseA(A, 2.64, {push: .4}); poseB(B, t, {hit: .55, shake: .02, rate: 7, breath: .02});
+  poseCrowd(crowd, CROWD, t);
+  const ph = beatPh(t), beat = pulse(ph), bpm = bpmAt(t);
+  const showBpm = (o = 1) => {
+    $('bpmv').textContent = Math.round(bpm); $('ecg').setAttribute('d', ecg(t, bpm));
+    $('bpm').style.transform = `scale(${1 + .03 * beat})`; show($('bpm'), o);
+  };
+
+  if (name === 'title') {                       // "Second one." over the street
+    pos = vlerp(V3(-1.8, 2.2, 7.4), V3(-1.4, 1.9, 6.4), ease(k)); tgt = V3(.3, 1.3, 0);
+    gb = .4; desat = .6;
+    slamWords($('k_sec'), t, [c('second', -.05), c('second', .35)], s1 - .02, {from: 1.35, jolt: 10});
+    black = 1 - seg(t, 0, .2);
+  } else if (name === 'adrenal') {              // ADRENALINE — the two glands light up
+    render3d = false; show($('pl_adrenal'), 1);
+    const el = $('pl_adrenal'), p = ease(k), pul = .55 + .45 * pulse(lt * 2.2);
+    plate(el, p, {zoom0: 1.0, zoom1: 1.22, x1: 0, y1: 60, glowX: 798, glowY: 448, glow: seg(t, c('adren', -.05), c('adren', .2)) * pul, bright: .95});
+    const g2 = el.querySelectorAll('.glow')[1], z = lerp(1.0, 1.22, p);
+    g2.style.left = (960 + (1094 - 960) * z) + 'px'; g2.style.top = (540 + (396 - 540) * z + 60 * p) + 'px';
+    g2.style.opacity = el.querySelector('.glow').style.opacity; g2.style.transform = el.querySelector('.glow').style.transform;
+    flash = .35 * cut;
+    slam($('k_adren'), t, c('adren'), s1 - .02, {from: 1.6, jolt: 18});
+  } else if (name === 'pulse') {                // "Try this. Two fingers on your neck." — viewer test
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; key.intensity = 1.0; hemi.intensity = .45;
+    place(B, 1.2, 0, -.35);
+    const up = ease(seg(t, c('put', -.1), c('fingers', .3)));
+    const br = Math.sin(t * 3) * .01;
+    pose(B, {bob: br, lean: .02, headLean: -.05 + .05 * up,
+      ua: {L: V3(.25, -.97, .05), R: vlerp(V3(-.25, -.97, .05), V3(-.55, .25, .55), up)},
+      la: {L: V3(.08, -.99, .05), R: vlerp(V3(-.08, -.99, .05), V3(.55, .75, .35), up)}});
+    fists(B, 1);
+    const c0 = V3(1.0, 1.35, 0);
+    pos = V3(lerp(-.6, -.1, ease(k)), 1.5, lerp(7.4, 6.6, ease(k))); tgt = V3(1.0, 1.15, 0); fov = 34; crowd.forEach(m => m.g.visible = false);
+    desat = .4; flash = .2 * cut;
+    slamWords($('k_check'), t, [c('try', -.05), c('try', .15), c('put', -.05)], s1 - .02, {jolt: 8});
+    if (t > c('fingers')) { const e = $('k_check2'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('fingers'), c('fingers', .3))); }
+    showBpm(seg(t, c('feel', -.2), c('feel', .2)));
+  } else if (name === 'paper') {                // resting pulse 60–100 — reference card
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; place(B, 1.2, 0, -.35);
+    pose(B, {bob: Math.sin(t * 3) * .01, ua: {L: V3(.25, -.97, .05), R: V3(-.55, .25, .55)}, la: {L: V3(.08, -.99, .05), R: V3(.55, .75, .35)}}); fists(B, 1);
+    pos = V3(-.1, 1.5, 6.6); tgt = V3(1.0, 1.15, 0); crowd.forEach(m => m.g.visible = false); gb = .55; desat = .6;
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 30, tilt: 7, hl: [[c('sixty', -.1), c('hundred', .5)], [c('minute_end', -.3), c('minute_end', .2)]]});
+    showBpm(1 - seg(t, s0, s0 + .3));
+  } else if (name === 'heart') {                // real fight: heart rate more than doubles, every beat harder
+    render3d = false; show($('pl_heart'), 1);
+    const el = $('pl_heart'), sq = 1 + .045 * beat * (1 + seg(t, c('every'), c('harder')));
+    plate(el, ease(k), {zoom0: 1.05 * sq, zoom1: 1.25 * sq, x0: 220, x1: 260, y1: 20, glowX: 880, glowY: 470, glow: .25 + .55 * beat, bright: .9 + .25 * beat});
+    el.querySelector('img').style.transform += ` translate(${Math.sin(t * 40) * 2 * beat}px,0)`;
+    red = .22 * beat; flash = .3 * cut; shk = 0;
+    showBpm(1);
+    slamWords($('k_double'), t, [c('double', -.05)], c('every', -.15), {from: 1.8, jolt: 20});
+    slamWords($('k_secs'), t, [c('inseconds', -.05), c('inseconds', .15)], c('every', -.15), {jolt: 8});
+    slamWords($('k_harder'), t, [c('harder', -.05), c('faster', -.05)], s1 - .02, {jolt: 14});
+  } else if (name === 'lungs') {                // lungs open: B's chest heaves, x-ray accent (1 s)
+    street.g.visible = false; voidSet.g.visible = true; place(B, 0, 0, 0);
+    poseB(B, t, {shake: .02, rate: 9, breath: .035});
+    const P = B.P, ch = W2(B, P.hip.clone().lerp(P.sh, .7));
+    pos = V3(lerp(-.7, -.4, k), 1.5, lerp(6.2, 5.4, k)); tgt = V3(0, 1.2, 0); A.g.visible = false; crowd.forEach(m => m.g.visible = false);
+    const xr = seg(t, c('lungs', .1), c('lungs', .4)) * (1 - seg(t, s1 - .25, s1));
+    setXray(B, .8 * xr); chest.inside.position.copy(P.hip.clone().lerp(P.sh, .62)); chest.inside.scale.setScalar(.85 * (1 + .12 * Math.sin(t * 9)));
+    chest.ribMat.opacity = xr * .6; chest.heart.scale.setScalar(.8 * xr * (1 + .3 * beat)); chest.heartMat.emissiveIntensity = xr * (.5 + 2.5 * beat); chest.redL.intensity = xr * (.5 + 4 * beat);
+    desat = .45; flash = .3 * cut; shk = .01;
+    slamWords($('k_lungs'), t, [c('lungs', -.05), c('air', -.1)], s1 - .02, {jolt: 12});
+  } else if (name === 'eye') {                  // pupils dilate
+    render3d = false; show($('pl_eye'), 1);
+    const z = lerp(1.05, 1.3, ease(k));
+    plate($('pl_eye'), ease(k), {zoom0: 1.05, zoom1: 1.3, bright: .9});
+    const dil = ease(seg(t, c('bigger', -.1), c('bigger', .5))), r = lerp(120, 175, dil) * z * (1 + .015 * beat);
+    const p = $('pupil'), cx = 960 + (959 - 960) * z, cy = 540 + (524 - 540) * z;
+    p.style.left = (cx - r) + 'px'; p.style.top = (cy - r) + 'px'; p.style.width = p.style.height = 2 * r + 'px'; show(p, 1);
+    flash = .3 * cut;
+    slamWords($('k_pupils'), t, [c('pupils', -.05), c('bigger', -.05)], s1 - .02, {jolt: 12});
+  } else if (name === 'blood') {                // liver dumps sugar into the blood: fuel
+    render3d = false; show($('pl_blood'), 1);
+    const rush = ease(k);
+    plate($('pl_blood'), rush, {zoom0: 1.04, zoom1: 1.6, x1: -40, y1: -30, bright: .9 + .3 * seg(t, c('fuel', -.1), c('fuel', .2)), blur: 0});
+    flash = .3 * cut + .35 * Math.exp(-Math.max(0, t - c('fuel')) * 6) * (t > c('fuel') ? 1 : 0);
+    slamWords($('k_sugar'), t, [c('sugar', -.05), c('blood', -.2), c('blood', -.05)], c('fuel', -.12), {jolt: 10});
+    slamWords($('k_fuel'), t, [c('fuel', -.05)], s1 - .02, {from: 1.9, jolt: 24});
+  } else if (name === 'allin') {                // the whole body all-in on the next ten seconds
+    poseCrowd(crowd, CROWD, t);
+    poseB(B, t, {hit: .2, shake: .04, rate: 9, breath: .03, squeeze: 1.2});
+    const c0 = V3(.2, 1.3, 0);
+    pos = vlerp(V3(-.6, 1.1, 8.0), V3(-.2, 1.4, 4.6), ease(k)); tgt = c0; fov = 36;
+    desat = .35; flash = .3 * cut; red = .18 * beat; shk = .015;
+    slamWords($('k_allin'), t, [c('allin', -.05), c('allin', .25)], DUR - .05, {from: 1.7, jolt: 18});
+    black = seg(t, DUR - .25, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = `rgba(255,255,255,1)`; $('blackout').style.opacity = Math.max(black, flash); }
+  else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>

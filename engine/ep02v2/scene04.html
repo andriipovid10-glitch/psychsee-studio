@@ -1,0 +1,144 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#tblur{position:absolute;inset:0;visibility:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#tdark{position:absolute;inset:0;visibility:hidden}
+#rdot{position:absolute;left:960px;top:540px;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:#ff3340;box-shadow:0 0 24px 6px rgba(255,40,60,.7);visibility:hidden}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="tblur"></div><div id="tdark"></div>
+<div id="rdot"></div>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 04 — tunnel vision</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Police psychology · survey</span><span>PsychSee notes</span></div>
+  <h1 style="font-size:70px">What officers saw in a shooting</h1>
+  <div class="pron">157 officers · interviewed after real shootings</div>
+  <div class="rule"></div>
+  <div class="fig"><b>79%</b><span>reported<br>tunnel vision</span></div>
+  <p>Under extreme threat, attention <span class="hl"><i></i>narrows onto the threat</span> — the weapon, the hands, the face.</p>
+  <p>What sits at the edges <span class="hl"><i></i>is simply not seen.</span></p>
+  <p class="src">Source: A. Artwohl (2002), “Perceptual and Memory Distortion During Officer-Involved Shootings”, FBI Law Enforcement Bulletin</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:480px;font-size:230px"><span>SECOND</span> <span class="r">4</span></div>
+<div id="k_test" class="kw" style="left:960px;top:200px;font-size:96px"><span>QUICK</span> <span>TEST.</span></div>
+<div id="k_stare" class="kw sm" style="left:960px;top:300px">// stare at the red dot · don't move your eyes</div>
+<div id="k_room" class="kw" style="left:960px;top:880px;font-size:90px"><span>HOW</span> <span>MUCH</span> <span>CAN</span> <span>YOU</span> <span>STILL</span> <span>SEE?</span></div>
+<div id="k_gone" class="kw" style="left:960px;top:880px;font-size:150px"><span>GONE.</span></div>
+<div id="k_tunnel" class="kw" style="left:960px;top:900px;font-size:150px"><span>TUNNEL</span> <span class="r">VISION.</span></div>
+<div id="k_locked" class="kw" style="left:960px;top:900px;font-size:140px"><span>LOCKED</span> <span class="r">ON.</span></div>
+<div id="k_useful" class="kw sm" style="left:960px;top:200px">// sounds useful…</div>
+<div id="k_guy" class="kw" style="left:960px;top:900px;font-size:130px"><span>THE</span> <span class="r">SECOND</span> <span>GUY.</span></div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, makeCrowd, poseCrowd, hideKw, slam, slamWords, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const TM = await loadTiming('s04'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene);
+const A = man(scene), B = man(scene), G2 = man(scene);   // G2 = the second guy
+G2.mat.color.set(0xff5a63); G2.mat.emissive = new THREE.Color(0x5a0008);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 3.9, t1: 5.0};
+
+const SHOTS = [['title', 0], ['test', c('quick', -.12)], ['vanish', c('imagine', -.12)], ['paper', c('police', -.12)], ['lock', c('locks', -.12)], ['guy', c('until', -.15)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+// tunnel: r = radius of the clear circle (px), amt 0..1
+function tunnel(r, amt, cx = 960, cy = 540) {
+  const m = `radial-gradient(circle at ${cx}px ${cy}px, transparent ${r}px, black ${r + 260}px)`;
+  $('tblur').style.maskImage = $('tblur').style.webkitMaskImage = m; show($('tblur'), amt);
+  $('tdark').style.background = `radial-gradient(circle at ${cx}px ${cy}px, rgba(0,0,0,0) ${r}px, rgba(2,4,10,${.97 * amt}) ${r + 320}px)`; show($('tdark'), amt > 0 ? 1 : 0);
+}
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['paper', 'rdot', 'tblur', 'tdark'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  poseA(A, t, {}); poseB(B, t, {hit: .1, shake: .04, rate: 9, breath: .03});
+  poseCrowd(crowd, CROWD, t);
+  // the second guy: comes in from behind-left of "you", in the dark at the edge
+  G2.g.visible = true; place(G2, lerp(3.4, 2.4, seg(t, c('sounds'), c('guy'))), -1.6, -Math.PI * .72); poseA(G2, t + 1.3, {});
+
+  if (name === 'title') {
+    pos = vlerp(V3(-.4, 1.9, 6.8), V3(-.2, 1.7, 5.6), ease(k)); tgt = V3(.2, 1.3, 0);
+    gb = .3; G2.g.visible = false;
+    slamWords($('k_sec'), t, [c('second', -.05), c('four', -.05)], s1 - .02, {from: 1.35, jolt: 10});
+    black = 1 - seg(t, 0, .2);
+  } else if (name === 'test' || name === 'vanish') {   // viewer test: stare at the dot; then the edges disappear
+    G2.g.visible = false;
+    pos = V3(-1.0, 2.3, 9.5); tgt = V3(0, 1.1, -1.5); fov = 46;            // wide, lots of "room" to see
+    desat = .35; flash = name === 'test' ? .25 * cut : 0;
+    const dk = seg(t, c('stare', -.1), c('stare', .2)); $('rdot').style.transform = `scale(${back(dk)})`; show($('rdot'), dk);
+    slamWords($('k_test'), t, [c('quick', -.05), c('quick', .2)], c('imagine', -.15), {jolt: 6});
+    if (t > c('stare', -.1)) { const e = $('k_stare'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('stare', -.1), c('stare', .2)) * (1 - seg(t, c('imagine', -.3), c('imagine')))); }
+    slamWords($('k_room'), t, [c('room', -.4), c('room', -.25), c('room', -.12), c('room'), c('see', -.2), c('see')], c('imagine', -.15), {jolt: 4, from: 1.2});
+    if (name === 'vanish') {
+      const v = ease(seg(t, c('imagine', .2), c('disappearing', .5)));
+      tunnel(lerp(1100, 170, v), v);
+      slam($('k_gone'), t, c('disappearing', .3), s1 - .02, {from: 1.3, jolt: 4});
+    }
+  } else if (name === 'paper') {                // the survey: 157 officers, 79% tunnel vision
+    G2.g.visible = false;
+    pos = V3(-1.0, 2.3, 9.5); tgt = V3(0, 1.1, -1.5); fov = 46; gb = .6; desat = .7;
+    tunnel(170, 1); show($('rdot'), 1);
+    paper($('paper'), t, {span: [s0, s1 + .05], scroll: 60, tilt: 7, hl: [[c('n79', -.1), c('vision', .2)], [c('vision', .4), c('vision', 1.0)]]});
+    slamWords($('k_tunnel'), t, [c('tunnel', -.05), c('vision', -.05)], s1 - .02, {jolt: 10});
+    $('k_tunnel').style.top = '1010px';
+  } else if (name === 'lock' || name === 'guy') {
+    // POV over B's shoulder, locked on A: hands + face. The second guy stands in the blurred edge.
+    const P = A.P, face = W2(A, P.head), hands = W2(A, P.hR.clone().lerp(P.hL, .5));
+    const look = face.clone().lerp(hands, .2).add(V3(0, -.1, 0));
+    const bh = W2(B, B.P.head);
+    pos = bh.clone().add(V3(.55, -.05, .3)); tgt = look; fov = 50; B.g.visible = false;
+    if (name === 'guy') {                         // pull back + turn: reveal who's standing in the dark part
+      const r = ease(seg(t, c('until', .1), c('standing', .3)));
+      B.g.visible = r > .25; pos = vlerp(pos, V3(3.4, 2.4, 6.2), r); tgt = vlerp(look, V3(1.5, 1.15, -.6), r); fov = lerp(44, 40, r);
+    }
+    cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); cam.updateMatrixWorld();
+    const [lx, ly] = project(cam, look);
+    let tr = 230, ta = 1;
+    if (name === 'guy') { const r = seg(t, c('guy', -.2), c('standing', .4)); ta = 1 - r; tr = lerp(230, 900, r); red = .15 * r; }
+    tunnel(tr, ta, lx, ly);
+    desat = .55; flash = .25 * cut; shk = name === 'lock' ? .01 : 0;
+    slamWords($('k_locked'), t, [c('locks', -.05), c('threat', -.1)], c('sounds', -.1), {jolt: 10});
+    if (t > c('sounds', -.05) && t < c('until')) { const e = $('k_useful'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('sounds', -.05), c('sounds', .25))); }
+    if (t > c('until')) slamWords($('k_guy'), t, [c('guy', -.45), c('guy', -.3), c('guy', -.05)], DUR - .05, {jolt: 12});
+    black = seg(t, DUR - .25, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('rflash').style.opacity = clamp(red * 1.4);
+  $('blackout').style.background = '#000'; $('blackout').style.opacity = black;
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; draw(0); window.ready = true;
+</script></body></html>

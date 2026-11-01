@@ -1,0 +1,185 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../ep02/lib/hud.css">
+<style id="kitcss"></style>
+<style>
+#gl{width:1920px;height:1080px}
+#dark{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(30,34,44,.85) 0%,rgba(30,34,44,.55) 45%,rgba(30,34,44,0) 72%);mix-blend-mode:multiply;visibility:hidden}
+.tag{position:absolute;left:960px;top:150px;transform:translateX(-50%);visibility:hidden}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="pl_gut" class="plate"><img src="img/flow_gut.jpg"><i class="glow"></i><i class="shade"></i></div>
+<div id="pl_mus" class="plate"><img src="img/flow_muscles.jpg"><i class="glow"></i><i class="glow g2"></i><i class="shade"></i></div>
+<div id="pl_fist" class="plate"><img src="img/flow_fist.jpg"><i class="shade"></i></div>
+<div id="dark"></div>
+<svg id="lock" class="ov" width="1920" height="1080" style="visibility:hidden">
+  <defs><linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#8a7448"/><stop offset=".5" stop-color="#e4cf98"/><stop offset="1" stop-color="#7a6440"/></linearGradient></defs>
+  <rect x="1180" y="250" width="230" height="560" rx="26" fill="url(#brass)" stroke="#3a2f1c" stroke-width="6"/>
+  <circle cx="1295" cy="470" r="34" fill="#0b0b0b"/><rect x="1283" y="470" width="24" height="90" rx="8" fill="#0b0b0b"/>
+  <g id="keyg"><circle cx="0" cy="0" r="62" fill="none" stroke="#d9c08a" stroke-width="26"/><rect x="50" y="-14" width="250" height="28" rx="8" fill="#d9c08a"/>
+    <rect x="240" y="14" width="22" height="34" fill="#d9c08a"/><rect x="200" y="14" width="18" height="24" fill="#d9c08a"/></g>
+</svg>
+<div id="rflash"></div>
+<div id="tl" class="mono">// 03 — the trade</div>
+<div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
+<div id="bl" class="mono">the first 10 seconds of a fight — ep.02</div>
+
+<div id="paper" class="paper"><div class="sheet">
+  <div class="kicker"><span>Physiology · fight or flight</span><span>PsychSee notes</span></div>
+  <h1 style="font-size:84px">precision → power</h1>
+  <div class="pron">what the stress response does to your muscles</div>
+  <div class="rule"></div>
+  <p>Stress hormones send <span class="hl"><i></i>more blood</span> to the big muscles of the legs, chest and arms, and muscle tension rises — ready to fight or run.</p>
+  <p>Meanwhile fine motor control <span class="hl"><i></i>tends to get worse:</span> small, precise finger movements become shaky and clumsy.</p>
+  <p class="src">Source: Harvard Health Publishing — “Understanding the stress response”</p>
+</div></div>
+
+<div id="k_sec" class="kw" style="left:960px;top:480px;font-size:230px"><span>SECOND</span> <span class="r">2</span></div>
+<div id="k_shut" class="kw sm" style="left:960px;top:640px">// shutting down everything it doesn't need</div>
+<div id="k_gut" class="kw" style="left:960px;top:900px;font-size:150px"><span>STOMACH:</span> <span class="r">OFF.</span></div>
+<div id="k_knot" class="kw sm" style="left:960px;top:990px">// that's the knot in your stomach</div>
+<div id="k_saliva" class="kw" style="left:960px;top:880px;font-size:150px"><span>SALIVA:</span> <span class="r">OFF.</span></div>
+<div id="k_dry" class="kw sm" style="left:960px;top:975px">// that's the dry mouth</div>
+<div id="k_blood" class="kw" style="left:960px;top:930px;font-size:120px"><span>BLOOD</span> <span>→</span> <span class="r">MUSCLES.</span></div>
+<div id="k_pale" class="kw" style="left:960px;top:880px;font-size:220px"><span>PALE.</span></div>
+<div id="k_shake" class="kw" style="left:960px;top:900px;font-size:150px"><span>HANDS</span> <span class="r">SHAKING.</span></div>
+<div id="k_big" class="kw" style="left:520px;top:300px;font-size:110px"><span>BIG</span> <span>MOVES</span> <span class="b">↑</span></div>
+<div id="k_small" class="kw" style="left:520px;top:440px;font-size:110px"><span>SMALL</span> <span>MOVES</span> <span class="r">↓</span></div>
+<div id="k_trade" class="kw" style="left:960px;top:880px;font-size:130px"><span>PRECISION</span> <span>→</span> <span class="r">POWER.</span></div>
+<div id="k_physio" class="kw sm tag" style="left:960px;top:70px">// physio student's note</div>
+<div id="blackout"></div>
+
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, pose, orbitPos, shake, $, show, project, pulse} from '../ep02/lib/core.js';
+import {makeTClock} from '../ep02/lib/tclock.js';
+import {setupStage} from './lib/stage.js';
+import {makeStreet, makeVoid} from './lib/sets.js';
+import {loadTiming, timecode, man, place, poseA, poseB, fists, tremor, makeCrowd, poseCrowd, hideKw, slam, slamWords, plate, paper, KW_CSS, PLATE_CSS, PAPER_CSS} from './lib/kit.js';
+$('kitcss').textContent = KW_CSS + PLATE_CSS + PAPER_CSS;
+
+const TM = await loadTiming('s03'), c = TM.cue, DUR = TM.duration;
+window.DURATION = DUR;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+const street = makeStreet(scene), voidSet = makeVoid(scene);
+const A = man(scene), B = man(scene);
+const crowd = makeCrowd(scene, 4);
+const CROWD = [[-3.6, -2.6, 2.3, 0], [3.9, -3.0, -2.4, 2], [-5.4, -3.6, 2.4, 1], [5.6, -4.2, -2.3, 0]];
+const HX = .9;
+const clk = makeTClock(document.body);
+const STORY = {from_cue: null, t0: 2.0, t1: 3.9};
+// a door with a lock for "a key in a lock" (void set)
+const door = new THREE.Group(); scene.add(door);
+const doorM = new THREE.MeshStandardMaterial({color: 0x3b2c24, roughness: .55});
+const dm = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.2, .08), doorM); dm.position.set(0, 1.1, 0); dm.receiveShadow = true; door.add(dm);
+const plateM = new THREE.MeshStandardMaterial({color: 0xb7a27a, metalness: .85, roughness: .25});
+const lp = new THREE.Mesh(new THREE.BoxGeometry(.09, .22, .02), plateM); lp.position.set(.36, 1.1, .05); door.add(lp);
+const hole = new THREE.Mesh(new THREE.CylinderGeometry(.012, .012, .03, 10), new THREE.MeshBasicMaterial({color: 0x050505})); hole.rotation.x = Math.PI / 2; hole.position.set(.36, 1.08, .065); door.add(hole);
+const keyM = new THREE.MeshStandardMaterial({color: 0xd9c08a, metalness: .9, roughness: .2});
+const keyG = new THREE.Group(); scene.add(keyG);
+const kb = new THREE.Mesh(new THREE.BoxGeometry(.012, .012, .12), keyM); kb.position.z = -.06; keyG.add(kb);
+const kh = new THREE.Mesh(new THREE.TorusGeometry(.03, .01, 8, 18), keyM); kh.position.z = .02; keyG.add(kh);
+
+const SHOTS = [['title', 0], ['gut', c('digestion', -.12)], ['mouth', c('saliva', -.12)], ['muscles', c('blood', -.12)], ['pale', c('faces', -.1)],
+  ['fist', c('hands', -.12)], ['key', c('big', -.12)], ['trade', c('traded', -.12)], ['physio', c('studying', -.12)]];
+const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
+const W2 = (M, p) => M.g.localToWorld(p.clone());
+
+function draw(t) {
+  const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
+  const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
+  hideKw(); ['pl_gut', 'pl_mus', 'pl_fist', 'paper', 'dark', 'lock'].forEach(id => show($(id), 0));
+  let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
+  key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
+  scene.fog.near = 20; scene.fog.far = 50;
+  street.g.visible = true; voidSet.g.visible = false; door.visible = keyG.visible = false;
+  place(A, -HX, 0, Math.PI / 2); place(B, HX, 0, -Math.PI / 2); A.g.visible = B.g.visible = true;
+  poseA(A, t, {}); poseB(B, t, {hit: .15, shake: .05, rate: 9, breath: .03});
+  poseCrowd(crowd, CROWD, t);
+  const beat = pulse(t * 2.6);
+
+  if (name === 'title') {
+    pos = vlerp(V3(.4, 1.9, 6.6), V3(.2, 1.7, 5.4), ease(k)); tgt = V3(.2, 1.3, 0);
+    desat = lerp(.3, .75, seg(t, c('shuts'), c('need_end'))); gb = .3;
+    slamWords($('k_sec'), t, [c('topay', -.05), c('topay', .3)], s1 - .02, {from: 1.35, jolt: 10});
+    if (t > c('shuts')) { const e = $('k_shut'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('shuts'), c('shuts', .3)) * (1 - seg(t, s1 - .15, s1))); }
+    black = 1 - seg(t, 0, .2);
+  } else if (name === 'gut') {                  // digestion off — the gut goes dark
+    render3d = false; show($('pl_gut'), 1);
+    plate($('pl_gut'), ease(k), {zoom0: 1.1, zoom1: 1.45, x0: 0, y0: -60, x1: 0, y1: -230, glowX: 948, glowY: 230, glow: .3 + .4 * beat, bright: .95});
+    const off = ease(seg(t, c('digestion', .2), c('stomach')));
+    const z = lerp(1.1, 1.45, ease(k)), y = lerp(-60, -230, ease(k)), gx = 960 + (960 - 960) * z, gy = 540 + (700 - 540) * z + y, r = 330 * z;
+    const dk = $('dark'); dk.style.left = (gx - r) + 'px'; dk.style.top = (gy - r) + 'px'; dk.style.width = dk.style.height = 2 * r + 'px'; show(dk, off);
+    flash = .3 * cut;
+    slamWords($('k_gut'), t, [c('digestion', -.05), c('digestion', .5)], s1 - .02, {jolt: 12});
+    if (t > c('knot', -.1)) { const e = $('k_knot'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('knot', -.1), c('knot', .2)) * (1 - seg(t, s1 - .1, s1))); }
+  } else if (name === 'mouth') {                // saliva drops — head close, mouth area
+    A.g.visible = false; desat = .55;
+    const hd = W2(B, B.P.head);
+    pos = hd.clone().add(V3(lerp(-2.2, -1.9, k), lerp(-.05, -.12, k), lerp(1.8, 1.5, k))); tgt = hd.clone().add(V3(0, -.2, 0)); fov = 34;
+    flash = .3 * cut; shk = .006;
+    slamWords($('k_saliva'), t, [c('saliva', -.05), c('drops', -.05)], s1 - .02, {jolt: 12});
+    if (t > c('dry', -.1)) { const e = $('k_dry'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('dry', -.1), c('dry', .2)) * (1 - seg(t, s1 - .1, s1))); }
+  } else if (name === 'muscles') {              // blood leaves the skin, rushes to the big muscles
+    render3d = false; show($('pl_mus'), 1);
+    const el = $('pl_mus'), p = ease(k), rush = seg(t, c('rushes', -.1), c('muscles', .3)), pul = .6 + .4 * beat;
+    plate(el, p, {zoom0: 1.0, zoom1: 1.15, x1: -30, y1: 20, glowX: 960, glowY: 370, glow: rush * pul, bright: .8 + .35 * rush});
+    const g2 = el.querySelectorAll('.glow')[1], z = lerp(1.0, 1.15, p);
+    g2.style.left = (960 + (1000 - 960) * z - 30 * p) + 'px'; g2.style.top = (540 + (730 - 540) * z + 20 * p) + 'px'; g2.style.opacity = rush * pul; g2.style.transform = `scale(${.6 + .8 * rush})`;
+    flash = .3 * cut;
+    slamWords($('k_blood'), t, [c('blood', -.05), c('rushes', -.05), c('muscles', -.05)], s1 - .02, {jolt: 12});
+  } else if (name === 'pale') {                 // faces go pale — the world drains to cold blue
+    A.g.visible = false;
+    const hd = W2(B, B.P.head);
+    pos = V3(lerp(-.2, .1, k), 1.5, lerp(5.2, 4.4, k)); tgt = V3(HX, 1.25, 0);
+    desat = lerp(.4, .95, seg(t, c('pale', -.2), c('pale', .3))); vign = .55; key.color.set(0xbfd4ff); flash = .3 * cut;
+    slam($('k_pale'), t, c('pale', -.03), s1 - .02, {from: 1.25, jolt: 6});
+  } else if (name === 'fist') {                 // hands shake — real fist, trembling
+    render3d = false; show($('pl_fist'), 1);
+    const tr = tremor(t, 7);
+    plate($('pl_fist'), ease(k), {zoom0: 1.04, zoom1: 1.2, x0: tr.x, y0: tr.y, x1: tr.x - 40, y1: tr.y, bright: .95});
+    $('pl_fist').querySelector('img').style.filter += ` blur(${(Math.abs(Math.sin(t * 53)) * 1.2).toFixed(2)}px)`;
+    flash = .3 * cut;
+    slamWords($('k_shake'), t, [c('hands', -.05), c('shake', -.05)], s1 - .02, {jolt: 14});
+    const kt = $('k_shake'); kt.style.transform = `translate(-50%,-50%) translate(${tr.x * .6}px,${tr.y * .6}px)`;
+  } else if (name === 'key') {                  // big moves stronger, small moves worse: the key keeps missing the lock
+    render3d = false; show($('pl_mus'), 1);
+    plate($('pl_mus'), ease(k), {zoom0: 1.15, zoom1: 1.2, x0: -380, x1: -400, glowX: 960, glowY: 370, glow: .5 * seg(t, c('big'), c('stronger')), bright: .55, blur: lerp(0, 6, seg(t, c('small', -.2), c('small', .3)))});
+    $('pl_mus').querySelectorAll('.glow')[1].style.opacity = 0;
+    const sk = seg(t, c('small', -.2), c('small', .25)); show($('lock'), sk);
+    const tr = tremor(t * 1.4, 26), aim = ease(seg(t, c('small'), c('key', .4)));
+    const kx = lerp(1700, 1295 + 300, aim) + tr.x * aim, ky = 470 + tr.y * aim;   // key tip ~300px right of its ring centre
+    $('keyg').setAttribute('transform', `translate(${kx},${ky}) rotate(${180 + tr.z * .3})`);
+    flash = .25 * cut;
+    slamWords($('k_big'), t, [c('big', -.05), c('big', .2), c('stronger', -.05)], s1 - .02, {jolt: 8});
+    slamWords($('k_small'), t, [c('small', -.05), c('small', .2), c('worse', -.05)], s1 - .02, {jolt: 8});
+  } else if (name === 'trade') {                // precision traded for power
+    render3d = false; show($('pl_mus'), 1);
+    plate($('pl_mus'), ease(k), {zoom0: 1.15, zoom1: 1.3, x0: -30, y0: 20, x1: -60, y1: 40, glowX: 960, glowY: 370, glow: .7 + .3 * beat, bright: 1.05});
+    $('pl_mus').querySelectorAll('.glow')[1].style.opacity = 0;
+    flash = .3 * cut + .3 * Math.exp(-Math.max(0, t - c('power')) * 6) * (t > c('power') ? 1 : 0);
+    slamWords($('k_trade'), t, [c('precision', -.05), c('precision', .4), c('power', -.05)], s1 - .02, {jolt: 14});
+  } else if (name === 'physio') {               // creator's physio note — reference card
+    render3d = false; show($('pl_mus'), 1);
+    plate($('pl_mus'), 1, {zoom0: 1.3, zoom1: 1.3, x1: -60, y1: 40, glowX: 960, glowY: 370, glow: .4, bright: .35, blur: 8});
+    $('pl_mus').querySelectorAll('.glow')[1].style.opacity = 0;
+    if (t > c('studying', -.1)) { const e = $('k_physio'); e.style.transform = 'translate(-50%,0)'; show(e, seg(t, c('studying', -.1), c('studying', .3)) * (1 - seg(t, DUR - .3, DUR))); }
+    paper($('paper'), t, {span: [c('studying', .2), DUR + .05], scroll: 90, tilt: 7, hl: [[c('two', -.1), c('two', .5)], [c('rewired', -.1), c('onejob', .2)]]});
+    black = seg(t, DUR - .25, DUR);
+  }
+
+  clk.update(t, STORY, DUR, c, {opacity: 1 - black});
+  if (render3d) {
+    const sh = shake(t, shk); cam.position.copy(pos.clone().add(sh)); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt.clone().add(sh.multiplyScalar(.5)));
+    grade.desat.value = desat; grade.vign.value = vign; grade.red.value = red; grade.flash.value = flash; grade.black.value = gb;
+    grade.seed.value = (Math.floor(t * 30) % 97) * .37;
+    composer.render();
+  }
+  $('gl').style.visibility = render3d ? 'visible' : 'hidden';
+  $('rflash').style.opacity = clamp(red * 1.4);
+  if (!render3d && flash > .02) { $('blackout').style.background = '#fff'; $('blackout').style.opacity = Math.max(black, flash); }
+  else { $('blackout').style.background = '#000'; $('blackout').style.opacity = black; }
+  timecode($('tc'), TM.offset + t);
+}
+window.draw = draw; await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); draw(0); window.ready = true;
+</script></body></html>
