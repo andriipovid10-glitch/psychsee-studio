@@ -15,7 +15,7 @@ T = {s: json.load(open(os.path.join(HERE, f'timing_{s}.json'))) for s in ORDER}
 
 # 1. video concat (same encoder settings for every scene -> stream copy)
 lst = os.path.join(RD, 'concat.txt')
-open(lst, 'w').write(''.join(f"file '{os.path.join(RD, 'scene' + s[1:] + '.mp4')}'\n" for s in ORDER))
+open(lst, 'w').write(''.join(f"file '{os.path.abspath(os.path.join(RD, 'scene' + s[1:] + '.mp4'))}'\n" for s in ORDER))
 video = os.path.join(RD, 'video_concat.mp4')
 run('ffmpeg', '-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', lst, '-c', 'copy', video)
 
