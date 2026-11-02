@@ -133,20 +133,22 @@ function draw(t) {
     place(B, 1.2, 0, -.35);
     const up = ease(seg(t, c('put', -.1), c('fingers', .3)));
     const br = Math.sin(t * 3) * .01;
-    pose(B, {bob: br, lean: .02, headLean: -.05 + .05 * up,
-      ua: {R: V3(-.25, -.97, .05), L: vlerp(V3(.25, -.97, .05), V3(.45, -.45, .55), up)},
-      la: {R: V3(-.08, -.99, .05), L: vlerp(V3(.08, -.99, .05), V3(-.24, .47, -.31), up)}});
-    fists(B, 1, {two: up > .3 ? 'L' : null});
+    pose(B, {bob: br, lean: .02, headLean: -.05 - .27 * up,
+      ua: {R: V3(-.25, -.97, .05), L: vlerp(V3(.25, -.97, .05), V3(.35, -.6, .7).normalize(), up)},
+      la: {R: V3(-.08, -.99, .05), L: vlerp(V3(.08, -.99, .05), V3(-.45, .8, -.35).normalize(), up)}});
+    fists(B, lerp(1, 1.35, up), {curl: lerp(.3, .95, up), two: up > .3 ? 'L' : null});
     crowd.forEach(m => m.g.visible = false);
     const nk = W2(B, B.P.neck.clone().lerp(B.P.head, .35));
     const close = ease(seg(t, c('fingers', -.2), c('neck', .3)));
-    pos = vlerp(V3(-.2, 1.5, 6.4), W2(B, B.P.neck.clone().add(V3(1.25, .0, 2.3))), close); tgt = vlerp(V3(1.0, 1.15, 0), nk.clone().add(V3(0, -.12, 0)), close); fov = lerp(34, 32, close);
+    const hm = W2(B, B.P.hL.clone().lerp(B.P.neck, .5));
+    pos = vlerp(V3(-.2, 1.5, 6.4), hm.clone().add(V3(1.25, .05, 2.5)), close); tgt = vlerp(V3(1.0, 1.15, 0), hm.clone().add(V3(0, .1, 0)), close); fov = lerp(34, 26, close);
     desat = .4; flash = .2 * cut;
     slamWords($('k_check'), t, [c('try', -.05), c('try', .15), c('put', -.05)], s1 - .02, {jolt: 8});
     if (t > c('fingers')) { const e = $('k_check2'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('fingers'), c('fingers', .3))); }
     showBpm(seg(t, c('feel', -.2), c('feel', .2)));
     cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); cam.updateMatrixWorld();
-    { const [hx, hy] = project(cam, W2(B, B.P.hL)), pr = $('pring'), b = pulse(t * 1.2);
+    key.position.set(lerp(-1.5, 3, close), lerp(9, 4, close), lerp(-2, 6, close)); key.intensity = lerp(1.0, 1.5, close); hemi.intensity = lerp(.45, .7, close);
+    { const tip = B.fists[0].userData.F[0][1].getWorldPosition(V3(0, 0, 0)); const [hx, hy] = project(cam, close > .5 ? tip : W2(B, B.P.hL)), pr = $('pring'), b = pulse(t * 1.2);
       pr.style.left = hx + 'px'; pr.style.top = hy + 'px'; pr.style.transform = `scale(${1 + .6 * b})`; show(pr, seg(t, c('neck', -.2), c('neck', .2)) * (.5 + .5 * b)); }
   } else if (name === 'paper') {                // resting pulse 60–100 — reference card
     street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; place(B, 1.2, 0, -.35);

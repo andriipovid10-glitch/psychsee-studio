@@ -15,11 +15,11 @@ function draw(t) {
   const v = Math.round(t); place(B, 0, 0, 0); grade.desat.value = .2; grade.red.value = 0; grade.flash.value = 0; grade.black.value = 0;
   let p;
   if (v <= 2) { poseB(B, 1, {calm: v === 2 ? 0 : 1, curl: v === 2 ? 1 : .3, squeeze: 1.1}); }
-  if (v === 3 || v === 5) { const ua = v === 3 ? V3(.35, -.6, .7) : V3(.6, -.5, .55), la = v === 3 ? V3(-.3, .85, -.4) : V3(-.45, .8, -.35);
-    pose(B, {headLean: v === 5 ? -.3 : .3, ua: {R: V3(-.25, -.97, .05), L: ua.normalize()}, la: {R: V3(-.08, -.99, .05), L: la.normalize()}}); fists(B, 1.3, {curl: .9, two: 'L'}); }
+  if (v === 3 || v === 5) { const ua = V3(.6, -.6, .5), la = V3(-.47, .73, -.49);
+    pose(B, {headLean: -.55, ua: {R: V3(-.25, -.97, .05), L: ua.normalize()}, la: {R: V3(-.08, -.99, .05), L: la.normalize()}}); fists(B, 1.35, {curl: .95, two: 'L'}); }
 
   if (v === 0 || v === 4 && false) { cam.position.set(0, 1.3, 5); cam.lookAt(0, 1.0, 0); cam.fov = 36; }
-  else if (v >= 3) { p = B.g.localToWorld(B.P.neck.clone()); cam.position.set(p.x + 1.3, p.y - .25, p.z + 2.1); cam.lookAt(p.x, p.y + .08, p.z); cam.fov = 30; }
+  else if (v >= 3) { p = B.g.localToWorld(B.P.neck.clone()); { const h = B.g.localToWorld(B.P.hL.clone()); const m = h.clone().lerp(p, .5); cam.position.set(m.x + (v === 3 ? .5 : 1.0), m.y - .25, m.z + (v === 3 ? 1.75 : 1.4)); cam.lookAt(m.x, m.y + .1, m.z); } cam.fov = 26; }
   else { p = B.g.localToWorld(B.P.hL.clone()); cam.position.set(p.x + .35, p.y + .15, p.z + .9); cam.lookAt(p); cam.fov = 30; }
   cam.updateProjectionMatrix(); key.position.set(2, 4, 6); hemi.intensity = .7; rim.intensity = 2.5; composer.render();
 }

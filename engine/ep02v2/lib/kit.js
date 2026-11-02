@@ -44,11 +44,11 @@ export function makeFist(mat) {
   g0.userData = {F, t1, t2};
   return g0;
 }
-function setHand(f, curl, two) {
+function setHand(f, curl, two, bend = .1) {
   const {F, t1, t2} = f.userData;
   F.forEach(([p1, p2], i) => {
-    const c = two && i < 2 ? .08 : curl;
-    p1.rotation.set(c * 1.55, 0, 0); p2.rotation.set(c * 1.75, 0, 0);
+    if (two && i < 2) { p1.rotation.set(bend, 0, i ? -.2 : .2); p2.rotation.set(.1, 0, 0); return; }   // straight fingers, bent at the knuckle
+    p1.rotation.set(curl * 1.55, 0, 0); p2.rotation.set(curl * 1.75, 0, 0);
   });
   t1.rotation.set(curl * .9, 0, lerp(-.75, .35, curl)); t2.rotation.set(curl * .6, 0, lerp(-.15, .9, curl));
 }
@@ -68,11 +68,17 @@ export function fists(M, sq = 1, o = {}) {
     _n.set(Math.sign(P.hip.x - h.x) || (i ? 1 : -1), 0, -.25);   // palm faces inward (medial), a bit back
     _n.addScaledVector(_d, -_n.dot(_d)); if (_n.lengthSq() < 1e-6) _n.set(0, 0, 1); _n.normalize();
     _x.crossVectors(_d, _n);
-    const mir = _x.z < 0 ? -1 : 1;
+    let mir = _x.z < 0 ? -1 : 1; if (o.flip === side) mir = -mir;
     _m.makeBasis(_x, _d, _n); f.quaternion.setFromRotationMatrix(_m);
     f.position.copy(h).addScaledVector(_d, -.02);
     const k = .1 * sq; f.scale.set(k * mir, k, k);
-    setHand(f, curl, o.two === side);
+    setHand(f, curl, o.two === side, o.bend);
+    if (o.two === side && o.twoAt) {                                           // aim the two straight fingers at a point (M.g space)
+      f.updateMatrix(); _m.copy(f.matrix).invert();
+      const tip = f.userData.F[0][0].getWorldPosition(new THREE.Vector3()); M.g.worldToLocal(tip);
+      const dir = o.twoAt.clone().sub(tip).transformDirection(_m);
+      f.userData.F.slice(0, 2).forEach(([p1]) => p1.quaternion.setFromUnitVectors(_up, dir));
+    }
   });
 }
 export const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) * a * .5, Math.cos(t * 47.3) * a, Math.sin(t * 39.9) * a * .4);
