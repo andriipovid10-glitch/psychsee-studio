@@ -14,14 +14,12 @@ MASTER = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] else os.path.join(ROOT
 OUT = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else os.path.join(ROOT, 'renders/ep02v2/shorts')
 ONLY = sys.argv[3] if len(sys.argv) > 3 else None
 
-# the whole episode as a numbered series, in order: name, scenes, hook title ({r}..{w} = red)
-SHORTS = [
-    ('part1', ['s00', 's01'], 'THE FIRST {r}10 SECONDS{w}\\NOF A FIGHT'),
-    ('part2', ['s02', 's03'], 'YOUR BODY\\NGOES {r}ALL-IN{w}'),
-    ('part3', ['s04', 's05'], 'YOUR EYES AND EARS\\N{r}SHUT DOWN{w}'),
-    ('part4', ['s06', 's07'], 'PAIN OFF.\\NTIME {r}LIES.{w}'),
-    ('part5', ['s08', 's09', 's10'], 'HOW TO STAY\\N{r}IN CONTROL{w}'),
-]
+# the whole episode as a numbered series of ~30 s parts, in order; cuts sit in the pauses between sentences
+CUTS = [0, 33.8, 60.33, 92.6, 125.7, 156.99, 188.22, 217.5, 248.62, 278.6, None]   # None = end of episode
+TITLES = ['THE FIRST {r}10 SECONDS{w}\\NOF A FIGHT', 'YOU\'RE NOT\\N{r}DRIVING{w}', 'CHECK YOUR PULSE\\N{r}RIGHT NOW{w}',
+          'WHY YOUR HANDS\\N{r}SHAKE{w}', 'TUNNEL VISION\\NIS {r}REAL{w}', 'WHY NOBODY HEARS\\N{r}"STOP"{w}',
+          'THE {r}SLOW-MOTION{w}\\NLIE', 'WHY FIGHTS FEEL\\NLIKE A {r}BLUR{w}', 'HOW TO STAY\\N{r}IN CONTROL{w}', 'THE SMARTEST\\N{r}MOVE{w} OF ALL']
+SHORTS = [(f'part{i + 1:02d}', CUTS[i], CUTS[i + 1], TITLES[i]) for i in range(10)]
 VY, VH = 600, 608   # video band
 
 norm = lambda w: re.sub(r"[^a-z0-9%']", '', w.lower())
@@ -49,16 +47,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 RED, WHITE = r'{\c&H4033FF&}', r'{\c&HFAF2EE&}'
 
 
-def build(name, scenes, title, part, nparts):
-    t0 = OFF[scenes[0]]; t1 = OFF[scenes[-1]] + T[scenes[-1]]['duration']; D = t1 - t0
-    W = [dict(w, start=w['start'] + OFF[sc] - t0, end=w['end'] + OFF[sc] - t0) for sc in scenes for w in T[sc]['words']]
+def build(name, t0, t1, title, part, nparts):
+    t1 = t1 if t1 is not None else OFF[ORDER[-1]] + T[ORDER[-1]]['duration']; D = t1 - t0
+    W = [dict(w, start=w['start'] + OFF[sc] - t0, end=w['end'] + OFF[sc] - t0) for sc in ORDER for w in T[sc]['words']]
+    W = [w for w in W if 0 <= w['start'] < D]
     ev = []
     ev.append(f"Dialogue: 0,{ts(0)},{ts(D)},Pill,,0,0,0,,{{\\fad(200,0)}} FULL VIDEO ON MY CHANNEL ")
     ev.append(f"Dialogue: 0,{ts(0)},{ts(D)},Handle,,0,0,0,,@psychsee")
     ev.append(f"Dialogue: 0,{ts(0)},{ts(D)},Part,,0,0,0,,{{\\pos(540,330)\\fad(150,0)}}PART {part}/{nparts}")
     ev.append(f"Dialogue: 0,{ts(0)},{ts(D)},Title,,0,0,0,,{{\\pos(540,470)\\fad(150,0)}}" + title.replace('{r}', RED).replace('{w}', WHITE))
     if part < nparts:
-        ev.append(f"Dialogue: 2,{ts(D - 3)},{ts(D)},Next,,0,0,0,,{{\\pos(540,1520)\\fad(200,0)}}PART {part + 1} {RED}→ NEXT SHORT")
+        ev.append(f"Dialogue: 2,{ts(D - 2.5)},{ts(D)},Next,,0,0,0,,{{\\pos(540,1520)\\fad(200,0)}}PART {part + 1} {RED}→ NEXT SHORT")
     grp = []
     for w in W:
         grp.append(w)
@@ -84,6 +83,6 @@ def cap(g):
 
 
 os.makedirs(OUT, exist_ok=True)
-for i, (nm, scenes, title) in enumerate(SHORTS):
+for i, (nm, a, b, title) in enumerate(SHORTS):
     if ONLY and ONLY != nm: continue
-    build(nm, scenes, title, i + 1, len(SHORTS))
+    build(nm, a, b, title, i + 1, len(SHORTS))
