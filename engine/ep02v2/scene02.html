@@ -17,6 +17,7 @@
 <div id="pl_eye" class="plate"><img src="img/flow_eye.jpg"><i class="shade"></i></div>
 <div id="pl_blood" class="plate"><img src="img/flow_blood.jpg"><i class="shade"></i></div>
 <div id="pupil"></div>
+<div id="pring" style="position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border:4px solid #ff3340;border-radius:50%;box-shadow:0 0 24px rgba(255,40,60,.8);visibility:hidden"></div>
 <div id="rflash"></div>
 <div id="tl" class="mono">// 02 — adrenaline</div>
 <div id="tr" class="mono">PSYCHSEE &nbsp; <span id="tc">00:00:00:00</span></div>
@@ -97,7 +98,7 @@ const beatPh = t => { // integrate bpm roughly (piecewise) so the beat speeds up
 function draw(t) {
   const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
   const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
-  hideKw(); ['pl_adrenal', 'pl_heart', 'pl_eye', 'pl_blood', 'paper', 'pupil', 'bpm'].forEach(id => show($(id), 0));
+  hideKw(); ['pl_adrenal', 'pl_heart', 'pl_eye', 'pl_blood', 'paper', 'pupil', 'bpm', 'pring'].forEach(id => show($(id), 0));
   let desat = .3, vign = .42, red = 0, flash = 0, black = 0, gb = 0, shk = 0, fov = 36, render3d = true, pos, tgt;
   key.intensity = 1.3; key.color.set(0xdde8ff); key.position.set(-1.5, 9, -2); hemi.intensity = .3; rim.intensity = 2.6;
   scene.fog.near = 20; scene.fog.far = 50;
@@ -133,18 +134,23 @@ function draw(t) {
     const up = ease(seg(t, c('put', -.1), c('fingers', .3)));
     const br = Math.sin(t * 3) * .01;
     pose(B, {bob: br, lean: .02, headLean: -.05 + .05 * up,
-      ua: {L: V3(.25, -.97, .05), R: vlerp(V3(-.25, -.97, .05), V3(-.55, .25, .55), up)},
-      la: {L: V3(.08, -.99, .05), R: vlerp(V3(-.08, -.99, .05), V3(.55, .75, .35), up)}});
+      ua: {R: V3(-.25, -.97, .05), L: vlerp(V3(.25, -.97, .05), V3(.45, -.45, .55), up)},
+      la: {R: V3(-.08, -.99, .05), L: vlerp(V3(.08, -.99, .05), V3(-.24, .47, -.31), up)}});
     fists(B, 1);
-    const c0 = V3(1.0, 1.35, 0);
-    pos = V3(lerp(-.6, -.1, ease(k)), 1.5, lerp(7.4, 6.6, ease(k))); tgt = V3(1.0, 1.15, 0); fov = 34; crowd.forEach(m => m.g.visible = false);
+    crowd.forEach(m => m.g.visible = false);
+    const nk = W2(B, B.P.neck.clone().lerp(B.P.head, .35));
+    const close = ease(seg(t, c('fingers', -.2), c('neck', .3)));
+    pos = vlerp(V3(-.2, 1.5, 6.4), W2(B, B.P.neck.clone().add(V3(1.25, .0, 2.3))), close); tgt = vlerp(V3(1.0, 1.15, 0), nk.clone().add(V3(0, -.12, 0)), close); fov = lerp(34, 32, close);
     desat = .4; flash = .2 * cut;
     slamWords($('k_check'), t, [c('try', -.05), c('try', .15), c('put', -.05)], s1 - .02, {jolt: 8});
     if (t > c('fingers')) { const e = $('k_check2'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('fingers'), c('fingers', .3))); }
     showBpm(seg(t, c('feel', -.2), c('feel', .2)));
+    cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(tgt); cam.updateMatrixWorld();
+    { const [hx, hy] = project(cam, W2(B, B.P.hL)), pr = $('pring'), b = pulse(t * 1.2);
+      pr.style.left = hx + 'px'; pr.style.top = hy + 'px'; pr.style.transform = `scale(${1 + .6 * b})`; show(pr, seg(t, c('neck', -.2), c('neck', .2)) * (.5 + .5 * b)); }
   } else if (name === 'paper') {                // resting pulse 60–100 — reference card
     street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; place(B, 1.2, 0, -.35);
-    pose(B, {bob: Math.sin(t * 3) * .01, ua: {L: V3(.25, -.97, .05), R: V3(-.55, .25, .55)}, la: {L: V3(.08, -.99, .05), R: V3(.55, .75, .35)}}); fists(B, 1);
+    pose(B, {bob: Math.sin(t * 3) * .01, ua: {R: V3(-.25, -.97, .05), L: V3(.45, -.45, .55)}, la: {R: V3(-.08, -.99, .05), L: V3(-.24, .47, -.31)}}); fists(B, 1);
     pos = V3(-.1, 1.5, 6.6); tgt = V3(1.0, 1.15, 0); crowd.forEach(m => m.g.visible = false); gb = .55; desat = .6;
     paper($('paper'), t, {span: [s0, s1 + .05], scroll: 30, tilt: 7, hl: [[c('sixty', -.1), c('hundred', .5)], [c('minute_end', -.3), c('minute_end', .2)]]});
     showBpm(1 - seg(t, s0, s0 + .3));
@@ -167,14 +173,14 @@ function draw(t) {
     chest.ribMat.opacity = xr * .6; chest.heart.scale.setScalar(.8 * xr * (1 + .3 * beat)); chest.heartMat.emissiveIntensity = xr * (.5 + 2.5 * beat); chest.redL.intensity = xr * (.5 + 4 * beat);
     desat = .45; flash = .3 * cut; shk = .01;
     slamWords($('k_lungs'), t, [c('lungs', -.05), c('air', -.1)], s1 - .02, {jolt: 12});
-  } else if (name === 'eye') {                  // pupils dilate
-    render3d = false; show($('pl_eye'), 1);
-    const z = lerp(1.05, 1.3, ease(k));
-    plate($('pl_eye'), ease(k), {zoom0: 1.05, zoom1: 1.3, bright: .9});
-    const dil = ease(seg(t, c('bigger', -.1), c('bigger', .5))), r = lerp(120, 175, dil) * z * (1 + .015 * beat);
-    const p = $('pupil'), cx = 960 + (959 - 960) * z, cy = 540 + (524 - 540) * z;
-    p.style.left = (cx - r) + 'px'; p.style.top = (cy - r) + 'px'; p.style.width = p.style.height = 2 * r + 'px'; show(p, 1);
-    flash = .3 * cut;
+  } else if (name === 'eye') {                  // pupils dilate — on OUR stickman's face
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; crowd.forEach(m => m.g.visible = false);
+    place(B, 0, 0, 0);
+    const dil = ease(seg(t, c('bigger', -.15), c('bigger', .45)));
+    poseB(B, t, {shake: .006, breath: .006, rate: 6, pupil: lerp(1.0, 2.3, dil), mouth: .2, brow: .6});
+    const hd = W2(B, B.P.head);
+    pos = hd.clone().add(V3(lerp(.35, .12, k), lerp(.08, .04, k), lerp(1.6, 1.05, ease(k)))); tgt = hd.clone().add(V3(0, .02, 0)); fov = 32;
+    key.intensity = 1.4; key.position.set(1, 4, 6); hemi.intensity = .6; desat = .2; flash = .3 * cut;
     slamWords($('k_pupils'), t, [c('pupils', -.05), c('bigger', -.05)], s1 - .02, {jolt: 12});
   } else if (name === 'blood') {                // liver dumps sugar into the blood: fuel
     render3d = false; show($('pl_blood'), 1);

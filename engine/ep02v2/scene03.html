@@ -112,11 +112,12 @@ function draw(t) {
     flash = .3 * cut;
     slamWords($('k_gut'), t, [c('digestion', -.05), c('digestion', .5)], s1 - .02, {jolt: 12});
     if (t > c('knot', -.1)) { const e = $('k_knot'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('knot', -.1), c('knot', .2)) * (1 - seg(t, s1 - .1, s1))); }
-  } else if (name === 'mouth') {                // saliva drops — head close, mouth area
-    A.g.visible = false; desat = .55;
+  } else if (name === 'mouth') {                // saliva drops — his face, dry half-open mouth
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; crowd.forEach(m => m.g.visible = false);
+    place(B, 0, 0, 0); poseB(B, t, {shake: .01, rate: 9, breath: .02, mouth: .45 + .15 * Math.sin(t * 9), brow: .5});
     const hd = W2(B, B.P.head);
-    pos = hd.clone().add(V3(lerp(-2.2, -1.9, k), lerp(-.05, -.12, k), lerp(1.8, 1.5, k))); tgt = hd.clone().add(V3(0, -.2, 0)); fov = 34;
-    flash = .3 * cut; shk = .006;
+    pos = hd.clone().add(V3(lerp(.45, .25, k), lerp(-.05, -.1, k), lerp(1.4, 1.05, ease(k)))); tgt = hd.clone().add(V3(0, -.1, 0)); fov = 32;
+    key.position.set(1, 4, 6); hemi.intensity = .6; desat = .35; flash = .3 * cut;
     slamWords($('k_saliva'), t, [c('saliva', -.05), c('drops', -.05)], s1 - .02, {jolt: 12});
     if (t > c('dry', -.1)) { const e = $('k_dry'); e.style.transform = 'translate(-50%,-50%)'; show(e, seg(t, c('dry', -.1), c('dry', .2)) * (1 - seg(t, s1 - .1, s1))); }
   } else if (name === 'muscles') {              // blood leaves the skin, rushes to the big muscles
@@ -133,14 +134,13 @@ function draw(t) {
     pos = V3(lerp(-.2, .1, k), 1.5, lerp(5.2, 4.4, k)); tgt = V3(HX, 1.25, 0);
     desat = lerp(.4, .95, seg(t, c('pale', -.2), c('pale', .3))); vign = .55; key.color.set(0xbfd4ff); flash = .3 * cut;
     slam($('k_pale'), t, c('pale', -.03), s1 - .02, {from: 1.25, jolt: 6});
-  } else if (name === 'fist') {                 // hands shake — real fist, trembling
-    render3d = false; show($('pl_fist'), 1);
-    const tr = tremor(t, 7);
-    plate($('pl_fist'), ease(k), {zoom0: 1.04, zoom1: 1.2, x0: tr.x, y0: tr.y, x1: tr.x - 40, y1: tr.y, bright: .95});
-    $('pl_fist').querySelector('img').style.filter += ` blur(${(Math.abs(Math.sin(t * 53)) * 1.2).toFixed(2)}px)`;
-    flash = .3 * cut;
+  } else if (name === 'fist') {                 // hands shake — his own fist, close
+    street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; crowd.forEach(m => m.g.visible = false);
+    place(B, 0, 0, 0); poseB(B, t, {shake: .09, rate: 8, breath: .02, squeeze: 1.25});
+    const hnd = W2(B, B.P.hL);
+    pos = hnd.clone().add(V3(lerp(-.15, -.05, k), lerp(.12, .06, k), lerp(.95, .7, ease(k)))); tgt = hnd; fov = 34;
+    key.position.set(1, 4, 6); hemi.intensity = .6; desat = .35; flash = .3 * cut; shk = .004;
     slamWords($('k_shake'), t, [c('hands', -.05), c('shake', -.05)], s1 - .02, {jolt: 14});
-    const kt = $('k_shake'); kt.style.transform = `translate(-50%,-50%) translate(${tr.x * .6}px,${tr.y * .6}px)`;
   } else if (name === 'key') {                  // big moves stronger, small moves worse: the key keeps missing the lock
     render3d = false; show($('pl_mus'), 1);
     plate($('pl_mus'), ease(k), {zoom0: 1.15, zoom1: 1.2, x0: -380, x1: -400, glowX: 960, glowY: 370, glow: .5 * seg(t, c('big'), c('stronger')), bright: .55, blur: lerp(0, 6, seg(t, c('small', -.2), c('small', .3)))});

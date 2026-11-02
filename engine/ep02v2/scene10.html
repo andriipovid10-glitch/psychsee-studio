@@ -12,8 +12,6 @@
 #sub{position:absolute;left:960px;top:780px;transform:translate(-50%,-50%);background:#ff3340;color:#fff;font-weight:800;font-size:46px;padding:22px 54px;border-radius:999px;letter-spacing:.02em;box-shadow:0 0 50px rgba(255,40,60,.5)}</style></head><body>
 <canvas id="gl"></canvas>
 <div id="pl_ear" class="plate"><img src="img/flow_ear.jpg"><i class="shade"></i></div>
-<div id="pl_eye" class="plate"><img src="img/flow_eye.jpg"><i class="shade"></i></div>
-<div id="pl_arm" class="plate"><img src="img/flow_arm.jpg"><i class="shade"></i></div>
 <div id="pl_film" class="plate"><img src="img/flow_film.jpg"><i class="shade"></i></div>
 <div id="clock">T+10.00<small>s</small></div>
 <div id="rflash"></div>
@@ -41,11 +39,11 @@ const street = makeStreet(scene);
 const B = man(scene, undefined, 'you');
 const SHOTS = [['clock', 0], ['hear', c('hearing', -.12)], ['vis', c('vision', -.12)], ['pain', c('pain', -.12)], ['time', c('memory', -.12)], ['wheel', c('now', -.12)], ['end', c('next', -.15)]];
 const shotAt = t => { let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][1]) i++; return i; };
-const PL = {hear: 'pl_ear', vis: 'pl_eye', pain: 'pl_arm', time: 'pl_film'};
+const PL = {hear: 'pl_ear', time: 'pl_film'};
 function draw(t) {
   const si = shotAt(t), [name, s0] = SHOTS[si], s1 = si + 1 < SHOTS.length ? SHOTS[si + 1][1] : DUR;
   const lt = t - s0, d = s1 - s0, k = clamp(lt / d), cut = Math.exp(-lt * 9);
-  hideKw(); ['pl_ear', 'pl_eye', 'pl_arm', 'pl_film', 'clock', 'end'].forEach(id => show($(id), 0));
+  hideKw(); ['pl_ear', 'pl_film', 'clock', 'end'].forEach(id => show($(id), 0));
   let flash = 0, black = 0, render3d = false;
   if (name === 'clock') {
     const v = Math.min(10, 9.99 + 0.01 * seg(t, c('ten', -.1), c('ten'))); $('clock').innerHTML = `T+${v.toFixed(2)}<small>s</small>`;
@@ -54,6 +52,14 @@ function draw(t) {
   } else if (PL[name]) {
     show($(PL[name]), 1); plate($(PL[name]), ease(k), {zoom0: 1.15, zoom1: 1.3, bright: .85});
     flash = .35 * cut;
+    slamWords($('k_' + name), t, [s0 + .1, s0 + .3], s1 - .02, {jolt: 12});
+  } else if (name === 'vis' || name === 'pain') {   // his own eye (pupil wide) / his own fist — not photos
+    render3d = true; place(B, 0, 0, 0);
+    poseB(B, t, {calm: 0, shake: .02, rate: 6, breath: .01, pupil: name === 'vis' ? 2.2 : 1, brow: .4, squeeze: 1.2});
+    const p = name === 'vis' ? B.g.localToWorld(B.P.head.clone()) : B.g.localToWorld(B.P.hL.clone());
+    cam.position.set(p.x + lerp(.3, .15, k), p.y + .06, p.z + lerp(1.4, 1.0, ease(k))); cam.fov = 32; cam.updateProjectionMatrix(); cam.lookAt(p);
+    key.position.set(1, 4, 6); hemi.intensity = .6; rim.intensity = 3.0; grade.desat.value = .3; grade.flash.value = .3 * cut; grade.black.value = 0; grade.red.value = name === 'pain' ? .1 : 0;
+    composer.render();
     slamWords($('k_' + name), t, [s0 + .1, s0 + .3], s1 - .02, {jolt: 12});
   } else if (name === 'wheel') {
     render3d = true; place(B, 0, 0, 0); poseB(B, t, {calm: 1, breath: .012, rate: 2});

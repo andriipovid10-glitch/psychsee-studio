@@ -8,7 +8,7 @@ import json, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 ORDER = os.environ.get('SCENES', 's00').split()
-RD = os.path.join(ROOT, 'renders', 'ep02v2'); os.makedirs(RD, exist_ok=True)
+RD = os.environ.get('RD') or os.path.join(ROOT, 'renders', 'ep02v2'); os.makedirs(RD, exist_ok=True)
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(RD, 'ep02v2_first30s_draft.mp4')
 run = lambda *a: subprocess.run(list(a), check=True, capture_output=True, text=True)
 T = {s: json.load(open(os.path.join(HERE, f'timing_{s}.json'))) for s in ORDER}
