@@ -3,3 +3,4 @@ renders/
 *.part.mp4
 *.f32
 .DS_Store
+audio/ep02v2/vo_raw_*.wav
