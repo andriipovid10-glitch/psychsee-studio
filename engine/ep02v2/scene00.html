@@ -66,6 +66,7 @@ import {THREE, clamp, lerp, seg, ease, eo, ei, back, V3, vlerp, makeMan, pose, s
   $, show, project, timecode, loadTiming, rng} from '../ep02/lib/core.js';
 import {setupStage} from './lib/stage.js';
 import {dress} from './lib/look.js';
+import {makeFist, fists as kitFists} from './lib/kit.js';
 import {makeVoid, makeSchool, makeBar, makeStreet} from './lib/sets.js';
 
 // ---------------------------------------------------------------- timing (all beats come from the VO cues)
@@ -82,8 +83,7 @@ function plate() {}   // all locations are 3D (photo plates were tried and dropp
 const A = dress(makeMan(scene), 'thug'), B = dress(makeMan(scene), 'you');
 const ghosts = [0, 1, 2].map(() => dress(makeMan(scene), 'thug'));
 ghosts.forEach((g, i) => { g.mat.opacity = [.22, .13, .07][i]; g.mat.depthWrite = false; g.g.children.forEach(m => m.castShadow = false); });
-const fistGeo = new THREE.SphereGeometry(1, 24, 16);
-function addFists(M) { M.fists = [0, 1].map(() => { const f = new THREE.Mesh(fistGeo, M.mat); f.castShadow = true; M.g.add(f); return f; }); }
+function addFists(M) { M.fists = [0, 1].map(() => { const f = makeFist(M.mat); M.g.add(f); return f; }); }
 [A, B, ...ghosts].forEach(addFists);
 const chest = makeChest(B);
 // bystanders (crowd) — also stickmen, a bit darker, watching the fight
@@ -110,7 +110,7 @@ function place(M, x, face) { M.g.position.set(x, 0, 0); M.g.rotation.y = face * 
 
 // ---------------------------------------------------------------- poses (man-local: faces +z, his left = +x)
 const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) * a * .5, Math.cos(t * 47.3) * a, Math.sin(t * 39.9) * a * .4);
-function fists(M, sq = 1) { const P = M.P; M.fists[0].position.copy(P.hL); M.fists[1].position.copy(P.hR); M.fists.forEach(f => f.scale.setScalar(.088 * sq)); }
+const fists = kitFists;
 function poseA(M, t, o = {}) {           // the aggressor: chest out, leaning in, fists low
   const br = Math.sin(t * 3.1) * .012, p = o.punch || 0, pp = back(clamp(p));
   const uaR = vlerp(V3(-.42, -.88, .12), V3(-.06, .16, 1), pp), laR = vlerp(V3(-.18, -.75, .5), V3(-.03, .08, 1), pp);

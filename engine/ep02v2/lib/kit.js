@@ -22,15 +22,42 @@ export function timecode(el, globalT) {
 }
 
 // ---------------------------------------------------------------- cast
-const fistGeo = new THREE.SphereGeometry(1, 24, 16);
+// fist = palm + knuckle row + curled fingers + thumb (local +Y = forearm direction, unit radius ~1)
+const _sph = new THREE.SphereGeometry(1, 24, 16), _cap = new THREE.CapsuleGeometry(1, 1, 6, 14);
+export function makeFist(mat) {
+  const g = new THREE.Group(), add = (geo, p, s, r) => { const m = new THREE.Mesh(geo, mat); m.position.set(...p); m.scale.set(...s); if (r) m.rotation.set(...r); m.castShadow = true; g.add(m); return m; };
+  add(_sph, [0, 0, 0], [.92, .95, .72]);                                        // palm / back of hand
+  [-.45, -.15, .15, .45].forEach((x, i) => {
+    const k = i === 0 || i === 3 ? .9 : 1;
+    add(_sph, [x, .72 * k, -.05], [.27, .27, .27]);                             // knuckles
+    const cf = add(_cap, [x, .52 * k, .36], [.24, .2, .24], [Math.PI / 2 - .35, 0, 0]);    // curled fingers
+    if (i >= 2) {                                                              // index + middle can extend (pulse check)
+      const ef = new THREE.Group(); ef.position.set(x, .7, -.02); g.add(ef); ef.visible = false;
+      const fm = new THREE.Mesh(_cap, mat); fm.position.set(0, .8, 0); fm.scale.set(.22, .75, .22); fm.castShadow = true; ef.add(fm);
+      g.userData.ext = (g.userData.ext || []).concat([[cf, ef]]);
+    }
+  });
+  add(_cap, [.12, .12, .62], [.22, .34, .22], [0, 0, Math.PI / 2 - .25]);       // thumb across the front
+  return g;
+}
+const _up = new THREE.Vector3(0, 1, 0), _d = new THREE.Vector3();
 export function man(scene, color, look) {
   const M = makeMan(scene, color);
   if (look !== null) dress(M, look || 'c1');
-  M.fists = [0, 1].map(() => { const f = new THREE.Mesh(fistGeo, M.mat); f.castShadow = true; M.g.add(f); return f; });
+  M.fists = [0, 1].map(() => { const f = makeFist(M.mat); M.g.add(f); return f; });
   return M;
 }
 export function place(M, x, z, face) { M.g.position.set(x, 0, z); M.g.rotation.y = face; }
-export function fists(M, sq = 1) { const P = M.P; M.fists[0].position.copy(P.hL); M.fists[1].position.copy(P.hR); M.fists.forEach(f => f.scale.setScalar(.088 * sq)); }
+export function fists(M, sq = 1, o = {}) {
+  const P = M.P;
+  M.fists.forEach((f, i) => f.userData.ext.forEach(([cf, ef]) => { const on = o.two === (i ? 'R' : 'L'); cf.visible = !on; ef.visible = on; ef.rotation.set(o.twoX || 0, 0, o.twoZ || 0); }));
+  [[P.eL, P.hL], [P.eR, P.hR]].forEach(([e, h], i) => {
+    const f = M.fists[i]; _d.subVectors(h, e).normalize();
+    f.position.copy(h).addScaledVector(_d, .03); f.quaternion.setFromUnitVectors(_up, _d);
+    if (i === 1) f.rotateY(Math.PI);                                            // mirror: thumbs face inward
+    f.scale.setScalar(.088 * sq);
+  });
+}
 export const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) * a * .5, Math.cos(t * 47.3) * a, Math.sin(t * 39.9) * a * .4);
 // aggressor: o.punch 0..1, o.push 0..1 (two-hand shove)
 export function poseA(M, t, o = {}) {

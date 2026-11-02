@@ -136,7 +136,7 @@ function draw(t) {
     pose(B, {bob: br, lean: .02, headLean: -.05 + .05 * up,
       ua: {R: V3(-.25, -.97, .05), L: vlerp(V3(.25, -.97, .05), V3(.45, -.45, .55), up)},
       la: {R: V3(-.08, -.99, .05), L: vlerp(V3(.08, -.99, .05), V3(-.24, .47, -.31), up)}});
-    fists(B, 1);
+    fists(B, 1, {two: up > .3 ? 'L' : null});
     crowd.forEach(m => m.g.visible = false);
     const nk = W2(B, B.P.neck.clone().lerp(B.P.head, .35));
     const close = ease(seg(t, c('fingers', -.2), c('neck', .3)));
@@ -150,7 +150,7 @@ function draw(t) {
       pr.style.left = hx + 'px'; pr.style.top = hy + 'px'; pr.style.transform = `scale(${1 + .6 * b})`; show(pr, seg(t, c('neck', -.2), c('neck', .2)) * (.5 + .5 * b)); }
   } else if (name === 'paper') {                // resting pulse 60–100 — reference card
     street.g.visible = false; voidSet.g.visible = true; A.g.visible = false; place(B, 1.2, 0, -.35);
-    pose(B, {bob: Math.sin(t * 3) * .01, ua: {R: V3(-.25, -.97, .05), L: V3(.45, -.45, .55)}, la: {R: V3(-.08, -.99, .05), L: V3(-.24, .47, -.31)}}); fists(B, 1);
+    pose(B, {bob: Math.sin(t * 3) * .01, ua: {R: V3(-.25, -.97, .05), L: V3(.45, -.45, .55)}, la: {R: V3(-.08, -.99, .05), L: V3(-.24, .47, -.31)}}); fists(B, 1, {two: 'L'});
     pos = V3(-.1, 1.5, 6.6); tgt = V3(1.0, 1.15, 0); crowd.forEach(m => m.g.visible = false); gb = .55; desat = .6;
     paper($('paper'), t, {span: [s0, s1 + .05], scroll: 30, tilt: 7, hl: [[c('sixty', -.1), c('hundred', .5)], [c('minute_end', -.3), c('minute_end', .2)]]});
     showBpm(1 - seg(t, s0, s0 + .3));
