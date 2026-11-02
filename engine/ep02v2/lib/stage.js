@@ -7,6 +7,8 @@ import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 
 export const SCALE = +(new URLSearchParams(location.search).get('s') || 1);
+export const VERT = !!(new URLSearchParams(location.search).get('v'));   // ?v=1 -> 1080x1920 (Shorts)
+export const W = VERT ? 1080 : 1920, H = VERT ? 1920 : 1080;
 
 const GRADE = {
   uniforms: {tDiffuse: {value: null}, desat: {value: 0}, vign: {value: .4}, grain: {value: .016}, seed: {value: 0},
@@ -24,7 +26,7 @@ const GRADE = {
 };
 
 export function setupStage(canvas) {
-  const w = Math.round(1920 * SCALE), h = Math.round(1080 * SCALE);
+  const w = Math.round(W * SCALE), h = Math.round(H * SCALE);
   canvas.width = w; canvas.height = h;
   const R = new THREE.WebGLRenderer({canvas, antialias: true, preserveDrawingBuffer: true});
   R.setPixelRatio(1); R.setSize(w, h, false);
@@ -33,7 +35,7 @@ export function setupStage(canvas) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(NAVY);
   scene.fog = new THREE.Fog(NAVY, 9, 24);
-  const cam = new THREE.PerspectiveCamera(34, 16 / 9, 0.02, 100);
+  const cam = new THREE.PerspectiveCamera(34, W / H, 0.02, 100);
   const hemi = new THREE.HemisphereLight(0x8fa6d6, NAVY, .55); scene.add(hemi);
   const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(-4, 8, 6); key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 5;
