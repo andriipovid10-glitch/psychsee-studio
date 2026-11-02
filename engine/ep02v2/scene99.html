@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0;background:#000}#gl{width:1920px;height:1080px}</style></head><body>
+<canvas id="gl"></canvas>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// hand test page (not part of the video): t=0 relaxed full body, 1 relaxed close, 2 fist close, 3 pulse two fingers, 4 punch
+import {THREE, V3, pose, $} from '../ep02/lib/core.js';
+import {setupStage} from './lib/stage.js';
+import {makeVoid} from './lib/sets.js';
+import {man, place, fists, poseA, poseB} from './lib/kit.js';
+window.DURATION = 5;
+const st = setupStage($('gl')), {scene, cam, composer, grade, key, rim, hemi} = st;
+makeVoid(scene); const B = man(scene, undefined, 'you');
+function draw(t) {
+  const v = Math.round(t); place(B, 0, 0, 0); grade.desat.value = .2; grade.red.value = 0; grade.flash.value = 0; grade.black.value = 0;
+  let p;
+  if (v <= 2) { poseB(B, 1, {calm: v === 2 ? 0 : 1, curl: v === 2 ? 1 : .3, squeeze: 1.1}); }
+  if (v === 3 || v === 5) { const ua = v === 3 ? V3(.35, -.6, .7) : V3(.6, -.5, .55), la = v === 3 ? V3(-.3, .85, -.4) : V3(-.45, .8, -.35);
+    pose(B, {headLean: v === 5 ? -.3 : .3, ua: {R: V3(-.25, -.97, .05), L: ua.normalize()}, la: {R: V3(-.08, -.99, .05), L: la.normalize()}}); fists(B, 1.3, {curl: .9, two: 'L'}); }
+
+  if (v === 0 || v === 4 && false) { cam.position.set(0, 1.3, 5); cam.lookAt(0, 1.0, 0); cam.fov = 36; }
+  else if (v >= 3) { p = B.g.localToWorld(B.P.neck.clone()); cam.position.set(p.x + 1.3, p.y - .25, p.z + 2.1); cam.lookAt(p.x, p.y + .08, p.z); cam.fov = 30; }
+  else { p = B.g.localToWorld(B.P.hL.clone()); cam.position.set(p.x + .35, p.y + .15, p.z + .9); cam.lookAt(p); cam.fov = 30; }
+  cam.updateProjectionMatrix(); key.position.set(2, 4, 6); hemi.intensity = .7; rim.intensity = 2.5; composer.render();
+}
+window.draw = draw; draw(0); window.ready = true;
+</script></body></html>

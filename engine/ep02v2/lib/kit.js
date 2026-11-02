@@ -22,25 +22,37 @@ export function timecode(el, globalT) {
 }
 
 // ---------------------------------------------------------------- cast
-// fist = palm + knuckle row + curled fingers + thumb (local +Y = forearm direction, unit radius ~1)
+// hand = palm + 4 two-segment fingers + two-segment thumb. Local frame: +Y = forearm direction (fingers point +Y),
+// +Z = palm side, +X = thumb side. setHand() curls the fingers: 0 = open, 1 = tight fist; o.two extends index + middle.
 const _sph = new THREE.SphereGeometry(1, 24, 16), _cap = new THREE.CapsuleGeometry(1, 1, 6, 14);
 export function makeFist(mat) {
-  const g = new THREE.Group(), add = (geo, p, s, r) => { const m = new THREE.Mesh(geo, mat); m.position.set(...p); m.scale.set(...s); if (r) m.rotation.set(...r); m.castShadow = true; g.add(m); return m; };
-  add(_sph, [0, 0, 0], [.92, .95, .72]);                                        // palm / back of hand
-  [-.45, -.15, .15, .45].forEach((x, i) => {
-    const k = i === 0 || i === 3 ? .9 : 1;
-    add(_sph, [x, .72 * k, -.05], [.27, .27, .27]);                             // knuckles
-    const cf = add(_cap, [x, .52 * k, .36], [.24, .2, .24], [Math.PI / 2 - .35, 0, 0]);    // curled fingers
-    if (i >= 2) {                                                              // index + middle can extend (pulse check)
-      const ef = new THREE.Group(); ef.position.set(x, .7, -.02); g.add(ef); ef.visible = false;
-      const fm = new THREE.Mesh(_cap, mat); fm.position.set(0, .8, 0); fm.scale.set(.22, .75, .22); fm.castShadow = true; ef.add(fm);
-      g.userData.ext = (g.userData.ext || []).concat([[cf, ef]]);
-    }
+  const g0 = new THREE.Group(), g = new THREE.Group(); g.position.y = .8; g0.add(g); const mesh = (par, geo, p, s, r) => { const m = new THREE.Mesh(geo, mat); m.position.set(...p); m.scale.set(...s); if (r) m.rotation.set(...r); m.castShadow = true; par.add(m); return m; };
+  mesh(g, _sph, [0, .05, 0], [.8, .9, .45]);                                         // palm
+  const F = [];
+  [[.5, .78, .5, .42, .155], [.17, .86, .58, .46, .165], [-.17, .84, .55, .44, .16], [-.5, .74, .42, .36, .145]].forEach(([x, y, l1, l2, r]) => {
+    const p1 = new THREE.Group(); p1.position.set(x, y, 0); g.add(p1);               // knuckle joint
+    mesh(p1, _cap, [0, l1 / 2, 0], [r, l1 / 2, r]);
+    const p2 = new THREE.Group(); p2.position.set(0, l1, 0); p1.add(p2);             // middle joint
+    mesh(p2, _cap, [0, l2 / 2, 0], [r * .92, l2 / 2, r * .92]);
+    F.push([p1, p2]);
   });
-  add(_cap, [.12, .12, .62], [.22, .34, .22], [0, 0, Math.PI / 2 - .25]);       // thumb across the front
-  return g;
+  const t1 = new THREE.Group(); t1.position.set(.62, -.25, .12); g.add(t1);          // thumb base
+  mesh(t1, _cap, [0, .25, 0], [.18, .25, .18]);
+  const t2 = new THREE.Group(); t2.position.set(0, .5, 0); t1.add(t2);
+  mesh(t2, _cap, [0, .2, 0], [.165, .2, .165]);
+  mesh(g, _cap, [0, -.55, 0], [.38, .3, .3]);                                         // wrist
+  g0.userData = {F, t1, t2};
+  return g0;
 }
-const _up = new THREE.Vector3(0, 1, 0), _d = new THREE.Vector3();
+function setHand(f, curl, two) {
+  const {F, t1, t2} = f.userData;
+  F.forEach(([p1, p2], i) => {
+    const c = two && i < 2 ? .08 : curl;
+    p1.rotation.set(c * 1.55, 0, 0); p2.rotation.set(c * 1.75, 0, 0);
+  });
+  t1.rotation.set(curl * .9, 0, lerp(-.75, .35, curl)); t2.rotation.set(curl * .6, 0, lerp(-.15, .9, curl));
+}
+const _up = new THREE.Vector3(0, 1, 0), _d = new THREE.Vector3(), _n = new THREE.Vector3(), _x = new THREE.Vector3(), _m = new THREE.Matrix4();
 export function man(scene, color, look) {
   const M = makeMan(scene, color);
   if (look !== null) dress(M, look || 'c1');
@@ -49,13 +61,18 @@ export function man(scene, color, look) {
 }
 export function place(M, x, z, face) { M.g.position.set(x, 0, z); M.g.rotation.y = face; }
 export function fists(M, sq = 1, o = {}) {
-  const P = M.P;
-  M.fists.forEach((f, i) => f.userData.ext.forEach(([cf, ef]) => { const on = o.two === (i ? 'R' : 'L'); cf.visible = !on; ef.visible = on; ef.rotation.set(o.twoX || 0, 0, o.twoZ || 0); }));
-  [[P.eL, P.hL], [P.eR, P.hR]].forEach(([e, h], i) => {
+  const P = M.P, curl = o.curl ?? 1;
+  [[P.eL, P.hL, 'L'], [P.eR, P.hR, 'R']].forEach(([e, h, side], i) => {
     const f = M.fists[i]; _d.subVectors(h, e).normalize();
-    f.position.copy(h).addScaledVector(_d, .03); f.quaternion.setFromUnitVectors(_up, _d);
-    if (i === 1) f.rotateY(Math.PI);                                            // mirror: thumbs face inward
-    f.scale.setScalar(.088 * sq);
+    // palm faces the body's centre line; thumb toward the front (+Z) -> mirror the hand when needed
+    _n.set(Math.sign(P.hip.x - h.x) || (i ? 1 : -1), 0, -.25);   // palm faces inward (medial), a bit back
+    _n.addScaledVector(_d, -_n.dot(_d)); if (_n.lengthSq() < 1e-6) _n.set(0, 0, 1); _n.normalize();
+    _x.crossVectors(_d, _n);
+    const mir = _x.z < 0 ? -1 : 1;
+    _m.makeBasis(_x, _d, _n); f.quaternion.setFromRotationMatrix(_m);
+    f.position.copy(h).addScaledVector(_d, -.02);
+    const k = .1 * sq; f.scale.set(k * mir, k, k);
+    setHand(f, curl, o.two === side);
   });
 }
 export const tremor = (t, a) => V3(Math.sin(t * 53.1) * a + Math.sin(t * 31.7) * a * .5, Math.cos(t * 47.3) * a, Math.sin(t * 39.9) * a * .4);
@@ -82,7 +99,7 @@ export function poseB(M, t, o = {}) {
   if (cm) { ua = {L: vlerp(ua.L, V3(.22, -.97, .05), cm), R: vlerp(ua.R, V3(-.22, -.97, .05), cm)}; la = {L: vlerp(la.L, V3(.06, -.99, .1), cm), R: vlerp(la.R, V3(-.06, -.99, .1), cm)}; }
   pose(M, {root: [0, .04 * h, -.42 * h], bob: br, lean: -.03 - .36 * h + br * 1.2 + .05 * cm, headLean: (.14 - .24 * h) * (1 - cm), roll: .06 * h,
     ua, la, th: {L: V3(.16, -.92 + .1 * h, .08 + .45 * h), R: V3(-.14, -.99, -.14)}, sh: {L: V3(.02, -1, -.25 * h), R: V3(-.02, -1, .05)}});
-  fists(M, o.squeeze || 1);
+  fists(M, o.squeeze || 1, {curl: o.curl ?? lerp(.95, .3, cm)});
 }
 // bystanders watching: list of [x, z, face, variant]
 export function makeCrowd(scene, n = 5) { return Array.from({length: n}, (_, i) => man(scene, 0xc9cfda, 'c' + (1 + i % 5))); }

@@ -3,378 +3,471 @@
  "audio": "audio/ep02v2/vo_temp_s10.wav",
  "source": "asr-json:engine/ep02v2/asr/vo_temp_s10.asr.json (match 100%)",
  "vo_offset": 0.25,
- "audio_duration": 17.689,
- "duration": 19.939,
+ "audio_duration": 21.61,
+ "duration": 23.86,
  "cues": {
   "so": 0.364,
-  "ten": 0.936,
-  "hearing": 1.888,
-  "vision": 3.126,
-  "shrank": 3.507,
-  "pain": 4.364,
-  "disappeared": 4.84,
-  "memory": 6.174,
-  "lied": 6.65,
-  "time": 7.507,
-  "now": 8.277,
-  "driving": 8.944,
-  "wheel": 10.455,
-  "back": 10.645,
-  "next": 11.427,
-  "video": 11.617,
-  "happens": 12.297,
-  "attracted": 15.726,
-  "subscribe": 16.741,
-  "end": 17.693
+  "ten": 0.891,
+  "hearing": 1.939,
+  "vision": 3.215,
+  "shrank": 3.596,
+  "pain": 4.376,
+  "disappeared": 4.757,
+  "memory": 5.803,
+  "lied": 6.184,
+  "time": 7.232,
+  "body": 7.989,
+  "vote": 10.561,
+  "for": 11.259,
+  "passenger": 12.824,
+  "now": 13.722,
+  "driving": 14.389,
+  "wheel": 15.496,
+  "back": 15.686,
+  "want": 16.338,
+  "stress": 19.046,
+  "subscribe": 19.831,
+  "soon": 21.355,
+  "end": 21.641
  },
  "words": [
   {
    "i": 0,
    "w": "So.",
    "start": 0.364,
-   "end": 0.65
+   "end": 0.555
   },
   {
    "i": 1,
    "w": "Ten",
-   "start": 0.936,
-   "end": 1.126
+   "start": 0.891,
+   "end": 1.082
   },
   {
    "i": 2,
    "w": "seconds.",
-   "start": 1.126,
-   "end": 1.602
+   "start": 1.082,
+   "end": 1.653
   },
   {
    "i": 3,
    "w": "Your",
-   "start": 1.793,
-   "end": 1.888
+   "start": 1.844,
+   "end": 1.939
   },
   {
    "i": 4,
    "w": "hearing",
-   "start": 1.888,
-   "end": 2.174
+   "start": 1.939,
+   "end": 2.32
   },
   {
    "i": 5,
    "w": "shut",
-   "start": 2.174,
-   "end": 2.46
+   "start": 2.32,
+   "end": 2.51
   },
   {
    "i": 6,
    "w": "off.",
-   "start": 2.46,
-   "end": 2.936
+   "start": 2.51,
+   "end": 2.94
   },
   {
    "i": 7,
    "w": "Your",
-   "start": 3.031,
-   "end": 3.126
+   "start": 3.024,
+   "end": 3.215
   },
   {
    "i": 8,
    "w": "vision",
-   "start": 3.126,
-   "end": 3.507
+   "start": 3.215,
+   "end": 3.596
   },
   {
    "i": 9,
    "w": "shrank.",
-   "start": 3.507,
-   "end": 4.174
+   "start": 3.596,
+   "end": 4.14
   },
   {
    "i": 10,
    "w": "Your",
-   "start": 4.269,
-   "end": 4.364
+   "start": 4.186,
+   "end": 4.376
   },
   {
    "i": 11,
    "w": "pain",
-   "start": 4.364,
-   "end": 4.84
+   "start": 4.376,
+   "end": 4.757
   },
   {
    "i": 12,
    "w": "disappeared.",
-   "start": 4.84,
-   "end": 5.793
+   "start": 4.757,
+   "end": 5.421
   },
   {
    "i": 13,
    "w": "And",
-   "start": 5.983,
-   "end": 6.079
+   "start": 5.518,
+   "end": 5.708
   },
   {
    "i": 14,
    "w": "your",
-   "start": 6.079,
-   "end": 6.174
+   "start": 5.708,
+   "end": 5.803
   },
   {
    "i": 15,
    "w": "memory",
-   "start": 6.174,
-   "end": 6.65
+   "start": 5.803,
+   "end": 6.184
   },
   {
    "i": 16,
    "w": "lied",
-   "start": 6.65,
-   "end": 7.031
+   "start": 6.184,
+   "end": 6.661
   },
   {
    "i": 17,
    "w": "to",
-   "start": 7.031,
-   "end": 7.126
+   "start": 6.661,
+   "end": 6.851
   },
   {
    "i": 18,
    "w": "you",
-   "start": 7.126,
-   "end": 7.221
+   "start": 6.851,
+   "end": 6.946
   },
   {
    "i": 19,
    "w": "about",
-   "start": 7.221,
-   "end": 7.507
+   "start": 6.946,
+   "end": 7.232
   },
   {
    "i": 20,
    "w": "time.",
-   "start": 7.507,
-   "end": 7.983
+   "start": 7.232,
+   "end": 7.613
   },
   {
    "i": 21,
-   "w": "Now",
-   "start": 8.277,
-   "end": 8.468
+   "w": "Your",
+   "start": 7.894,
+   "end": 7.989
   },
   {
    "i": 22,
-   "w": "you",
-   "start": 8.468,
-   "end": 8.563
+   "w": "body",
+   "start": 7.989,
+   "end": 8.275
   },
   {
    "i": 23,
-   "w": "know",
-   "start": 8.563,
-   "end": 8.753
+   "w": "made",
+   "start": 8.275,
+   "end": 8.656
   },
   {
    "i": 24,
-   "w": "who's",
-   "start": 8.753,
-   "end": 8.944
+   "w": "every",
+   "start": 8.656,
+   "end": 9.037
   },
   {
    "i": 25,
-   "w": "driving",
-   "start": 8.944,
-   "end": 9.42
+   "w": "one",
+   "start": 9.037,
+   "end": 9.228
   },
   {
    "i": 26,
-   "w": "and",
-   "start": 9.597,
-   "end": 9.978
+   "w": "of",
+   "start": 9.228,
+   "end": 9.228
   },
   {
    "i": 27,
-   "w": "how",
-   "start": 9.978,
-   "end": 10.074
+   "w": "those",
+   "start": 9.228,
+   "end": 9.418
   },
   {
    "i": 28,
-   "w": "to",
-   "start": 10.074,
-   "end": 10.169
+   "w": "calls",
+   "start": 9.418,
+   "end": 9.799
   },
   {
    "i": 29,
-   "w": "take",
-   "start": 10.169,
-   "end": 10.359
+   "w": "before",
+   "start": 9.799,
+   "end": 10.18
   },
   {
    "i": 30,
-   "w": "the",
-   "start": 10.359,
-   "end": 10.455
+   "w": "you",
+   "start": 10.18,
+   "end": 10.37
   },
   {
    "i": 31,
-   "w": "wheel",
-   "start": 10.455,
-   "end": 10.645
+   "w": "got",
+   "start": 10.37,
+   "end": 10.561
   },
   {
    "i": 32,
-   "w": "back.",
-   "start": 10.645,
-   "end": 11.026
+   "w": "a",
+   "start": 10.561,
+   "end": 10.561
   },
   {
    "i": 33,
-   "w": "Next",
-   "start": 11.427,
-   "end": 11.617
+   "w": "vote.",
+   "start": 10.561,
+   "end": 10.942
   },
   {
    "i": 34,
-   "w": "video:",
-   "start": 11.617,
-   "end": 11.998
+   "w": "For",
+   "start": 11.259,
+   "end": 11.354
   },
   {
    "i": 35,
-   "w": "what",
-   "start": 12.107,
-   "end": 12.297
+   "w": "ten",
+   "start": 11.354,
+   "end": 11.735
   },
   {
    "i": 36,
-   "w": "happens",
-   "start": 12.297,
-   "end": 12.583
+   "w": "seconds,",
+   "start": 11.735,
+   "end": 12.306
   },
   {
    "i": 37,
-   "w": "in",
-   "start": 12.583,
-   "end": 12.678
+   "w": "you",
+   "start": 12.443,
+   "end": 12.634
   },
   {
    "i": 38,
-   "w": "your",
-   "start": 12.678,
-   "end": 12.773
+   "w": "were",
+   "start": 12.634,
+   "end": 12.634
   },
   {
    "i": 39,
-   "w": "body",
-   "start": 12.773,
-   "end": 13.154
+   "w": "the",
+   "start": 12.634,
+   "end": 12.824
   },
   {
    "i": 40,
-   "w": "in",
-   "start": 13.154,
-   "end": 13.249
+   "w": "passenger.",
+   "start": 12.824,
+   "end": 13.395
   },
   {
    "i": 41,
-   "w": "the",
-   "start": 13.249,
-   "end": 13.345
+   "w": "Now",
+   "start": 13.722,
+   "end": 13.913
   },
   {
    "i": 42,
-   "w": "first",
-   "start": 13.345,
-   "end": 13.821
+   "w": "you",
+   "start": 13.913,
+   "end": 14.008
   },
   {
    "i": 43,
-   "w": "few",
-   "start": 13.821,
-   "end": 14.011
+   "w": "know",
+   "start": 14.008,
+   "end": 14.198
   },
   {
    "i": 44,
-   "w": "seconds",
-   "start": 14.011,
-   "end": 14.487
+   "w": "who's",
+   "start": 14.198,
+   "end": 14.389
   },
   {
    "i": 45,
-   "w": "after",
-   "start": 14.487,
-   "end": 14.773
+   "w": "driving",
+   "start": 14.389,
+   "end": 14.862
   },
   {
    "i": 46,
-   "w": "you",
-   "start": 14.773,
-   "end": 14.868
+   "w": "and",
+   "start": 14.924,
+   "end": 15.115
   },
   {
    "i": 47,
-   "w": "see",
-   "start": 14.868,
-   "end": 15.154
+   "w": "how",
+   "start": 15.115,
+   "end": 15.21
   },
   {
    "i": 48,
-   "w": "someone",
-   "start": 15.154,
-   "end": 15.535
+   "w": "to",
+   "start": 15.21,
+   "end": 15.305
   },
   {
    "i": 49,
-   "w": "you're",
-   "start": 15.535,
-   "end": 15.726
+   "w": "take",
+   "start": 15.305,
+   "end": 15.496
   },
   {
    "i": 50,
-   "w": "attracted",
-   "start": 15.726,
-   "end": 16.202
+   "w": "the",
+   "start": 15.496,
+   "end": 15.496
   },
   {
    "i": 51,
-   "w": "to.",
-   "start": 16.202,
-   "end": 16.392
+   "w": "wheel",
+   "start": 15.496,
+   "end": 15.686
   },
   {
    "i": 52,
-   "w": "Subscribe",
-   "start": 16.741,
-   "end": 17.217
+   "w": "back.",
+   "start": 15.686,
+   "end": 16.067
   },
   {
    "i": 53,
-   "w": "so",
-   "start": 17.217,
-   "end": 17.312
+   "w": "Want",
+   "start": 16.338,
+   "end": 16.528
   },
   {
    "i": 54,
-   "w": "you",
-   "start": 17.312,
-   "end": 17.312
+   "w": "to",
+   "start": 16.528,
+   "end": 16.528
   },
   {
    "i": 55,
-   "w": "don't",
-   "start": 17.312,
-   "end": 17.503
+   "w": "know",
+   "start": 16.528,
+   "end": 16.624
   },
   {
    "i": 56,
-   "w": "miss",
-   "start": 17.503,
-   "end": 17.598
+   "w": "what",
+   "start": 16.624,
+   "end": 16.719
   },
   {
    "i": 57,
-   "w": "it.",
-   "start": 17.598,
-   "end": 17.693
+   "w": "else",
+   "start": 16.719,
+   "end": 17.004
+  },
+  {
+   "i": 58,
+   "w": "your",
+   "start": 17.004,
+   "end": 17.1
+  },
+  {
+   "i": 59,
+   "w": "body",
+   "start": 17.1,
+   "end": 17.29
+  },
+  {
+   "i": 60,
+   "w": "does",
+   "start": 17.29,
+   "end": 17.576
+  },
+  {
+   "i": 61,
+   "w": "behind",
+   "start": 17.576,
+   "end": 17.766
+  },
+  {
+   "i": 62,
+   "w": "your",
+   "start": 17.766,
+   "end": 17.862
+  },
+  {
+   "i": 63,
+   "w": "back",
+   "start": 17.862,
+   "end": 18.262
+  },
+  {
+   "i": 64,
+   "w": "especially",
+   "start": 18.38,
+   "end": 18.856
+  },
+  {
+   "i": 65,
+   "w": "under",
+   "start": 18.856,
+   "end": 19.046
+  },
+  {
+   "i": 66,
+   "w": "stress?",
+   "start": 19.046,
+   "end": 19.427
+  },
+  {
+   "i": 67,
+   "w": "Subscribe.",
+   "start": 19.831,
+   "end": 20.498
+  },
+  {
+   "i": 68,
+   "w": "A",
+   "start": 20.689,
+   "end": 20.784
+  },
+  {
+   "i": 69,
+   "w": "new",
+   "start": 20.784,
+   "end": 20.879
+  },
+  {
+   "i": 70,
+   "w": "one's",
+   "start": 20.879,
+   "end": 21.07
+  },
+  {
+   "i": 71,
+   "w": "coming",
+   "start": 21.07,
+   "end": 21.355
+  },
+  {
+   "i": 72,
+   "w": "soon.",
+   "start": 21.355,
+   "end": 21.641
   }
  ]
 }
