@@ -4,367 +4,527 @@
 {
 "text": "So,",
 "start_ms": 114,
-"end_ms": 305
+"end_ms": 495
 },
 {
 "text": "10",
-"start_ms": 641,
-"end_ms": 832
-},
-{
-"text": "seconds.",
-"start_ms": 832,
-"end_ms": 1403
-},
-{
-"text": "Your",
-"start_ms": 1594,
-"end_ms": 1689
-},
-{
-"text": "hearing",
-"start_ms": 1689,
-"end_ms": 2070
-},
-{
-"text": "shut",
-"start_ms": 2070,
-"end_ms": 2260
-},
-{
-"text": "off,",
-"start_ms": 2260,
-"end_ms": 2690
-},
-{
-"text": "your",
-"start_ms": 2774,
-"end_ms": 2965
-},
-{
-"text": "vision",
-"start_ms": 2965,
-"end_ms": 3346
-},
-{
-"text": "shrank,",
-"start_ms": 3346,
-"end_ms": 3890
-},
-{
-"text": "your",
-"start_ms": 3936,
-"end_ms": 4126
-},
-{
-"text": "pain",
-"start_ms": 4126,
-"end_ms": 4507
-},
-{
-"text": "disappeared,",
-"start_ms": 4507,
-"end_ms": 5171
-},
-{
-"text": "and",
-"start_ms": 5268,
-"end_ms": 5458
-},
-{
-"text": "your",
-"start_ms": 5458,
-"end_ms": 5553
-},
-{
-"text": "memory",
-"start_ms": 5553,
-"end_ms": 5934
-},
-{
-"text": "lied",
-"start_ms": 5934,
-"end_ms": 6411
-},
-{
-"text": "to",
-"start_ms": 6411,
-"end_ms": 6601
-},
-{
-"text": "you",
-"start_ms": 6601,
-"end_ms": 6696
-},
-{
-"text": "about",
-"start_ms": 6696,
-"end_ms": 6982
-},
-{
-"text": "time.",
-"start_ms": 6982,
-"end_ms": 7363
-},
-{
-"text": "Your",
-"start_ms": 7644,
-"end_ms": 7739
-},
-{
-"text": "body",
-"start_ms": 7739,
-"end_ms": 8025
-},
-{
-"text": "made",
-"start_ms": 8025,
-"end_ms": 8406
-},
-{
-"text": "every",
-"start_ms": 8406,
-"end_ms": 8787
-},
-{
-"text": "one",
-"start_ms": 8787,
-"end_ms": 8978
-},
-{
-"text": "of",
-"start_ms": 8978,
-"end_ms": 8978
-},
-{
-"text": "those",
-"start_ms": 8978,
-"end_ms": 9168
-},
-{
-"text": "calls",
-"start_ms": 9168,
-"end_ms": 9549
-},
-{
-"text": "before",
-"start_ms": 9549,
-"end_ms": 9930
-},
-{
-"text": "you",
-"start_ms": 9930,
-"end_ms": 10120
-},
-{
-"text": "got",
-"start_ms": 10120,
-"end_ms": 10311
-},
-{
-"text": "a",
-"start_ms": 10311,
-"end_ms": 10311
-},
-{
-"text": "vote.",
-"start_ms": 10311,
-"end_ms": 10692
-},
-{
-"text": "For",
-"start_ms": 11009,
-"end_ms": 11104
-},
-{
-"text": "10",
-"start_ms": 11104,
-"end_ms": 11485
+"start_ms": 795,
+"end_ms": 1080
 },
 {
 "text": "seconds,",
-"start_ms": 11485,
-"end_ms": 12056
+"start_ms": 1080,
+"end_ms": 1652
 },
 {
-"text": "you",
-"start_ms": 12193,
-"end_ms": 12384
+"text": "your",
+"start_ms": 1747,
+"end_ms": 1937
 },
 {
-"text": "were",
-"start_ms": 12384,
-"end_ms": 12384
+"text": "hearing",
+"start_ms": 1937,
+"end_ms": 2223
 },
 {
-"text": "the",
-"start_ms": 12384,
-"end_ms": 12574
+"text": "shut",
+"start_ms": 2223,
+"end_ms": 2509
 },
 {
-"text": "passenger.",
-"start_ms": 12574,
-"end_ms": 13145
+"text": "off,",
+"start_ms": 2509,
+"end_ms": 2890
 },
 {
-"text": "Now",
-"start_ms": 13472,
-"end_ms": 13663
+"text": "your",
+"start_ms": 2985,
+"end_ms": 3176
 },
 {
-"text": "you",
-"start_ms": 13663,
-"end_ms": 13758
+"text": "vision",
+"start_ms": 3176,
+"end_ms": 3556
 },
 {
-"text": "know",
-"start_ms": 13758,
-"end_ms": 13948
+"text": "shrank,",
+"start_ms": 3556,
+"end_ms": 4033
 },
 {
-"text": "who's",
-"start_ms": 13948,
-"end_ms": 14139
+"text": "your",
+"start_ms": 4128,
+"end_ms": 4318
 },
 {
-"text": "driving",
-"start_ms": 14139,
-"end_ms": 14612
+"text": "pain",
+"start_ms": 4318,
+"end_ms": 4699
+},
+{
+"text": "disappeared,",
+"start_ms": 4699,
+"end_ms": 5461
 },
 {
 "text": "and",
-"start_ms": 14674,
-"end_ms": 14865
-},
-{
-"text": "how",
-"start_ms": 14865,
-"end_ms": 14960
-},
-{
-"text": "to",
-"start_ms": 14960,
-"end_ms": 15055
-},
-{
-"text": "take",
-"start_ms": 15055,
-"end_ms": 15246
-},
-{
-"text": "the",
-"start_ms": 15246,
-"end_ms": 15246
-},
-{
-"text": "wheel",
-"start_ms": 15246,
-"end_ms": 15436
-},
-{
-"text": "back.",
-"start_ms": 15436,
-"end_ms": 15817
-},
-{
-"text": "Want",
-"start_ms": 16088,
-"end_ms": 16278
-},
-{
-"text": "to",
-"start_ms": 16278,
-"end_ms": 16278
-},
-{
-"text": "know",
-"start_ms": 16278,
-"end_ms": 16374
-},
-{
-"text": "what",
-"start_ms": 16374,
-"end_ms": 16469
-},
-{
-"text": "else",
-"start_ms": 16469,
-"end_ms": 16754
+"start_ms": 5556,
+"end_ms": 5747
 },
 {
 "text": "your",
-"start_ms": 16754,
-"end_ms": 16850
+"start_ms": 5747,
+"end_ms": 5842
+},
+{
+"text": "memory",
+"start_ms": 5842,
+"end_ms": 6318
+},
+{
+"text": "lied",
+"start_ms": 6318,
+"end_ms": 6604
+},
+{
+"text": "to",
+"start_ms": 6604,
+"end_ms": 6699
+},
+{
+"text": "you",
+"start_ms": 6699,
+"end_ms": 6890
+},
+{
+"text": "about",
+"start_ms": 6890,
+"end_ms": 7080
+},
+{
+"text": "time.",
+"start_ms": 7080,
+"end_ms": 7652
+},
+{
+"text": "Your",
+"start_ms": 8006,
+"end_ms": 8101
 },
 {
 "text": "body",
-"start_ms": 16850,
-"end_ms": 17040
+"start_ms": 8101,
+"end_ms": 8386
 },
 {
-"text": "does",
-"start_ms": 17040,
-"end_ms": 17326
+"text": "made",
+"start_ms": 8386,
+"end_ms": 8672
 },
 {
-"text": "behind",
-"start_ms": 17326,
-"end_ms": 17516
+"text": "every",
+"start_ms": 8767,
+"end_ms": 9148
+},
+{
+"text": "one",
+"start_ms": 9148,
+"end_ms": 9244
+},
+{
+"text": "of",
+"start_ms": 9244,
+"end_ms": 9244
+},
+{
+"text": "those",
+"start_ms": 9244,
+"end_ms": 9434
+},
+{
+"text": "calls",
+"start_ms": 9434,
+"end_ms": 9815
+},
+{
+"text": "before",
+"start_ms": 9998,
+"end_ms": 10379
+},
+{
+"text": "you",
+"start_ms": 10379,
+"end_ms": 10474
+},
+{
+"text": "got",
+"start_ms": 10474,
+"end_ms": 10665
+},
+{
+"text": "a",
+"start_ms": 10665,
+"end_ms": 10760
+},
+{
+"text": "vote.",
+"start_ms": 10760,
+"end_ms": 11046
+},
+{
+"text": "For",
+"start_ms": 11391,
+"end_ms": 11486
+},
+{
+"text": "10",
+"start_ms": 11486,
+"end_ms": 11677
+},
+{
+"text": "seconds,",
+"start_ms": 11677,
+"end_ms": 12058
+},
+{
+"text": "you",
+"start_ms": 12322,
+"end_ms": 12417
+},
+{
+"text": "were",
+"start_ms": 12417,
+"end_ms": 12512
+},
+{
+"text": "the",
+"start_ms": 12512,
+"end_ms": 12608
+},
+{
+"text": "passenger.",
+"start_ms": 12608,
+"end_ms": 13084
+},
+{
+"text": "Now",
+"start_ms": 13410,
+"end_ms": 13696
+},
+{
+"text": "you",
+"start_ms": 13696,
+"end_ms": 13791
+},
+{
+"text": "know",
+"start_ms": 13791,
+"end_ms": 13887
+},
+{
+"text": "who's",
+"start_ms": 13887,
+"end_ms": 14077
+},
+{
+"text": "driving",
+"start_ms": 14077,
+"end_ms": 14553
+},
+{
+"text": "and",
+"start_ms": 14664,
+"end_ms": 14950
+},
+{
+"text": "how",
+"start_ms": 14950,
+"end_ms": 15045
+},
+{
+"text": "to",
+"start_ms": 15045,
+"end_ms": 15140
+},
+{
+"text": "take",
+"start_ms": 15140,
+"end_ms": 15330
+},
+{
+"text": "the",
+"start_ms": 15330,
+"end_ms": 15426
+},
+{
+"text": "wheel",
+"start_ms": 15426,
+"end_ms": 15616
+},
+{
+"text": "back.",
+"start_ms": 15616,
+"end_ms": 15902
+},
+{
+"text": "Now",
+"start_ms": 16260,
+"end_ms": 16450
+},
+{
+"text": "I",
+"start_ms": 16450,
+"end_ms": 16450
+},
+{
+"text": "want",
+"start_ms": 16450,
+"end_ms": 16545
+},
+{
+"text": "to",
+"start_ms": 16545,
+"end_ms": 16641
+},
+{
+"text": "hear",
+"start_ms": 16641,
+"end_ms": 16736
+},
+{
+"text": "yours.",
+"start_ms": 16736,
+"end_ms": 17212
+},
+{
+"text": "How",
+"start_ms": 17403,
+"end_ms": 17498
+},
+{
+"text": "did",
+"start_ms": 17498,
+"end_ms": 17688
 },
 {
 "text": "your",
-"start_ms": 17516,
-"end_ms": 17612
+"start_ms": 17688,
+"end_ms": 17879
 },
 {
-"text": "back,",
-"start_ms": 17612,
-"end_ms": 18012
+"text": "first",
+"start_ms": 17879,
+"end_ms": 18164
 },
 {
-"text": "especially",
-"start_ms": 18130,
-"end_ms": 18606
+"text": "fight",
+"start_ms": 18164,
+"end_ms": 18355
 },
 {
-"text": "under",
-"start_ms": 18606,
-"end_ms": 18796
+"text": "go?",
+"start_ms": 18355,
+"end_ms": 18641
 },
 {
-"text": "stress?",
-"start_ms": 18796,
-"end_ms": 19177
+"text": "Did",
+"start_ms": 18831,
+"end_ms": 19022
 },
 {
-"text": "Subscribe.",
-"start_ms": 19581,
-"end_ms": 20248
+"text": "your",
+"start_ms": 19022,
+"end_ms": 19117
 },
 {
-"text": "A",
-"start_ms": 20439,
-"end_ms": 20534
+"text": "body",
+"start_ms": 19117,
+"end_ms": 19403
 },
 {
-"text": "new",
-"start_ms": 20534,
-"end_ms": 20629
+"text": "do",
+"start_ms": 19403,
+"end_ms": 19498
 },
 {
-"text": "one's",
-"start_ms": 20629,
-"end_ms": 20820
+"text": "any",
+"start_ms": 19498,
+"end_ms": 19688
+},
+{
+"text": "of",
+"start_ms": 19688,
+"end_ms": 19688
+},
+{
+"text": "this?",
+"start_ms": 19688,
+"end_ms": 20069
+},
+{
+"text": "Tell",
+"start_ms": 20332,
+"end_ms": 20522
+},
+{
+"text": "me",
+"start_ms": 20522,
+"end_ms": 20618
+},
+{
+"text": "in",
+"start_ms": 20618,
+"end_ms": 20713
+},
+{
+"text": "the",
+"start_ms": 20713,
+"end_ms": 20713
+},
+{
+"text": "comments.",
+"start_ms": 20713,
+"end_ms": 21189
+},
+{
+"text": "I",
+"start_ms": 21189,
+"end_ms": 21284
+},
+{
+"text": "read",
+"start_ms": 21284,
+"end_ms": 21570
+},
+{
+"text": "every",
+"start_ms": 21570,
+"end_ms": 21760
+},
+{
+"text": "single",
+"start_ms": 21760,
+"end_ms": 22046
+},
+{
+"text": "one.",
+"start_ms": 22046,
+"end_ms": 22332
+},
+{
+"text": "And",
+"start_ms": 22427,
+"end_ms": 22618
+},
+{
+"text": "subscribe.",
+"start_ms": 22618,
+"end_ms": 23189
+},
+{
+"text": "More",
+"start_ms": 23284,
+"end_ms": 23475
+},
+{
+"text": "videos",
+"start_ms": 23475,
+"end_ms": 23760
+},
+{
+"text": "are",
+"start_ms": 23760,
+"end_ms": 23856
 },
 {
 "text": "coming",
-"start_ms": 20820,
-"end_ms": 21105
+"start_ms": 23856,
+"end_ms": 24046
 },
 {
-"text": "soon.",
-"start_ms": 21105,
-"end_ms": 21391
+"text": "on",
+"start_ms": 24046,
+"end_ms": 24141
+},
+{
+"text": "what",
+"start_ms": 24141,
+"end_ms": 24332
+},
+{
+"text": "your",
+"start_ms": 24332,
+"end_ms": 24427
+},
+{
+"text": "body",
+"start_ms": 24427,
+"end_ms": 24713
+},
+{
+"text": "does",
+"start_ms": 24713,
+"end_ms": 24903
+},
+{
+"text": "when",
+"start_ms": 24903,
+"end_ms": 25094
+},
+{
+"text": "you're",
+"start_ms": 25094,
+"end_ms": 25189
+},
+{
+"text": "under",
+"start_ms": 25189,
+"end_ms": 25284
+},
+{
+"text": "stress.",
+"start_ms": 25284,
+"end_ms": 25760
+},
+{
+"text": "You",
+"start_ms": 25951,
+"end_ms": 26046
+},
+{
+"text": "don't",
+"start_ms": 26046,
+"end_ms": 26141
+},
+{
+"text": "want",
+"start_ms": 26141,
+"end_ms": 26237
+},
+{
+"text": "to",
+"start_ms": 26237,
+"end_ms": 26332
+},
+{
+"text": "miss",
+"start_ms": 26332,
+"end_ms": 26522
+},
+{
+"text": "the",
+"start_ms": 26522,
+"end_ms": 26522
+},
+{
+"text": "next",
+"start_ms": 26522,
+"end_ms": 26808
+},
+{
+"text": "one.",
+"start_ms": 26808,
+"end_ms": 26999
 }
 ]
 }

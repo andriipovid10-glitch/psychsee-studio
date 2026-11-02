@@ -424,11 +424,19 @@
    "driving": "driving",
    "wheel": "wheel",
    "back": "back",
-   "want": "want",
-   "stress": "stress",
+   "hear": "hear",
+   "yours": "yours",
+   "first": "first",
+   "fight": "fight",
+   "any": "any",
+   "comments": "comments",
+   "single": "single",
    "subscribe": "subscribe",
-   "soon": "soon",
-   "end": "soon.end"
+   "more": "more",
+   "stress": "stress",
+   "miss": "miss",
+   "nextone": "next",
+   "end": "one#3.end"
   }
  }
 }
