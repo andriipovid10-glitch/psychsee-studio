@@ -12,7 +12,7 @@ html,body{width:1080px;height:1920px}
 #grade .g{font-weight:900;font-family:Inter,sans-serif;font-size:190px;letter-spacing:-.06em;line-height:1.25;color:#1a7f37}
 #grade .g.bad{color:#ff3340}
 #grade .lines i{display:block;height:8px;margin:14px 46px;background:#d9d2c3;border-radius:4px}
-#bat{position:absolute;left:540px;top:430px;transform:translate(-50%,-50%);width:520px;visibility:hidden}
+#bat{position:absolute;left:540px;top:300px;transform:translate(-50%,-50%);width:520px;visibility:hidden}
 #bat .lbl{font-family:'DejaVu Sans Mono',monospace;font-size:26px;letter-spacing:.3em;color:#8a97b3;text-align:center;margin-bottom:16px}
 #bat .shell{position:relative;height:120px;border:6px solid #eef2fa;border-radius:22px;padding:10px}
 #bat .shell:after{content:'';position:absolute;right:-26px;top:34px;width:16px;height:40px;background:#eef2fa;border-radius:0 8px 8px 0}
@@ -21,7 +21,7 @@ html,body{width:1080px;height:1920px}
 #meter{position:absolute;left:540px;top:420px;transform:translate(-50%,-50%);text-align:center;visibility:hidden}
 #meter .n{font-weight:900;font-size:230px;letter-spacing:-.06em;line-height:1;color:#7fb2ff;text-shadow:0 0 60px rgba(127,178,255,.6)}
 #meter .lbl{font-family:'DejaVu Sans Mono',monospace;font-size:28px;letter-spacing:.3em;color:#8a97b3;margin-top:8px}
-#follow{position:absolute;left:540px;top:1080px;transform:translate(-50%,-50%);background:#ff3340;color:#fff;font-weight:900;font-size:96px;padding:34px 110px;border-radius:999px;box-shadow:0 0 70px rgba(255,40,60,.55);visibility:hidden;letter-spacing:.01em}
+#follow{position:absolute;left:540px;top:1420px;transform:translate(-50%,-50%);background:#ff3340;color:#fff;font-weight:900;font-size:96px;padding:34px 110px;border-radius:999px;box-shadow:0 0 70px rgba(255,40,60,.55);visibility:hidden;letter-spacing:.01em}
 #rflash{position:absolute;inset:0;pointer-events:none}
 </style></head><body>
 <canvas id="gl"></canvas>
@@ -40,12 +40,12 @@ html,body{width:1080px;height:1920px}
 <div id="k_but" class="kw" style="left:540px;top:900px;font-size:330px"><span class="r">BUT</span></div>
 <div id="k_fake" class="kw" style="left:540px;top:1180px;font-size:92px;line-height:1.02;text-align:center"><span>VISUALIZATION</span><br><span>ISN'T</span> <span class="b">FAKE.</span></div>
 <div id="k_weights" class="kw" style="left:540px;top:1180px;font-size:130px"><span>NO</span> <span class="b">WEIGHTS.</span></div>
-<div id="k_work" class="kw" style="left:540px;top:430px;font-size:112px;line-height:1.02;text-align:center"><span>PICTURE</span><br><span>THE</span> <span class="b">WORK.</span></div>
-<div id="k_trophy" class="kw" style="left:540px;top:1180px;font-size:112px"><span>NOT</span> <span>THE</span> <span class="r">TROPHY.</span></div>
-<div id="k_finish" class="kw" style="left:540px;top:430px;font-size:88px;line-height:1.02;text-align:center"><span>STOP</span> <span>PICTURING</span><br><span>THE</span> <span class="r">FINISH</span> <span class="r">LINE.</span></div>
-<div id="k_reps" class="kw" style="left:540px;top:430px;font-size:112px;line-height:1.02;text-align:center"><span>PICTURE</span><br><span>THE</span> <span class="b">REPS.</span></div>
-<div id="k_prac" class="kw" style="left:540px;top:1180px;font-size:96px;line-height:1.02;text-align:center"><span>YOUR</span> <span>BRAIN</span> <span>CALLS</span> <span>IT</span><br><span class="b">PRACTICE.</span></div>
-<div id="k_back" class="kw" style="left:540px;top:760px;font-size:70px;line-height:1.05;text-align:center"><span>YOUR</span> <span>MIND</span> <span>DOES</span> <span>A</span> <span>LOT</span><br><span class="r">BEHIND</span> <span class="r">YOUR</span> <span class="r">BACK.</span></div>
+<div id="k_work" class="kw" style="left:540px;top:330px;font-size:112px;line-height:1.02;text-align:center"><span>PICTURE</span><br><span>THE</span> <span class="b">WORK.</span></div>
+<div id="k_trophy" class="kw" style="left:540px;top:1400px;font-size:112px"><span>NOT</span> <span>THE</span> <span class="r">TROPHY.</span></div>
+<div id="k_finish" class="kw" style="left:540px;top:330px;font-size:88px;line-height:1.02;text-align:center"><span>STOP</span> <span>PICTURING</span><br><span>THE</span> <span class="r">FINISH</span> <span class="r">LINE.</span></div>
+<div id="k_reps" class="kw" style="left:540px;top:330px;font-size:112px;line-height:1.02;text-align:center"><span>PICTURE</span><br><span>THE</span> <span class="b">REPS.</span></div>
+<div id="k_prac" class="kw" style="left:540px;top:1400px;font-size:96px;line-height:1.02;text-align:center"><span>YOUR</span> <span>BRAIN</span> <span>CALLS</span> <span>IT</span><br><span class="b">PRACTICE.</span></div>
+<div id="k_back" class="kw" style="left:540px;top:330px;font-size:70px;line-height:1.05;text-align:center"><span>YOUR</span> <span>MIND</span> <span>DOES</span> <span>A</span> <span>LOT</span><br><span class="r">BEHIND</span> <span class="r">YOUR</span> <span class="r">BACK.</span></div>
 <div id="rflash"></div>
 <script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js","three/addons/":"../node_modules/three/examples/jsm/"}}</script>
 <script type="module">
@@ -106,7 +106,7 @@ G.g.traverse(o => { if (o.isMesh) { o.material = o.material.clone(); Object.assi
 
 // pinky glow: own material on the left-hand pinky
 const pinkyMat = B.mat.clone(); B.fists[0].userData.F[3].forEach(p => p.traverse(o => { if (o.isMesh) o.material = pinkyMat; }));
-pinkyMat.emissive = new THREE.Color(0x3a8bff);
+pinkyMat.emissive = new THREE.Color(0x5aa8ff);
 
 const SHOTS = [['hook', 0], ['student', c('students', -.12)], ['relax', c('when', -.12)], ['but', c('but', -.1)], ['finger', c('study', -.25)],
   ['work', c('difference', -.12)], ['finish', c('stop', -.12)], ['reps', c('reps', -.25)], ['follow', c('follow', -.12)]];
@@ -128,12 +128,12 @@ function draw(t) {
   if (name === 'hook') {                       // dreaming: trophy + coins float in a warm bubble over his head
     place(B, 0, 0, 0); pose(B, {bob: br, headLean: -.12, ua: {L: V3(.2, -.98, .05), R: V3(-.2, -.98, .05)}, la: {L: V3(.05, -.99, .1), R: V3(-.05, -.99, .1)}});
     fists(B, 1, {curl: .3}); B.face = {pupil: .7, mouth: .25, brow: .1};
-    dream.visible = true; dream.position.set(0, 2.55 + Math.sin(t * 1.6) * .04, 0); dreamLight.intensity = 3.5;
+    dream.visible = true; dream.position.set(0, 3.25 + Math.sin(t * 1.6) * .04, 0); dreamLight.intensity = 3.5;
     trophy.rotation.y = t * .9; trophy.position.set(0, -.3, 0);
     coins.forEach((m, i) => { const a = i / coins.length * Math.PI * 2 + t * .7; m.position.set(Math.cos(a) * .62, -.05 + Math.sin(a * 2 + t) * .14, Math.sin(a) * .62); m.rotation.set(t * 2 + i, i, t + i * .5); });
-    bubble.scale.setScalar(.85 + .03 * Math.sin(t * 2)); bubble.position.y = 0;
+    bubble.scale.setScalar(.72 + .03 * Math.sin(t * 2)); bubble.position.y = 0;
     const why = seg(t, c('reason', -.3), c('reason', .2));
-    pos = vlerp(V3(.4, .6, 4.6), V3(.15, 1.4, 5.6), ease(seg(t, 0, c('reason')))); tgt = V3(0, lerp(1.9, 1.7, why), 0); fov = 46;
+    pos = vlerp(V3(.4, .6, 4.6), V3(.15, 1.4, 5.6), ease(seg(t, 0, c('reason')))); tgt = V3(0, lerp(2.35, 2.0, why), 0); fov = 52;
     desat = lerp(0, .5, why); red = .12 * seg(t, c('dont', -.1), c('dont', .3));
     slamWords($('k_vis'), t, [c('vis', -.12)], s1 - .02, {jolt: 10});
     slamWords($('k_why'), t, [c('reason', -.35), c('reason', -.25), c('reason', -.12), c('dont', -.12), c('dont', -.05), c('dont', .15), c('dont', .3)], s1 - .02, {jolt: 14});
@@ -162,7 +162,7 @@ function draw(t) {
     sit(B, {lean: lerp(.05, -.35, lay), headLean: lerp(-.1, -.35, lay), bob: br, ua: {L: vlerp(V3(.3, -.9, .2), V3(.7, .55, -.4), lay).normalize(), R: vlerp(V3(-.3, -.9, .2), V3(-.7, .55, -.4), lay).normalize()},
       la: {L: vlerp(V3(.05, -.99, .1), V3(-.6, .4, -.6), lay).normalize(), R: vlerp(V3(-.05, -.99, .1), V3(.6, .4, -.6), lay).normalize()}});
     fists(B, 1, {curl: .3}); B.face = {pupil: .7, mouth: .2 + .2 * lay, brow: 0};
-    dream.visible = true; dream.position.set(0, 2.5, 0); trophy.rotation.y = t; dreamLight.intensity = 2.5 * (1 - seg(t, c('drops', -.2), c('drops', .5)));
+    dream.visible = true; dream.position.set(0, 2.75, 0); trophy.rotation.y = t; dreamLight.intensity = 2.5 * (1 - seg(t, c('drops', -.2), c('drops', .5)));
     coins.forEach((m, i) => { const a = i / coins.length * Math.PI * 2 + t * .7; m.position.set(Math.cos(a) * .62, -.05 + Math.sin(a * 2 + t) * .14, Math.sin(a) * .62); m.rotation.set(t * 2 + i, i, t + i * .5); });
     pos = vlerp(V3(-1.2, 1.1, 4.8), V3(-.4, 1.5, 5.6), ease(k)); tgt = V3(0, 1.45, 0); fov = 44;
     const e = 1 - .82 * ease(seg(t, c('energy', -.2), c('drops', .6))), b = $('bat');
@@ -175,7 +175,7 @@ function draw(t) {
     show($('c_kap'), seg(t, c('energy', -.2), c('energy', .1)) * (1 - seg(t, s1 - .2, s1)));
   } else if (name === 'but') {                 // hard cut to black, BUT
     B.g.visible = false; black = 1; flash = .6 * cut;
-    slamWords($('k_but'), t, [s0 + .02], c('fake', -.6), {from: 2.2, jolt: 30});
+    slamWords($('k_but'), t, [s0 + .02], c('fake', -.75), {from: 2.2, jolt: 30});
     slamWords($('k_fake'), t, [c('fake', -.6), c('fake', -.4), c('fake', -.05)], s1 - .02, {jolt: 12});
     if (t > c('fake', -.6)) black = .55;
     place(B, 0, 0, 0); pose(B, {bob: br}); fists(B, 1, {curl: .2}); B.g.visible = t > c('fake', -.6);
@@ -186,9 +186,9 @@ function draw(t) {
     const flex = .5 + .5 * Math.sin(t * 7);
     fists(B, 1.15, {curl: .15}); B.face = {pupil: .9, mouth: .1, brow: .3};
     const pk = B.fists[0].userData.F[3]; pk[0].rotation.x = .1 + .9 * flex * seg(t, c('imagined'), c('imagined', .4)); pk[1].rotation.x = pk[0].rotation.x * .8;
-    pinkyMat.emissiveIntensity = 1.8 * seg(t, c('finger', -.2), c('finger', .2)) * (.7 + .3 * flex);
+    pinkyMat.emissiveIntensity = 3.2 * seg(t, c('finger', -.2), c('finger', .2)) * (.7 + .3 * flex);
     const hp = W2(B, B.P.hL);
-    pos = vlerp(hp.clone().add(V3(.9, .9, 1.9)), hp.clone().add(V3(.35, .25, .75)), ease(seg(t, s0, c('finger', .3)))); tgt = vlerp(V3(0, 1.4, 0), hp.clone().add(V3(0, .05, .05)), ease(seg(t, s0, c('finger', .3)))); fov = 40;
+    pos = vlerp(hp.clone().add(V3(.9, .9, 1.9)), hp.clone().add(V3(.5, .4, 1.25)), ease(seg(t, s0, c('finger', .3)))); tgt = vlerp(V3(0, 1.4, 0), hp.clone().add(V3(0, .05, .05)), ease(seg(t, s0, c('finger', .3)))); fov = 40;
     key.position.set(2, 5, 6); hemi.intensity = .7; desat = .15;
     const m = $('meter'), n = Math.round(35 * ease(seg(t, c('pct', -.9), c('pct', .25))));
     show(m, seg(t, c('pct', -1.1), c('pct', -.8))); m.querySelector('.n').textContent = '+' + n + '%';
@@ -203,10 +203,10 @@ function draw(t) {
     dumb.visible = true; dumb.position.copy(W2(B, B.P.hR)); dumb.quaternion.copy(B.g.quaternion);
     B.face = {pupil: 1, mouth: .35, brow: .6};
     dream.visible = true; const gone = ease(seg(t, c('trophy', -.1), c('trophy', .5)));
-    dream.position.set(1.0, 2.35 - gone * 1.5, -.3); trophy.rotation.y = t; trophy.rotation.z = gone * 1.2; dream.scale.setScalar(.8 * (1 - gone * .7));
+    dream.position.set(.9, 2.2 - gone * 1.5, -.2); trophy.rotation.y = t; trophy.rotation.z = gone * 1.2; dream.scale.setScalar(.8 * (1 - gone * .7));
     coins.forEach((m, i) => { m.position.set(Math.cos(i) * .6, -.05 - gone * (1 + i * .2), Math.sin(i) * .6); m.rotation.set(t * 3 + i, i, t); });
     dreamLight.intensity = 2 * (1 - gone);
-    pos = vlerp(V3(-.9, 1.2, 4.6), V3(-.3, 1.4, 5.3), ease(k)); tgt = V3(.2, 1.3, 0); fov = 44;
+    pos = vlerp(V3(-.9, 1.5, 5.2), V3(-.3, 1.6, 5.6), ease(k)); tgt = V3(.3, 1.55, 0); fov = 46;
     red = .08 * seg(t, c('trophy'), c('trophy', .3));
     slamWords($('k_work'), t, [c('work', -.5), c('work', -.3), c('work', -.05)], s1 - .02, {jolt: 10});
     slamWords($('k_trophy'), t, [c('trophy', -.45), c('trophy', -.3), c('trophy', -.05)], s1 - .02, {jolt: 12});
@@ -215,7 +215,7 @@ function draw(t) {
     pose(B, {bob: br, ua: {L: V3(.2, -.98, .05), R: V3(-.2, -.98, .05)}, la: {L: V3(.05, -.99, .1), R: V3(-.05, -.99, .1)}}); fists(B, 1, {curl: .3});
     B.face = {pupil: .8, mouth: .15, brow: .1};
     const snap = seg(t, c('finish', .15), c('finish', .45)); finish.userData.tape.scale.x = 1 - snap; finish.userData.tape.position.y = 1.1 - snap * .2;
-    pos = vlerp(V3(0, 1.0, 6.4), V3(.6, 1.6, 5.4), ease(k)); tgt = V3(0, 1.0, .6); fov = 46;
+    pos = vlerp(V3(0, 1.2, 5.0), V3(.5, 1.6, 4.4), ease(k)); tgt = V3(0, 1.35, .6); fov = 46;
     desat = .45; red = .1 * snap;
     slamWords($('k_finish'), t, [c('stop', -.08), c('stop', .1), c('finish', -.3), c('finish', -.1), c('finish', .1)], s1 - .02, {jolt: 10});
   } else if (name === 'reps') {                // ghost double rehearses the rep a beat ahead of him
@@ -224,13 +224,13 @@ function draw(t) {
     const curl = (M, r) => { pose(M, {bob: br, ua: {L: V3(.18, -.98, .05), R: V3(-.18, -.98, .1)}, la: {L: V3(.05, -.99, .1), R: vlerp(V3(-.05, -.99, .15), V3(-.05, .35, .94), r).normalize()}}); fists(M, 1, {curl: .3}); M.fists[1].userData.F.forEach(([p1, p2]) => { p1.rotation.x = 1.45; p2.rotation.x = 1.6; }); };
     curl(G, rep(.9)); curl(B, rep(0)); B.face = {pupil: 1, mouth: .3, brow: .7};
     dumb.visible = true; dumb.position.copy(W2(B, B.P.hR)); dumb.quaternion.copy(B.g.quaternion);
-    pos = vlerp(V3(1.4, 1.3, 4.6), V3(.6, 1.5, 4.0), ease(k)); tgt = V3(0, 1.3, 0); fov = 44; rim.intensity = 3.4; desat = .2;
+    pos = vlerp(V3(1.4, 1.5, 5.4), V3(.6, 1.6, 4.9), ease(k)); tgt = V3(0, 1.6, 0); fov = 46; rim.intensity = 3.4; desat = .2;
     slamWords($('k_reps'), t, [s0 + .1, s0 + .25, c('reps', -.05)], s1 - .02, {jolt: 10});
     slamWords($('k_prac'), t, [c('brain', -.1), c('brain', .05), c('practice', -.4), c('practice', -.25), c('practice', -.05)], s1 - .02, {jolt: 10});
   } else if (name === 'follow') {              // he turns to camera; FOLLOW
-    place(B, 0, 0, 0); pose(B, {bob: br, headLean: .05, ua: {L: V3(.2, -.98, .05), R: V3(-.6, .2, .78).normalize()}, la: {L: V3(.05, -.99, .1), R: V3(-.1, .9, .4).normalize()}});
+    place(B, 0, 0, 0); pose(B, {bob: br, headLean: .05, ua: {L: V3(.2, -.98, .05), R: V3(-.45, -.55, .7).normalize()}, la: {L: V3(.05, -.99, .1), R: V3(.1, .2, 1).normalize()}});
     fists(B, 1, {curl: .25}); B.face = {pupil: 1.1, mouth: .25, brow: .4};
-    pos = vlerp(V3(0, 1.5, 4.2), V3(0, 1.45, 3.6), ease(k)); tgt = V3(0, 1.45, 0); fov = 46;
+    pos = vlerp(V3(0, 1.5, 4.6), V3(0, 1.5, 4.0), ease(k)); tgt = V3(0, 1.75, 0); fov = 46;
     const f = $('follow'), sb = seg(t, c('follow', -.15), c('follow', .15));
     show(f, sb); f.style.transform = `translate(-50%,-50%) scale(${lerp(.5, 1, back(sb)) * (1 + .03 * Math.sin(t * 6))})`;
     slamWords($('k_back'), t, [c('mind', -.25), c('mind', -.1), c('mind', .05), c('mind', .15), c('mind', .25), c('back', -.45), c('back', -.3), c('back', -.08)], DUR - .05, {jolt: 8});
